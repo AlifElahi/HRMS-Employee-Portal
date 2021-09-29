@@ -1,0 +1,42 @@
+/**
+ * App Header
+ */
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+
+class Sidebar extends Component {
+  render() {
+
+    const { location } = this.props
+    let pathname = location.pathname
+    return (
+      <div className="sidebar" id="sidebar">
+        <div className="sidebar-inner slimscroll">
+          <div id="sidebar-menu" className="sidebar-menu">
+            <ul>
+              {/* <li className="menu-title">
+                <span>Employee Portal</span>
+              </li> */}
+              <li className="menue">
+                <a href="#" ><i className="la la-user" /> <span> Employee Portal</span> <span className="menu-arrow" /></a>
+                <ul style={{ display: 'none' }}>
+                  <li><a className={pathname.includes('employee-dashboard') ? "active" : ""}
+                    href="/hive_hrm/app/employees/employee-dashboard">Employee Dashboard</a></li>
+                  <li><a className={pathname.includes('employee-profile') ? "active" : ""} href="/hive_hrm/app/employees/employee-profile"> Employee Profile </a></li>
+
+                  <li><a className={pathname.includes('allemployees') ? "active" : pathname.includes('employees-list') ? "active" : ""}
+                    href="/hive_hrm/app/employees/allemployees">All Employees</a></li>
+                  <li><a className={pathname.includes('ves-employee') ? "active" : ""} href="/hive_hrm/app/employees/leaves-employee">Leaves</a></li>
+                  <li><a className={pathname.includes('ce-employee') ? "active" : ""} href="/hive_hrm/app/employees/attendance-employee">Attendance</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    );
+  }
+}
+
+export default withRouter(Sidebar);
