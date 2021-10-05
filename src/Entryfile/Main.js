@@ -45,7 +45,7 @@ const MainApp = () => (
    <AuthenticationProvider
       // authenticating={Loading}
       configuration={oidcConfiguration}
-      loggerLevel={oidcLog.DEBUG}
+      // loggerLevel={oidcLog.DEBUG}
       // callbackComponentOverride={Loading}
       UserStore={LocalWebStorage}
     >

@@ -1,48 +1,57 @@
 /**
  * App Header
  */
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import {headerlogo,lnEnglish,lnFrench,lnSpanish,lnGerman, Avatar_02,Avatar_03,Avatar_05,
-  Avatar_06,Avatar_08,Avatar_09,Avatar_13,Avatar_17,Avatar_21} from '../../Entryfile/imagepath'
+import {
+  headerlogo, lnEnglish, lnFrench, lnSpanish, lnGerman, Avatar_02, Avatar_03, Avatar_05,
+  Avatar_06, Avatar_08, Avatar_09, Avatar_13, Avatar_17, Avatar_21
+} from '../../Entryfile/imagepath'
+import { useReactOidc } from '@axa-fr/react-oidc-context';
 
-class Header extends Component {
 
-   render() {
-    const {  location } = this.props
-    let pathname = location.pathname
-    
-      return (
-         <div className="header" style={{right:"0px"}}>
-        {/* Logo */}
-        <div className="header-left">
-          <a href="/hive_hrm/app/employees/employee-dashboard" className="logo">
-            <img src={headerlogo} width={40} height={40} alt="" />
-          </a>
-        </div>
-        {/* /Logo */}
-        <a id="toggle_btn" href="" style={{display: pathname.includes('tasks') ?"none" :pathname.includes('compose') ? "none" :""}}>
-          <span className="bar-icon"><span />
-            <span />
-            <span />
-          </span>
+const Header = () => {
+
+  const { oidcUser, logout } = useReactOidc();
+  const [name, setName] = useState("")
+  useEffect(() => {
+    if (oidcUser) {
+      setName(oidcUser.profile.first_name)
+    }
+  })
+
+  return (
+    <div className="header" style={{ right: "0px" }}>
+      {/* Logo */}
+      <div className="header-left">
+        <a href="/hive_hrm/app/employees/employee-dashboard" className="logo">
+          <img src={headerlogo} width={40} height={40} alt="" />
         </a>
-        {/* Header Title */}
-        <div className="page-title-box">
-          <h3>Hive HRMS</h3>
-        </div>
-        {/* /Header Title */}
-        <a id="mobile_btn" className="mobile_btn" href="#sidebar"><i className="fa fa-bars" /></a>
-        {/* Header Menu */}
-        <ul className="nav user-menu">
-          {/* Search */}
-         
-          {/* /Search */}
-          {/* Flag */}
-         
-          {/* /Flag */}
-          {/* Notifications */}
-          {/* <li className="nav-item dropdown">
+      </div>
+      {/* /Logo */}
+      {/* <a id="toggle_btn" href="" style={{ display: pathname.includes('tasks') ? "none" : pathname.includes('compose') ? "none" : "" }}> */}
+      <a id="toggle_btn" href="" style={{ display: '' }}>
+        <span className="bar-icon"><span />
+          <span />
+          <span />
+        </span>
+      </a>
+      {/* Header Title */}
+      <div className="page-title-box">
+        <h3>Hive HRMS</h3>
+      </div>
+      {/* /Header Title */}
+      <a id="mobile_btn" className="mobile_btn" href="#sidebar"><i className="fa fa-bars" /></a>
+      {/* Header Menu */}
+      <ul className="nav user-menu">
+        {/* Search */}
+
+        {/* /Search */}
+        {/* Flag */}
+
+        {/* /Flag */}
+        {/* Notifications */}
+        {/* <li className="nav-item dropdown">
             <a href="#" className="dropdown-toggle nav-link" data-toggle="dropdown">
               <i className="fa fa-bell-o" /> <span className="badge badge-pill">3</span>
             </a>
@@ -125,37 +134,40 @@ class Header extends Component {
               </div>
             </div>
           </li> */}
-          {/* /Notifications */}
-         
+        {/* /Notifications */}
+
+        {name ?
           <li className="nav-item dropdown has-arrow main-drop">
             <a href="#" className="dropdown-toggle nav-link" data-toggle="dropdown">
               <span className="user-img"><img src={Avatar_21} alt="" />
                 {/* <span className="status online" /> */}
-                </span>
-              <span>Username</span>
+              </span>
+              <span>{name}</span>
             </a>
             <div className="dropdown-menu">
               <a className="dropdown-item" href="/hive_hrm/app/employees/employee-profile">My Profile</a>
-              <a className="dropdown-item" href="/hive_hrm/settings/companysetting">Settings</a>
-              <a className="dropdown-item" href="/hive_hrm/login">Logout</a>
+              {/* <a className="dropdown-item" href="/hive_hrm/settings/companysetting">Settings</a> */}
+              {/* <a className="dropdown-item" href="/hive_hrm/logout">Logout</a> */}
+              <button className="dropdown-item" onClick={() => logout()} >Logout</button>
+
             </div>
-          </li>
-        </ul>
-        {/* /Header Menu */}
-        {/* Mobile Menu */}
-        <div className="dropdown mobile-user-menu">
-          <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fa fa-ellipsis-v" /></a>
-          <div className="dropdown-menu dropdown-menu-right">
-            <a className="dropdown-item" href="/hive_hrm/app/employees/employee-profile">My Profile</a>
-            <a className="dropdown-item" href="/hive_hrm/settings/companysetting">Settings</a>
-            <a className="dropdown-item" href="/hive_hrm/login">Logout</a>
-          </div>
+          </li> : <li />}
+      </ul>
+      {/* /Header Menu */}
+      {/* Mobile Menu */}
+      {name && <div className="dropdown mobile-user-menu">
+        <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fa fa-ellipsis-v" /></a>
+        <div className="dropdown-menu dropdown-menu-right">
+          <a className="dropdown-item" href="/hive_hrm/app/employees/employee-profile">My Profile</a>
+          {/* <a className="dropdown-item" href="/hive_hrm/settings/companysetting">Settings</a> */}
+          <button className="dropdown-item" onClick={() => logout()} >Logout</button>
         </div>
-        {/* /Mobile Menu */}
-      </div>
-       
-      );
-   }
+      </div>}
+      {/* /Mobile Menu */}
+    </div>
+
+  );
 }
+
 
 export default withRouter(Header);

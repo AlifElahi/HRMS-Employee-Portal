@@ -1,4 +1,4 @@
-const publicPath = '/hive_hrm';
+const publicPath = '/hive_hrm/';
 
 export const routeCodes = {
   HOME: publicPath,

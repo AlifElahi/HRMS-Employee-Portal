@@ -4736,10 +4736,14 @@ html.menu-opened body {
     border-radius: 4px;
     margin-bottom: 20px;
     padding: 10px 15px;
+	display: flex;
+	flex-direction: row;
 }
 .punch-det h6 {
     line-height: 20px;
     margin-bottom: 0;
+	/* padding-left: 2px; */
+	padding-right: 2px;
 }
 .punch-det p {
     color: #727272;
@@ -4751,7 +4755,7 @@ html.menu-opened body {
 }
 .punch-info-dash {
 	margin-bottom: 25px;
-	margin-top: 30px;
+	margin-top: 25px;
 }
 .punch-hours {
     align-items: center;
@@ -4766,8 +4770,8 @@ html.menu-opened body {
     width: 120px;
 }
 .punch-btn-section-dash {
-    margin-bottom: 40px;
-    margin-top: 35px;
+    margin-bottom: 30px;
+    margin-top: 30px;
     text-align: center;
 }
 .punch-btn-section {

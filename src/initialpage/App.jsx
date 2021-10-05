@@ -20,6 +20,7 @@ import Settinglayout from './Sidebar/Settinglayout';
 // import 'Assets/css/font-awesome.min.css';
 
 import $ from 'jquery';
+import LogoutPage from './logout';
 // window.jQuery = $;
 // window.$ = $;
 // import UserPage from './pages/UserPage'
@@ -65,8 +66,9 @@ export default class App extends Component {
         }
         return (
             <Switch>
-                {/* <Route path="/login" component={LoginPage} />
-                    <Route path="/forgotpassword" component={ForgotPassword} />
+                 <Route path="/logout" component={LogoutPage} />
+                 <Route path="/login" component={LoginPage} />
+                {/*    <Route path="/forgotpassword" component={ForgotPassword} />
                     <Route path="/register" component={RegistrationPage} />
                     <Route path="/otp" component={OTP} />
                     <Route path="/lockscreen" component={LockScreen} /> */}

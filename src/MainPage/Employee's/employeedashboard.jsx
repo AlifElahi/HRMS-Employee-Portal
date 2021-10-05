@@ -1,21 +1,25 @@
-/**
- * Signin Firebase
- */
 
-import React, {useState,useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import { useReactOidc } from '@axa-fr/react-oidc-context';
+import dateFormat from "dateformat";
 import { Avatar_02, Avatar_04, Avatar_05, Avatar_07, Avatar_08, Avatar_09 } from '../../Entryfile/imagepath.jsx'
-// import '../../assets/css/empdashstyle.css'
-import {UserData} from '../../auth/clasess/Userdata'
-export default function EmployeeDashboard() {
-  let date=new Date()
-  let day=`${date.getDate()} ${date.getMonth()} ${date.getFullYear()}`
+// import {UserData} from '../../auth/clasess/Userdata'
+import { useReactOidc } from '@axa-fr/react-oidc-context';
+
+import { getPunchcardInfo, punchTimeLog } from '../../Services/dashBoardServices.js';
+import Punchcard from './components/Punchcard.jsx';
+
+const EmployeeDashboard = () => {
+
+  let date = new Date()
+  let day = dateFormat(date, "dddd, mmmm dS, yyyy, h:MM TT");
 
   const [dt, setDt] = useState(day);
-  const profile = new UserData().getProfile();
-  
+  const { oidcUser } = useReactOidc();
+  const { profile } = oidcUser
 
+
+ 
   let arr = [1, 2, 3, 5, 6, 7];
   return (
 
@@ -34,6 +38,7 @@ export default function EmployeeDashboard() {
               </div>
               <div className="welcome-det">
                 <h3>{`Welcome,${profile.first_name}`}</h3>
+                {/* <h3>{`Welcome`}</h3> */}
                 {/* <p>Monday, 20 May 2019</p> */}
                 <p>{dt}</p>
               </div>
@@ -42,39 +47,45 @@ export default function EmployeeDashboard() {
         </div>
         <div className="row">
           <div className="col-md-6">
-            <div className="card punch-status" style={{ height: 485 }}>
+            {/* <div className="card punch-status" style={{ height: 485 }}>
               <div className="card-body">
-                <h5 className="card-title">Timesheet <small className="text-muted">{dt}</small></h5>
+                <h5 className="card-title">Timesheet <small className="text-muted"></small></h5>
                 <div className="punch-det">
-                  <h6>Punch In at</h6>
-                  <p>Wed, 11th Mar 2019 10.00 AM</p>
+                  <h6>First {punchStatus} at</h6>
+                  <p>{typeof (firstIn) === 'string' ? firstIn : dateFormat(firstIn, "h:MM TT")}  </p>
+                </div>
+                <div className="punch-det">
+                  <h6>{lastactivity} at</h6>
+                  <p>{typeof (lastactivityTime) === 'string' ? lastactivityTime : dateFormat(lastactivityTime, "h:MM TT")}  </p>
                 </div>
                 <div className="punch-info-dash">
                   <div className="punch-hours">
-                    <span>3.45 hrs</span>
+                    <span>{timeDuration()}</span>
                   </div>
                 </div>
                 <div className="punch-btn-section-dash">
-                  <button type="button" className="btn btn-primary punch-btn">Punch Out</button>
+                  <button type="button" className="btn btn-primary punch-btn" onClick={() => punch()} >{punchStatus == 'Punch in' ? 'Punch out' : 'Punch in'}</button>
                 </div>
                 <div className="statistics">
                   <div className="row">
-                    <div className="col-md-6 col-6 text-center">
+                    {/* <div className="col-md-6 col-6 text-center">
                       <div className="stats-box">
                         <p>Break</p>
                         <h6>1.21 hrs</h6>
                       </div>
-                    </div>
-                    <div className="col-md-6 col-6 text-center">
+                    </div> 
+                    <div className="col-md-12 col-12 text-center">
                       <div className="stats-box">
                         <p>Overtime</p>
-                        <h6>3 hrs</h6>
+                        <h6>{overtime()}</h6>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
+            <Punchcard />
+
           </div>
           <div className="col-md-6">
             <div className="dash-sidebar">
@@ -124,4 +135,4 @@ export default function EmployeeDashboard() {
 }
 
 
-
+export default EmployeeDashboard
