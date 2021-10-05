@@ -62,7 +62,7 @@ export default class App extends Component {
         // }
         // }
         if (location.pathname === '/') {
-            return (<Redirect to={'app/employees/employee-dashboard'} />);
+            return (<Redirect to={'/login'} />);
         }
         return (
             <Switch>
