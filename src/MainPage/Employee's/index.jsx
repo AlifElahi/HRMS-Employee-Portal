@@ -18,7 +18,7 @@ import EmployeeProfile from './employeeprofile';
 
 const EmployeesRoute1 = ({ match }) => (
    <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/allemployees`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/employee-dashboard`} />
       <Route path={`${match.url}/allemployees`} component={withOidcSecure(AllEmployees)} />
       <Route path={`${match.url}/leaves-employee`} component={withOidcSecure(LeaveEmployee)} />
       <Route path={`${match.url}/attendance-employee`} component={withOidcSecure(AttendanceEmployee)} />

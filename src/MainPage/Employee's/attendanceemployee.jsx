@@ -74,8 +74,7 @@ const Attendance = () => {
   ];
 
   useEffect(() => {
-    let yearlength = new Date().getFullYear() - 2020 + 1
-    setyearLen(yearlength)
+    // let yearlength = new Date().getFullYear() - 2020 + 1
     onSearch();
   }, [])
 
@@ -164,7 +163,6 @@ const Attendance = () => {
         </div>
         {/* Search Filter */}
         <div className="row filter-row">
-          {/* <form> */}
           <div className="col-sm-4" >
             <div className="form-group form-focus select-focus">
               <Select

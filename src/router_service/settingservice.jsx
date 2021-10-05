@@ -3,7 +3,7 @@ import Companysettings from './../MainPage/Administration/Settings/companysettin
 import Themesettings from '../MainPage/Administration/Settings/themesetting';
 import Rolepermission from '../MainPage/Administration/Settings/rolespermission';
 import Emailsettings from '../MainPage/Administration/Settings/emailsetting';
-// import Localization from './../MainPage/Administration/settings/localization';
+import Localization from '../MainPage/Administration/Settings/localizationfile';
 import Invoicesettings from '../MainPage/Administration/Settings/invoicesetting';
 import Salarysettings from '../MainPage/Administration/Settings/salarysetting';
 import Notification from '../MainPage/Administration/Settings/notification';
@@ -19,10 +19,10 @@ export default [
       path: 'companysetting',
       component: Companysettings
    },
-   // {
-   //    path: 'localization',
-   //    component: Localization
-   // },
+   {
+      path: 'localization',
+      component: Localization
+   },
    {
       path: 'theme-settings',
       component: Themesettings

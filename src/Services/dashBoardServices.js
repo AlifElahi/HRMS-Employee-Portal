@@ -13,10 +13,8 @@ export const getPunchcardInfo = async (token) => {
                 }
 
             })
-        console.log(res);
         return res.data
     } catch (error) {
-        console.log(error);
         return error
     }
 
@@ -53,12 +51,12 @@ export const getMothSpecificUserTimeSheet = async (month, year, token) => {
                 }
 
             })
-            console.log(res.data);
+        if (res.data.length === 0) return res.data
         let dataArr = await monthSpecifictiemSheetdataFormater(res.data)
 
         return dataArr
     } catch (error) {
-       
+
 
 
         return error
