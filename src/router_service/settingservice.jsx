@@ -1,9 +1,9 @@
 
-import Companysettings from '../MainPage/Administration/Settings/companysettings';
+import Companysettings from './../MainPage/Administration/Settings/companysettings';
 import Themesettings from '../MainPage/Administration/Settings/themesetting';
 import Rolepermission from '../MainPage/Administration/Settings/rolespermission';
 import Emailsettings from '../MainPage/Administration/Settings/emailsetting';
-import Localization from '../MainPage/Administration/settings/localization';
+// import Localization from './../MainPage/Administration/settings/localization';
 import Invoicesettings from '../MainPage/Administration/Settings/invoicesetting';
 import Salarysettings from '../MainPage/Administration/Settings/salarysetting';
 import Notification from '../MainPage/Administration/Settings/notification';
@@ -14,16 +14,15 @@ import PerformanceSetting from '../MainPage/Administration/Settings/performances
 import Toxboxsetting from '../MainPage/Administration/Settings/toxboxsetting';
 import CronSetting from '../MainPage/Administration/Settings/cronsetting';
 
-
 export default [  
    {
       path: 'companysetting',
       component: Companysettings
    },
-   {
-      path: 'localization',
-      component: Localization
-   },
+   // {
+   //    path: 'localization',
+   //    component: Localization
+   // },
    {
       path: 'theme-settings',
       component: Themesettings
