@@ -1,12 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from "react-helmet";
 import dateFormat from "dateformat";
 import { Avatar_02, Avatar_04, Avatar_05, Avatar_07, Avatar_08, Avatar_09 } from '../../Entryfile/imagepath.jsx'
-// import {UserData} from '../../auth/clasess/Userdata'
 import { useReactOidc } from '@axa-fr/react-oidc-context';
-
-import { getPunchcardInfo, punchTimeLog } from '../../Services/dashBoardServices.js';
 import Punchcard from './components/Punchcard.jsx';
 
 const EmployeeDashboard = () => {

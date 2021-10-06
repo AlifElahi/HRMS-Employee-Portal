@@ -46,6 +46,7 @@ const MainApp = () => (
       // authenticating={Loading}
       configuration={oidcConfiguration}
       // loggerLevel={oidcLog.DEBUG}
+      // isEnabled={false}
       // callbackComponentOverride={Loading}
       UserStore={LocalWebStorage}
     >
