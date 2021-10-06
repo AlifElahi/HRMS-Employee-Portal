@@ -5,8 +5,8 @@ import dateFormat from "dateformat";
 
 export const monthSpecifictiemSheetdataFormater = async (data) => {
     const objmaker=(x,idx)=>{
-        let dd = `${x.date},${x.check_in[0].time}`
-        let dw = x.check_out.length?`${x.date},${x.check_out[x.check_out.length - 1].time}`:""
+        let dd = `${x.date}T${x.check_in[0].time}`
+        let dw = x.check_out.length?`${x.date}T${x.check_out[x.check_out.length - 1].time}`:""
         let datedd = new Date(dd)
         let dateww = dw!==""?new Date(dw):new Date()
         let pi = dateFormat(datedd, "h:MM TT");

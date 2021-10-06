@@ -20,7 +20,6 @@ const Punchcard = () => {
     let w = response.last_activity.activity ? response.last_activity.activity == 'punch_in' ? 'Punch out' : 'Punch in' : 'Punch in'
     let lastActivityTime = response.last_activity.activity ? `${response.date}T${response.last_activity.time}` : ''
     let fistcheckin = response.last_activity.activity ? `${response.date}T${response.first_punch_in}` : ''
-    console.log(fistcheckin,new Date(fistcheckin));
     if (response.last_activity.activity) {
       let r = response.last_activity.activity == 'punch_in' ? 'Punch in' : 'Punch out'
       setLastActivity(r)
