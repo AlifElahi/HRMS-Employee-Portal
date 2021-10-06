@@ -46,7 +46,7 @@ const Punchcard = () => {
     if (typeof (firstIn) === 'object' &&typeof (lastactivityTime) === 'object' && lastactivity == 'Punch out') {
       const hours = parseInt(Math.abs(lastactivityTime - firstIn) / (1000 * 60 * 60) % 24);
       const minutes = parseInt(Math.abs(lastactivityTime.getTime() - firstIn.getTime()) / (1000 * 60) % 60);
-      let duration = `${hours}.${minutes} hrs`
+      let duration = `${hours}:${minutes} hrs`
       return duration
 
     }
