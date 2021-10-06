@@ -47,7 +47,7 @@ const EmployeeDashboard = () => {
         </div>
         <div className="row">
           <div className="col-md-6">
-            {/* <Punchcard /> */}
+             <Punchcard /> 
 
           </div>
           <div className="col-md-6">
