@@ -1,10 +1,6 @@
-/**
- * TermsCondition Page
- */
-import React, { Component } from 'react';
+import React from 'react';
 import { Helmet } from "react-helmet";
 import { Avatar_02, Avatar_05, Avatar_09, Avatar_10, Avatar_16 } from '../../Entryfile/imagepath'
-// import { userInfo } from '../../Services/Helper';
 import { useReactOidc } from '@axa-fr/react-oidc-context';
 
 

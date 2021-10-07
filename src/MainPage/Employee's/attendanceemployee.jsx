@@ -1,13 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
-import { getMothSpecificUserTimeSheet } from '../../Services/dashBoardServices';
+import { getCurrentMonthtats, getMothSpecificUserTimeSheet } from '../../Services/dashBoardServices';
 import Punchcard from './components/Punchcard';
 import { useReactOidc } from '@axa-fr/react-oidc-context';
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
 import Select from 'react-select';
 import AttendancestatCard from './components/attendancestatCard';
+import { makeMonthStats, makeMonthStatsDataFormater } from '../../Services/Helper';
 
 
 const Attendance = () => {
@@ -32,11 +33,12 @@ const Attendance = () => {
   })
   const { oidcUser } = useReactOidc();
   const toDay = new Date();
-  const [selectedMonth, setMonth] = useState(toDay.getMonth()+1);
+  const [selectedMonth, setMonth] = useState(toDay.getMonth() + 1);
   const [selectedMonthoption, setMonthoption] = useState(monthOptions[toDay.getMonth()]);
   const [selectedYearoption, setYearoption] = useState({ value: toDay.getFullYear(), label: toDay.getFullYear() });
   const [selectedYear, setYear] = useState(toDay.getFullYear());
   const [dataSource, setData] = useState([]);
+  const [statData,setStatData]=useState('')
 
   const customStyles = {
     control: base => ({
@@ -77,10 +79,17 @@ const Attendance = () => {
   useEffect(() => {
     // let yearlength = new Date().getFullYear() - 2020 + 1
     onSearch();
+    getStatData();
+
   }, [])
 
 
+const getStatData=async()=>{
+  let res = await getCurrentMonthtats(oidcUser.access_token)
+  let o = await makeMonthStatsDataFormater(res)
+  setStatData(o)
 
+} 
 
   function handleChangeMonth(event) {
     setMonth(event.value)
@@ -123,7 +132,28 @@ const Attendance = () => {
             <Punchcard />
           </div>
           <div className="col-md-6">
-         <AttendancestatCard/>
+            <div className="dash-sidebar">
+              <section>
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">Late Entry</h5>
+                    <div className="time-list">
+                      <div className="dash-stats-list">
+                        <h4>3</h4>
+                        <p>Late</p>
+                      </div>
+                      <div className="dash-stats-list">
+                        <h4>4</h4>
+                        <p>Allowed</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section>
+                <AttendancestatCard  data={statData}/>
+              </section>
+            </div>
           </div>
         </div>
         {/* Search Filter */}
@@ -144,7 +174,6 @@ const Attendance = () => {
           <div className="col-sm-4">
             <div className="form-group form-focus select-focus">
               <Select
-              
                 classNamePrefix="select"
                 styles={customStyles}
                 value={selectedYearoption}

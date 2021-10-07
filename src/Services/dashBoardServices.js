@@ -37,6 +37,28 @@ export const punchTimeLog = async (type, token) => {
     }
 
 }
+export const getCurrentMonthtats = async (token) => {
+
+    try {
+        let res = await axios.get(`https://timesheet.hivecorelimited.com/attendance/statistics/`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+
+            })
+
+
+        return res.data
+    } catch (error) {
+
+
+
+        return error
+
+    }
+
+}
 export const getMothSpecificUserTimeSheet = async (month, year, token) => {
 
     try {
@@ -53,7 +75,6 @@ export const getMothSpecificUserTimeSheet = async (month, year, token) => {
             })
         if (res.data.length === 0) return res.data
         let dataArr = await monthSpecifictiemSheetdataFormater(res.data)
-
         return dataArr
     } catch (error) {
 

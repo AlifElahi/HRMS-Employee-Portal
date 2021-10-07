@@ -4789,7 +4789,7 @@ html.menu-opened body {
 	margin-bottom: 0;
 }
 .stats-list {
-	height: 331px;
+	height: auto;
 	overflow-y: auto;
 }
 .att-statistics .stats-info {
