@@ -9,6 +9,7 @@ const EmployeeProfile = () => {
 
   const { oidcUser } = useReactOidc();
   const  userInfo  = oidcUser.profile
+  console.log(userInfo);
 
   return (
     <div className="page-wrapper">
@@ -155,7 +156,7 @@ const EmployeeProfile = () => {
                       {/* <a href="#" className="edit-icon" data-toggle="modal" data-target="#emergency_contact_modal"><i className="fa fa-pencil" /></a> */}
                     </h3>
                     {/* <h5 className="section-title">Primary</h5> */}
-                    {userInfo.emergency_contacts.map((x, idx) =>
+                    {userInfo.emergency_contacts?userInfo.emergency_contacts.length>0?userInfo.emergency_contacts.map((x, idx) =>
                       <ul className="personal-info" key={`contact-${idx}`}>
                         <li>
                           <div className="title">Name</div>
@@ -170,7 +171,24 @@ const EmployeeProfile = () => {
                           <div className="text">{x.phone}</div>
                         </li>
                         <hr />
-                      </ul>)}
+                      </ul>)
+                      :
+                      <ul className="personal-info" >
+                        <li>
+                          <div className="title">Name</div>
+                          <div className="text">{userInfo.emergency_contacts.name}</div>
+                        </li>
+                        <li>
+                          <div className="title">Relationship</div>
+                          <div className="text">{userInfo.emergency_contacts.relation}</div>
+                        </li>
+                        <li>
+                          <div className="title">Phone </div>
+                          <div className="text">{userInfo.emergency_contacts.phone}</div>
+                        </li>
+                        <hr />
+                      </ul>:<ul/>
+                      }
                     {/* <hr /> */}
                     {/* <h5 className="section-title">Secondary</h5> */}
                   </div>
