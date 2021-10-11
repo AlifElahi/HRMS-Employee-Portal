@@ -54,11 +54,11 @@ const Punchcard = () => {
       const newday = new Date()
       const hours = parseInt(Math.abs(newday - firstIn) / (1000 * 60 * 60) % 24);
       const minutes = parseInt(Math.abs(newday.getTime() - firstIn.getTime()) / (1000 * 60) % 60);
-      let duration = `${hours}.${minutes} hrs`
+      let duration = `${hours}:${minutes} hrs`
       return duration
 
     }
-    return '0.0 hrs'
+    return '0:0 hrs'
 
   }
   const overtime = () => {
@@ -72,7 +72,7 @@ const Punchcard = () => {
         overtimeHr = hours - 7
         overtimemin = minutes
       }
-      return `${overtimeHr}.${overtimemin} hrs`
+      return `${overtimeHr}:${overtimemin} hrs`
 
     }
     if (typeof (firstIn) === 'object' && lastactivity == 'Punch in') {
@@ -83,10 +83,10 @@ const Punchcard = () => {
         overtimeHr = hours - 7
         overtimemin = minutes
       }
-      return `${overtimeHr}.${overtimemin} hrs`
+      return `${overtimeHr}:${overtimemin} hrs`
 
     }
-    return '0.0 hrs'
+    return '0:0 hrs'
 
   }
 
@@ -95,13 +95,14 @@ const Punchcard = () => {
         <div className="card-body">
           <h5 className="card-title">Timesheet <small className="text-muted"></small></h5>
           <div className="punch-det">
-            <h6>{punchStatus&& `First Punch in at `}</h6>
+            <h6>{`First Punch in at:`}</h6>
             <p>{typeof (firstIn) === 'string' ? firstIn : dateFormat(firstIn, "h:MM TT")}  </p>
           </div>
-          <div className="punch-det">
-            <h6>{lastactivity&& ` Last activity: ${lastactivity} at `}</h6>
+          <div className="punch-det" >
+            <h6>{lastactivity? ` Last activity: ${lastactivity} at `:"Last activity:"}</h6>
             <p>{typeof (lastactivityTime) === 'string' ? lastactivityTime : dateFormat(lastactivityTime, "h:MM TT")}  </p>
           </div>
+         
           <div className="punch-info-dash">
             <div className="punch-hours">
               <span>{timeDuration()}</span>

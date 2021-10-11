@@ -1,15 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { Avatar_02, Avatar_05, Avatar_09, Avatar_10, Avatar_16 } from '../../Entryfile/imagepath'
 import { useReactOidc } from '@axa-fr/react-oidc-context';
+import { useHistory, useParams } from 'react-router';
+import axios from "axios";
+
 
 
 const EmployeeProfile = () => {
-
-
+  let history = useHistory();
+  const { id } = useParams()
   const { oidcUser } = useReactOidc();
-  const  userInfo  = oidcUser.profile
-  console.log(userInfo);
+  const [userInfo, setUserInfo] = useState({})
+  // const userInfo=oidcUser.profile
+
+  useEffect(() => {
+    ff()
+    return ()=>{}
+  }, [])
+
+  const ff = async () => {
+    let data = id ? await getEmpData() : oidcUser.profile
+    setUserInfo(data)
+  }
+
+
+  const getEmpData = async () => {
+    try {
+      let res = await axios.get(`https://sso.hivecorelimited.com/users/${id}/`,
+        {
+
+          headers: {
+            'Authorization': `Bearer ${oidcUser.access_token}`
+          }
+
+        })
+      console.log(res.data);
+      return res.data
+
+    } catch (error) {
+      console.log(error);
+      history.push('/app/employees/allemployees')
+    }
+
+  }
 
   return (
     <div className="page-wrapper">
@@ -65,10 +99,10 @@ const EmployeeProfile = () => {
                             <div className="title">Birthday:</div>
                             <div className="text">{userInfo.birthday}</div>
                           </li>
-                          <li>
+                          {!id && <li>
                             <div className="title">Address:</div>
                             <div className="text">{userInfo.address}, {userInfo.postal_code}</div>
-                          </li>
+                          </li>}
                           <li>
                             <div className="title">Gender:</div>
                             <div className="text">{userInfo.gender}</div>
@@ -120,10 +154,10 @@ const EmployeeProfile = () => {
                       {/* <a href="#" className="edit-icon" data-toggle="modal" data-target="#personal_info_modal"><i className="fa fa-pencil" /></a> */}
                     </h3>
                     <ul className="personal-info">
-                      <li>
+                      {!id && <li>
                         <div className="title">Citzen Id</div>
                         <div className="text">{userInfo.citizen_id}</div>
-                      </li>
+                      </li>}
                       <li>
                         <div className="title">Tel</div>
                         <div className="text"><a href="">{userInfo.phone}</a></div>
@@ -140,10 +174,10 @@ const EmployeeProfile = () => {
                         <div className="title">Marital status</div>
                         <div className="text">{userInfo.maritial_status}</div>
                       </li>
-                      <li>
+                      {!id && <li>
                         <div className="title">No. of children</div>
                         <div className="text">{userInfo.no_of_children}</div>
-                      </li>
+                      </li>}
                     </ul>
                   </div>
                 </div>
@@ -156,39 +190,41 @@ const EmployeeProfile = () => {
                       {/* <a href="#" className="edit-icon" data-toggle="modal" data-target="#emergency_contact_modal"><i className="fa fa-pencil" /></a> */}
                     </h3>
                     {/* <h5 className="section-title">Primary</h5> */}
-                    {userInfo.emergency_contacts?userInfo.emergency_contacts.length>0?userInfo.emergency_contacts.map((x, idx) =>
-                      <ul className="personal-info" key={`contact-${idx}`}>
-                        <li>
-                          <div className="title">Name</div>
-                          <div className="text">{x.name}</div>
-                        </li>
-                        <li>
-                          <div className="title">Relationship</div>
-                          <div className="text">{x.relation}</div>
-                        </li>
-                        <li>
-                          <div className="title">Phone </div>
-                          <div className="text">{x.phone}</div>
-                        </li>
-                        <hr />
-                      </ul>)
-                      :
-                      <ul className="personal-info" >
-                        <li>
-                          <div className="title">Name</div>
-                          <div className="text">{userInfo.emergency_contacts.name}</div>
-                        </li>
-                        <li>
-                          <div className="title">Relationship</div>
-                          <div className="text">{userInfo.emergency_contacts.relation}</div>
-                        </li>
-                        <li>
-                          <div className="title">Phone </div>
-                          <div className="text">{userInfo.emergency_contacts.phone}</div>
-                        </li>
-                        <hr />
-                      </ul>:<ul/>
+                    {!!!id ? <div>
+                      {userInfo.emergency_contacts ? userInfo.emergency_contacts.length > 0 ? userInfo.emergency_contacts.map((x, idx) =>
+                        <ul className="personal-info" key={`contact-${idx}`}>
+                          <li>
+                            <div className="title">Name</div>
+                            <div className="text">{x.name}</div>
+                          </li>
+                          <li>
+                            <div className="title">Relationship</div>
+                            <div className="text">{x.relation}</div>
+                          </li>
+                          <li>
+                            <div className="title">Phone </div>
+                            <div className="text">{x.phone}</div>
+                          </li>
+                          <hr />
+                        </ul>)
+                        :
+                        <ul className="personal-info" >
+                          <li>
+                            <div className="title">Name</div>
+                            <div className="text">{userInfo.emergency_contacts.name}</div>
+                          </li>
+                          <li>
+                            <div className="title">Relationship</div>
+                            <div className="text">{userInfo.emergency_contacts.relation}</div>
+                          </li>
+                          <li>
+                            <div className="title">Phone </div>
+                            <div className="text">{userInfo.emergency_contacts.phone}</div>
+                          </li>
+                          <hr />
+                        </ul> : <ul />
                       }
+                    </div> : <ul />}
                     {/* <hr /> */}
                     {/* <h5 className="section-title">Secondary</h5> */}
                   </div>

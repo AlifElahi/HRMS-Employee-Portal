@@ -23,7 +23,7 @@ const EmployeesRoute1 = ({ match }) => (
       <Route path={`${match.url}/leaves-employee`} component={withOidcSecure(LeaveEmployee)} />
       <Route path={`${match.url}/attendance-employee`} component={withOidcSecure(AttendanceEmployee)} />
       <Route path={`${match.url}/employee-dashboard`} component={withOidcSecure(EmployeeDashboard)} />
-      <Route path={`${match.url}/employee-profile`} component={withOidcSecure(EmployeeProfile)} />
+      <Route path={`${match.url}/employee-profile/:id?`} component={withOidcSecure(EmployeeProfile)} />
    </Switch>
 );
 

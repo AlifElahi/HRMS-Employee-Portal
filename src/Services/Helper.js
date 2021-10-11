@@ -69,3 +69,22 @@ export const makeMonthStatsDataFormater = async (data) => {
   
 }
 
+export const getEmployeeList = async (token) => {
+
+    try {
+        let res = await axios.get('https://sso.hivecorelimited.com/users',
+            {
+                
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+
+            })
+
+        return res.data
+    } catch (error) {
+        return error
+
+    }
+
+}

@@ -1,18 +1,64 @@
 
-import React, { Component } from 'react';
+import { useReactOidc } from '@axa-fr/react-oidc-context';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import { Avatar_01,Avatar_02,Avatar_03,Avatar_04,Avatar_05,Avatar_11, Avatar_12,Avatar_09,
-    Avatar_10, Avatar_08,Avatar_13,Avatar_16 } from"../../Entryfile/imagepath"
+import axios from "axios";
+import {
+  Avatar_01, Avatar_02, Avatar_03, Avatar_04, Avatar_05, Avatar_11, Avatar_12, Avatar_09,
+  Avatar_10, Avatar_08, Avatar_13, Avatar_16
+} from "../../Entryfile/imagepath"
+import { Link ,useHistory} from 'react-router-dom';
+// import { punchTimeLog } from '../../Services/dashBoardServices';
 
-class Employee extends Component {
-   render() {
-      return ( 
-        
-      <div className="page-wrapper">
-        <Helmet>
-            <title>Employee - HRMS Admin Template</title>
-            <meta name="description" content="Login page"/>					
-        </Helmet>
+const Employee = () => {
+
+  let history=useHistory();
+  const { oidcUser } = useReactOidc();
+  const [allemplist, setAllempList] = useState([])
+  const [rendemplist, setrendempList] = useState([])
+
+  useEffect(() => {
+    getEmpList(oidcUser.access_token);
+  }, [])
+
+
+  const getEmpList = async (token) => {
+
+    try {
+      let res = await axios.get('https://sso.hivecorelimited.com/users',
+        {
+
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+
+        })
+      console.log(res.data);
+      setAllempList(res.data)
+      setrendempList(res.data)
+
+
+    } catch (error) {
+      console.log(error);
+    }
+    // let data = await getEmployeeList(oidcUser.access_token)
+    // console.log(data);
+
+  }
+
+  const navigateToProfile = (id)=>{
+    history.push(`/app/employees/employee-profile/${id}`)
+  }
+
+
+
+  return (
+
+    <div className="page-wrapper">
+      <Helmet>
+        <title>Employee - zHRMS Admin Template</title>
+        <meta name="description" content="Login page" />
+      </Helmet>
       {/* Page Content */}
       <div className="content container-fluid">
         {/* Page Header */}
@@ -25,33 +71,33 @@ class Employee extends Component {
                 <li className="breadcrumb-item active">Employee</li>
               </ul>
             </div>
-            <div className="col-auto float-right ml-auto">
+            {/* <div className="col-auto float-right ml-auto">
               <a href="#" className="btn add-btn" data-toggle="modal" data-target="#add_employee"><i className="fa fa-plus" /> Add Employee</a>
               <div className="view-icons">
                 <a href="/hive_hrm/app/employee/allemployees" className="grid-view btn btn-link active"><i className="fa fa-th" /></a>
                 <a href="/hive_hrm/app/employee/employees-list" className="list-view btn btn-link"><i className="fa fa-bars" /></a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* /Page Header */}
         {/* Search Filter */}
         <div className="row filter-row">
-          <div className="col-sm-6 col-md-3">  
+          <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus">
               <input type="text" className="form-control floating" />
               <label className="focus-label">Employee ID</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3">  
+          <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus">
               <input type="text" className="form-control floating" />
               <label className="focus-label">Employee Name</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3"> 
+          <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus select-focus">
-              <select className="select floating"> 
+              <select className="select floating">
                 <option>Select Designation</option>
                 <option>Web Developer</option>
                 <option>Web Designer</option>
@@ -61,205 +107,35 @@ class Employee extends Component {
               <label className="focus-label">Designation</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3">  
-            <a href="#" className="btn btn-success btn-block"> Search </a>  
+          <div className="col-sm-6 col-md-3">
+            <a href="#" className="btn btn-success btn-block"> Search </a>
           </div>
         </div>
         {/* Search Filter */}
-        <div className="row staff-grid-row">
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_02} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
+        {rendemplist.length ?
+          <div className="row staff-grid-row">
+            {rendemplist.map((x, _idx) =>
+              <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3"key={x.id} onClick={()=>navigateToProfile(x.id)} >
+                {/* <Link to={`/app/employees/employee-profile/${x.id}`} > */}
+                <div className="profile-widget">
+                  <div className="profile-img">
+                    <div  className="avatar"><img src={Avatar_02} alt="" /></div>
+                  </div>
+                  {/* <div className="dropdown profile-action">
+                    <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
+                    <div className="dropdown-menu dropdown-menu-right">
+                      <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
+                      <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
+                    </div>
+                  </div> */}
+                  <h4 className="user-name m-t-10 mb-0 text-ellipsis">{x.full_name}</h4>
+                  <div className="small text-muted">{x.designation}</div>
+
                 </div>
+                {/* </Link> */}
               </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">John Doe</a></h4>
-              <div className="small text-muted">Web Designer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_09} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Richard Miles</a></h4>
-              <div className="small text-muted">Web Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_10} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">John Smith</a></h4>
-              <div className="small text-muted">Android Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_05} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Mike Litorus</a></h4>
-              <div className="small text-muted">IOS Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_11} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Wilmer Deluna</a></h4>
-              <div className="small text-muted">Team Leader</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_12} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Jeffrey Warden</a></h4>
-              <div className="small text-muted">Web Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_13} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Bernardo Galaviz</a></h4>
-              <div className="small text-muted">Web Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_01} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Lesley Grauer</a></h4>
-              <div className="small text-muted">Team Leader</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_16} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Jeffery Lalor</a></h4>
-              <div className="small text-muted">Team Leader</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_04} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Loren Gatlin</a></h4>
-              <div className="small text-muted">Android Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_03} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Tarah Shropshire</a></h4>
-              <div className="small text-muted">Android Developer</div>
-            </div>
-          </div>
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-            <div className="profile-widget">
-              <div className="profile-img">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img src={Avatar_08} alt="" /></a>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><a href="/hive_hrm/app/profile/employee-profile">Catherine Manseau</a></h4>
-              <div className="small text-muted">Android Developer</div>
-            </div>
-          </div>
-        </div>
+              )}
+          </div> : <div></div>}
       </div>
       {/* /Page Content */}
       {/* Add Employee Modal */}
@@ -311,13 +187,13 @@ class Employee extends Component {
                       <input className="form-control" type="password" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Employee ID <span className="text-danger">*</span></label>
                       <input type="text" className="form-control" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Joining Date <span className="text-danger">*</span></label>
                       <div className="cal-icon"><input className="form-control datetimepicker" type="text" /></div>
@@ -604,13 +480,13 @@ class Employee extends Component {
                       <input className="form-control" defaultValue="johndoe" type="password" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Employee ID <span className="text-danger">*</span></label>
                       <input type="text" defaultValue="FT-0001" readOnly className="form-control floating" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Joining Date <span className="text-danger">*</span></label>
                       <div className="cal-icon"><input className="form-control datetimepicker" type="text" /></div>
@@ -874,8 +750,8 @@ class Employee extends Component {
       </div>
       {/* /Delete Employee Modal */}
     </div>
-        );
-   }
+  );
+
 }
 
 export default Employee;

@@ -5,6 +5,7 @@ import dateFormat from "dateformat";
 import { Avatar_02, Avatar_04, Avatar_05, Avatar_07, Avatar_08, Avatar_09 } from '../../Entryfile/imagepath.jsx'
 import { useReactOidc } from '@axa-fr/react-oidc-context';
 import Punchcard from './components/Punchcard.jsx';
+import { Link } from 'react-router-dom';
 
 const EmployeeDashboard = () => {
 
@@ -12,11 +13,10 @@ const EmployeeDashboard = () => {
   let day = dateFormat(date, "dddd, mmmm dS, yyyy, h:MM TT");
 
   const [dt, setDt] = useState(day);
+  const [leavesToApprove, setleavesToApprove] = useState(true);
   const { oidcUser } = useReactOidc();
   const { profile } = oidcUser
 
-
- 
   let arr = [1, 2, 3, 5, 6, 7];
   return (
 
@@ -44,11 +44,17 @@ const EmployeeDashboard = () => {
         </div>
         <div className="row">
           <div className="col-md-6">
-             <Punchcard /> 
+            <Punchcard />
 
           </div>
           <div className="col-md-6">
             <div className="dash-sidebar">
+              {/* <section>
+                
+                <Link to = '/attendance-employee'>
+              <button className="btn btn-success btn-block" disabled={true}> Leave to approve </button>
+              </Link>
+                </section> */}
               <section>
                 <div className="card" style={{ height: 270 }}>
                   <div className="card-body">
@@ -65,6 +71,7 @@ const EmployeeDashboard = () => {
                   </div>
                 </div>
               </section>
+              {leavesToApprove?
               <section>
                 <div className="card">
                   <div className="card-body">
@@ -84,7 +91,47 @@ const EmployeeDashboard = () => {
                     </div>
                   </div>
                 </div>
-              </section>
+              </section>:
+              <section>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="card">
+                      <div className="card-body">
+                        <h5 className="card-title">Your Leave</h5>
+                        <div className="time-list">
+                          <div className="dash-stats-list">
+                            <h4>4.5</h4>
+                            <p>Leave Taken</p>
+                          </div>
+                          <div className="dash-stats-list">
+                            <h4>12</h4>
+                            <p>Remaining</p>
+                          </div>
+                        </div>
+                        <div className="request-btn">
+                          <a className="btn btn-primary" href="#">Apply Leave</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="card">
+                      <div className="card-body">
+                        <h5 className="card-title">Leaves to approve</h5>
+                        <div className="time-list">
+                          <div className="dash-stats-list">
+                            <h4>12</h4>
+                            <p>To Responde</p>
+                          </div>
+                        </div>
+                        <div className="request-btn">
+                          <a className="btn btn-primary" href="#">Leave approve</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>}
             </div>
           </div>
         </div>
