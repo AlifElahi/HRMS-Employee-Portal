@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 // We will create these two pages in a moment
 //Authendication
@@ -41,17 +41,28 @@ import LogoutPage from './logout';
 //             />}
 //    />;
 
-export default class App extends Component {
-    componentDidMount() {
+const App =(props) => {
+    // componentDidMount() {
+    //     if (location.pathname.includes("login") || location.pathname.includes("register") || location.pathname.includes("forgotpassword")
+    //         || location.pathname.includes("otp") || location.pathname.includes("lockscreen")) {
+    //         $('body').addClass('account-page');
+    //     } else if (location.pathname.includes("error-404") || location.pathname.includes("error-500")) {
+    //         $('body').addClass('error-page');
+    //     }
+    // }
+    const { location, match, user } = props;
+
+    // $('body').addClass('account-page');
+
+    useEffect(() => {
         if (location.pathname.includes("login") || location.pathname.includes("register") || location.pathname.includes("forgotpassword")
             || location.pathname.includes("otp") || location.pathname.includes("lockscreen")) {
             $('body').addClass('account-page');
         } else if (location.pathname.includes("error-404") || location.pathname.includes("error-500")) {
             $('body').addClass('error-page');
         }
-    }
-    render() {
-        const { location, match, user } = this.props;
+    }, [])
+   
 
 
         // if (location.pathname === '/') {
@@ -83,4 +94,4 @@ export default class App extends Component {
         )
     }
 
-}
+export default App

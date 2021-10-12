@@ -24,6 +24,7 @@
   "dependencies": {
     "@axa-fr/react-oidc-context": "^3.0.8",
     "@axa-fr/react-oidc-context-fetch": "^3.0.8",
+    "@emotion/react": "^11.4.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-regular-svg-icons": "^5.14.0",
@@ -61,6 +62,7 @@
     "react-scrollspy-nav": "^1.2.4",
     "react-select": "^5.0.0",
     "react-slick": "^0.27.7",
+    "react-spinners": "^0.11.0",
     "react-sticky": "^6.0.3",
     "react-sticky-box": "^0.9.3",
     "react-summernote": "^2.0.2",

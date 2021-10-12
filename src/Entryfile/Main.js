@@ -36,6 +36,8 @@ import "../assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css"
 import { AuthenticationProvider, oidcLog } from '@axa-fr/react-oidc-context';
 import oidcConfiguration from '../auth/configuration';
 import { LocalWebStorage } from '../auth/clasess/Store';
+import LoaderPage from '../MainPage/loader';
+
 
 
 
@@ -43,11 +45,11 @@ import { LocalWebStorage } from '../auth/clasess/Store';
 // console.log('sreevidsf '+" "+getBasename)
 const MainApp = () => (
    <AuthenticationProvider
-      // authenticating={Loading}
+      authenticating={LoaderPage}
       configuration={oidcConfiguration}
       // loggerLevel={oidcLog.DEBUG}
       // isEnabled={false}
-      // callbackComponentOverride={Loading}
+      callbackComponentOverride={LoaderPage}
       UserStore={LocalWebStorage}
     >
    <Router basename={`${config.publicPath}`}>

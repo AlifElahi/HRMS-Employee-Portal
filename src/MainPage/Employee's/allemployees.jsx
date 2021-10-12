@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 import axios from "axios";
 import Select from 'react-select';
 import {
-  Avatar_01, Avatar_02, Avatar_03, Avatar_04, Avatar_05, Avatar_11, Avatar_12, Avatar_09,
+  Avatar_01,Avatar_02, Avatar_03, Avatar_04, Avatar_05, Avatar_11, Avatar_12, Avatar_09,
   Avatar_10, Avatar_08, Avatar_13, Avatar_16
 } from "../../Entryfile/imagepath"
 import { Link, useHistory } from 'react-router-dom';
@@ -16,7 +16,6 @@ const Employee = () => {
 
   let history = useHistory();
   const { oidcUser } = useReactOidc();
-  const [allemplist, setAllempList] = useState([])
   const [rendemplist, setrendempList] = useState([])
   const [Desigs, setDesigs] = useState([])
   const [DesigOption, SetDesigoption] = useState({ value: "", label: 'Select Designation' })

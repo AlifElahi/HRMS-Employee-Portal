@@ -18,6 +18,7 @@ export const monthSpecifictiemSheetdataFormater = async (data) => {
       date: x.date,
       punch_in: pi,
       punch_out: po,
+      remark: x.is_late?"Late":"On time",
       production: prod,
       dif: dif
     }

@@ -39,6 +39,7 @@ const Attendance = () => {
   const [selectedYear, setYear] = useState(toDay.getFullYear());
   const [dataSource, setData] = useState([]);
   const [statData,setStatData]=useState('')
+  const [Latecount,setLateCount]=useState(0)
 
   const customStyles = {
     control: base => ({
@@ -60,6 +61,11 @@ const Attendance = () => {
       key: 'date',
     },
     {
+      title: 'Remark',
+      dataIndex: 'remark',
+      key: 'remark',
+    },
+    {
       title: 'Punch In',
       dataIndex: 'punch_in',
       key: 'punch_in',
@@ -77,7 +83,8 @@ const Attendance = () => {
   ];
 
   useEffect(() => {
-    onSearch();
+    // onSearch();
+    onFirstSearch();
     getStatData();
 
   }, [])
@@ -107,6 +114,21 @@ const getStatData=async()=>{
     setData([])
     setData(response)
   }
+  const onFirstSearch = async () => {
+    if (!(selectedMonth && selectedYear)) return
+    let month = selectedMonth;
+    let year = selectedYear;
+    let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token)
+    setData(response)
+    let count=response.reduce((total,x)=>{
+      if(x.remark==='Late')
+      return total + 1;
+      return total 
+    },0);
+    setLateCount(count)
+
+  }
+ 
 
 
   return (
@@ -138,7 +160,7 @@ const getStatData=async()=>{
                     <h5 className="card-title">Late Entry</h5>
                     <div className="time-list">
                       <div className="dash-stats-list">
-                        <h4>3</h4>
+                        <h4>{Latecount}</h4>
                         <p>Late</p>
                       </div>
                       <div className="dash-stats-list">
