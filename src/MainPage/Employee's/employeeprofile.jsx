@@ -4,8 +4,7 @@ import { Avatar_02, Avatar_05, Avatar_09, Avatar_10, Avatar_16 } from '../../Ent
 import { useReactOidc } from '@axa-fr/react-oidc-context';
 import { useHistory, useParams } from 'react-router';
 import axios from "axios";
-
-
+import Skeleton from 'react-loading-skeleton';
 
 const EmployeeProfile = () => {
   let history = useHistory();
@@ -77,8 +76,8 @@ const EmployeeProfile = () => {
                     <div className="row">
                       <div className="col-md-5">
                         <div className="profile-info-left">
-                          <h3 className="user-name m-t-0 mb-0">{userInfo.first_name}</h3>
-                          <h3 className="user-name m-t-0 mb-0">{userInfo.last_name}</h3>
+                          <h3 className="user-name m-t-0 mb-0">{userInfo.first_name||<Skeleton width={200} />}</h3>
+                          <h3 className="user-name m-t-0 mb-0">{userInfo.last_name||<Skeleton width={100} />}</h3>
                           <h6 className="text-muted">UI/UX Design Team [dummy]</h6>
                           <small className="text-muted">{userInfo.designation}</small>
                           <div className="staff-id">Employee ID : FT-0001[dummy]</div>
@@ -89,23 +88,23 @@ const EmployeeProfile = () => {
                         <ul className="personal-info">
                           <li>
                             <div className="title">Phone:</div>
-                            <div className="text"><a href="">{userInfo.phone}</a></div>
+                            <div className="text"><a href="">{userInfo.phone||<Skeleton width={250}/>}</a></div>
                           </li>
                           <li>
                             <div className="title">Email:</div>
-                            <div className="text"><a href="">{userInfo.email}</a></div>
+                            <div className="text"><a href="">{userInfo.email||<Skeleton width={250}/>}</a></div>
                           </li>
                           <li>
                             <div className="title">Birthday:</div>
-                            <div className="text">{userInfo.birthday}</div>
+                            <div className="text">{userInfo.birthday||<Skeleton width={250}/>}</div>
                           </li>
                           {!id && <li>
                             <div className="title">Address:</div>
-                            <div className="text">{userInfo.address}, {userInfo.postal_code}</div>
+                            <div className="text">{userInfo.address||<Skeleton width={250}/>}, {userInfo.postal_code}</div>
                           </li>}
                           <li>
                             <div className="title">Gender:</div>
-                            <div className="text">{userInfo.gender}</div>
+                            <div className="text">{userInfo.gender||<Skeleton width={250}/>}</div>
                           </li>
                           <li>
                             <div className="title">Reports to:</div>
@@ -115,7 +114,7 @@ const EmployeeProfile = () => {
                                   <img src={Avatar_16} alt="" />
                                 </div>
                               </div>
-                              <a href="/blue/app/profile/employee-profile">
+                              <a >
                                 Jeffery Lalor [dummy]
                               </a>
                             </div>
@@ -156,27 +155,27 @@ const EmployeeProfile = () => {
                     <ul className="personal-info">
                       {!id && <li>
                         <div className="title">Citzen Id</div>
-                        <div className="text">{userInfo.citizen_id}</div>
+                        <div className="text">{userInfo.citizen_id||<Skeleton width={250}/>}</div>
                       </li>}
                       <li>
                         <div className="title">Tel</div>
-                        <div className="text"><a href="">{userInfo.phone}</a></div>
+                        <div className="text"><a href="">{userInfo.phone||<Skeleton width={250}/>}</a></div>
                       </li>
                       <li>
                         <div className="title">Nationality</div>
-                        <div className="text">{userInfo.nationality}</div>
+                        <div className="text">{userInfo.nationality||<Skeleton width={250}/>}</div>
                       </li>
                       <li>
                         <div className="title">Religion</div>
-                        <div className="text">{userInfo.nationality}</div>
+                        <div className="text">{userInfo.nationality||<Skeleton width={250}/>}</div>
                       </li>
                       <li>
                         <div className="title">Marital status</div>
-                        <div className="text">{userInfo.maritial_status}</div>
+                        <div className="text">{userInfo.maritial_status||<Skeleton width={250}/>}</div>
                       </li>
                       {!id && <li>
                         <div className="title">No. of children</div>
-                        <div className="text">{userInfo.no_of_children}</div>
+                        <div className="text">{userInfo.no_of_children||<Skeleton width={250}/>}</div>
                       </li>}
                     </ul>
                   </div>

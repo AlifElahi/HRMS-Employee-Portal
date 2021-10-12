@@ -9,6 +9,8 @@ import {
   Avatar_10, Avatar_08, Avatar_13, Avatar_16
 } from "../../Entryfile/imagepath"
 import { Link, useHistory } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+
 // import { searchEmployee } from './empService';s
 // import { punchTimeLog } from '../../Services/dashBoardServices';
 
@@ -16,7 +18,7 @@ const Employee = () => {
 
   let history = useHistory();
   const { oidcUser } = useReactOidc();
-  const [rendemplist, setrendempList] = useState([])
+  const [rendemplist, setrendempList] = useState(new Array(8).fill({}))
   const [Desigs, setDesigs] = useState([])
   const [DesigOption, SetDesigoption] = useState({ value: "", label: 'Select Designation' })
   const [searchFilter, setSearch] = useState({
@@ -70,7 +72,6 @@ const getDesignations= async()=>{
           }
 
         })
-      setAllempList(res.data)
       setrendempList(res.data)
 
 
@@ -83,6 +84,7 @@ const getDesignations= async()=>{
   }
 
   const navigateToProfile = (id) => {
+    if(!id)return
     history.push(`/app/employees/employee-profile/${id}`)
   }
 
@@ -189,7 +191,7 @@ const getDesignations= async()=>{
         {rendemplist.length ?
           <div className="row staff-grid-row">
             {rendemplist.map((x, _idx) =>
-              <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3" key={x.id} onClick={() => navigateToProfile(x.id)} >
+              <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3" key={x.id||_idx} onClick={() => navigateToProfile(x.id)} >
                 {/* <Link to={`/app/employees/employee-profile/${x.id}`} > */}
                 <div className="profile-widget">
                   <div className="profile-img">
@@ -202,8 +204,8 @@ const getDesignations= async()=>{
                       <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
                     </div>
                   </div> */}
-                  <h4 className="user-name m-t-10 mb-0 text-ellipsis">{x.full_name}</h4>
-                  <div className="small text-muted">{x.designation}</div>
+                  <h4 className="user-name m-t-10 mb-0 text-ellipsis">{x.full_name||<Skeleton width={250}/>}</h4>
+                  <div className="small text-muted">{x.designation||<Skeleton width={150}/>}</div>
 
                 </div>
                 {/* </Link> */}
