@@ -77,7 +77,6 @@ const Attendance = () => {
   ];
 
   useEffect(() => {
-    // let yearlength = new Date().getFullYear() - 2020 + 1
     onSearch();
     getStatData();
 
