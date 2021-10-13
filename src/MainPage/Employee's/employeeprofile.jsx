@@ -154,7 +154,7 @@ const EmployeeProfile = () => {
                     </h3>
                     <ul className="personal-info">
                       {!id && userInfo.citizen_id && <li>
-                        <div className="title">Citzen Id</div>
+                        <div className="title">Citizen Id</div>
                         <div className="text">{userInfo.citizen_id || <Skeleton width={250} />}</div>
                       </li>}
                       <li>

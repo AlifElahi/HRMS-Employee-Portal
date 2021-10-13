@@ -87,7 +87,7 @@ const Employee = () => {
     let res = await searchEmployee(obj, oidcUser.access_token)
 
     if (!res.length) return
-    setrendempList(res.data)
+    setrendempList(res)
 
   }
 
@@ -121,13 +121,13 @@ const Employee = () => {
         <div className="row filter-row">
           <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus">
-              <input type="text" className="form-control floating" onChange={handleChangeId} />
+              <input type="text"  className="form-control floating" onChange={handleChangeId} />
               <label className="focus-label">Employee ID</label>
             </div>
           </div>
           <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus">
-              <input type="text" className="form-control floating" name="empName" onChange={handleChangeName} />
+              <input type="text" className="form-control floating"  name="empName" onChange={handleChangeName} />
               <label className="focus-label">Employee Name</label>
             </div>
           </div>
