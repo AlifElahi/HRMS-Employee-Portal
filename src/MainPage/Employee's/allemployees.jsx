@@ -2,17 +2,15 @@
 import { useReactOidc } from '@axa-fr/react-oidc-context';
 import React, { useState, useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import axios from "axios";
 import Select from 'react-select';
 import {
-  Avatar_01,Avatar_02, Avatar_03, Avatar_04, Avatar_05, Avatar_11, Avatar_12, Avatar_09,
+  Avatar_01, Avatar_02, Avatar_03, Avatar_04, Avatar_05, Avatar_11, Avatar_12, Avatar_09,
   Avatar_10, Avatar_08, Avatar_13, Avatar_16
 } from "../../Entryfile/imagepath"
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
-
-// import { searchEmployee } from './empService';s
-// import { punchTimeLog } from '../../Services/dashBoardServices';
+import { getAllDesignations, getEmployeeList, searchEmployee } from '../../Services/dashBoardServices';
+import AddEmployeemodal from './modals/addEmployeemodal';
 
 const Employee = () => {
 
@@ -40,93 +38,56 @@ const Employee = () => {
   }, [])
 
 
-const getDesignations= async()=>{
-  try {
-    let res=await axios.get('https://sso.hivecorelimited.com/designations',{
+  const getDesignations = async () => {
 
-      headers: {
-        'Authorization': `Bearer ${oidcUser.access_token}`
-      }
-
-    })
-   let arr= new Array(res.data.length+1).fill(null).map((x, idx) => {
-     if(idx===0)return { value: "", label: 'Select Designation' }
-      let designation = res.data[idx-1].name
+    let res = await getAllDesignations(oidcUser.access_token)
+    if (!res.length) return
+    let arr = new Array(res.length + 1).fill(null).map((x, idx) => {
+      if (idx === 0) return { value: "", label: 'Select Designation' }
+      let designation = res[idx - 1].name
       return { value: designation, label: designation }
     })
     setDesigs(arr)
-  } catch (error) {
-    console.log(error);
-    
+
   }
-}
 
-  const getEmpList = async (token) => {
-
-    try {
-      let res = await axios.get('https://sso.hivecorelimited.com/users',
-        {
-
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-
-        })
-      setrendempList(res.data)
-
-
-    } catch (error) {
-      console.log(error);
-    }
-    // let data = await getEmployeeList(oidcUser.access_token)
-    // console.log(data);
-
+  const getEmpList = async () => {
+    let res = await getEmployeeList(oidcUser.access_token)
+    setrendempList(res)
   }
 
   const navigateToProfile = (id) => {
-    if(!id)return
+    if (!id) return
     history.push(`/app/employees/employee-profile/${id}`)
   }
 
   function handleChangeDesig(event) {
-    let o=searchFilter
-    o.designation=event.value
+    let o = searchFilter
+    o.designation = event.value
     setSearch(o)
     SetDesigoption(event)
   }
   function handleChangeName(event) {
     event.persist();
-    let o=searchFilter
-    o.name=event.target.value
+    let o = searchFilter
+    o.name = event.target.value
     setSearch(o)
-    
+
   }
   function handleChangeId(event) {
     event.persist();
-    let o=searchFilter
-    o.id=event.target.value
+    let o = searchFilter
+    o.id = event.target.value
     setSearch(o)
   }
 
-  const SearchFunc=async()=>{
+  const SearchFunc = async () => {
     let obj = Object.fromEntries(Object.entries(searchFilter).filter(([_, v]) => v != ""));
-    try {
-      let res = await axios.get('https://sso.hivecorelimited.com/users',
 
-          {
-              params: obj,
-              headers: {
-                  'Authorization': `Bearer ${oidcUser.access_token}`
-              }
+    let res = await searchEmployee(obj, oidcUser.access_token)
 
-          }
-      );
-
-      setrendempList(res.data)
-      
-  } catch (error) {
-      console.log(error);
-  }
+    if (!res.length) return
+    setrendempList(res.data)
 
   }
 
@@ -147,11 +108,11 @@ const getDesignations= async()=>{
               <h3 className="page-title">Employees</h3>
             </div>
             {/* <div className="col-auto float-right ml-auto">
-              <a href="#" className="btn add-btn" data-toggle="modal" data-target="#add_employee"><i className="fa fa-plus" /> Add Employee</a>
-              <div className="view-icons">
+              <a className="btn add-btn" data-toggle="modal" data-target="#add_employee"><i className="fa fa-plus" /> Add Employee</a>
+               <div className="view-icons">
                 <a href="/hive_hrm/app/employee/allemployees" className="grid-view btn btn-link active"><i className="fa fa-th" /></a>
                 <a href="/hive_hrm/app/employee/employees-list" className="list-view btn btn-link"><i className="fa fa-bars" /></a>
-              </div>
+              </div> 
             </div> */}
           </div>
         </div>
@@ -166,7 +127,7 @@ const getDesignations= async()=>{
           </div>
           <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus">
-              <input type="text" className="form-control floating" name="empName"  onChange={handleChangeName}/>
+              <input type="text" className="form-control floating" name="empName" onChange={handleChangeName} />
               <label className="focus-label">Employee Name</label>
             </div>
           </div>
@@ -177,25 +138,25 @@ const getDesignations= async()=>{
                 styles={customStyles}
                 value={DesigOption}
                 onChange={handleChangeDesig}
-                options={Desigs.length?Desigs:[DesigOption]}
+                options={Desigs.length ? Desigs : [DesigOption]}
                 placeholder='Designation'
               />
             </div>
           </div>
-    
+
           <div className="col-sm-6 col-md-3">
-            <button className="btn btn-success btn-block" onClick={()=>SearchFunc()}> Search </button>
+            <button className="btn btn-success btn-block" onClick={() => SearchFunc()}> Search </button>
           </div>
         </div>
         {/* Search Filter */}
         {rendemplist.length ?
           <div className="row staff-grid-row">
             {rendemplist.map((x, _idx) =>
-              <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3" key={x.id||_idx} onClick={() => navigateToProfile(x.id)} >
+              <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3" key={x.id || _idx} onClick={() => navigateToProfile(x.id)} >
                 {/* <Link to={`/app/employees/employee-profile/${x.id}`} > */}
                 <div className="profile-widget">
                   <div className="profile-img">
-                    <div className="avatar"><img src={Avatar_02} alt="" /></div>
+                   <img  className="avatar" style={{objectFit:"cover"}} src={x.photo||Avatar_02} alt="" />
                   </div>
                   {/* <div className="dropdown profile-action">
                     <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
@@ -204,8 +165,8 @@ const getDesignations= async()=>{
                       <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fa fa-trash-o m-r-5" /> Delete</a>
                     </div>
                   </div> */}
-                  <h4 className="user-name m-t-10 mb-0 text-ellipsis">{x.full_name||<Skeleton width={250}/>}</h4>
-                  <div className="small text-muted">{x.designation||<Skeleton width={150}/>}</div>
+                  <h4 className="user-name m-t-10 mb-0 text-ellipsis">{x.full_name || <Skeleton width={250} />}</h4>
+                  <div className="small text-muted">{x.designation || <Skeleton width={150} />}</div>
 
                 </div>
                 {/* </Link> */}
@@ -216,7 +177,8 @@ const getDesignations= async()=>{
       {/* /Page Content */}
       {/* Add Employee Modal */}
       <div id="add_employee" className="modal custom-modal fade" role="dialog">
-        <div className="modal-dialog modal-dialog-centered modal-lg">
+        <AddEmployeemodal/>
+        {/* <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Add Employee</h5>
@@ -504,7 +466,7 @@ const getDesignations= async()=>{
               </form>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       {/* /Add Employee Modal */}
       {/* Edit Employee Modal */}

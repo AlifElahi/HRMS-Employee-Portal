@@ -19,6 +19,7 @@ export const getPunchcardInfo = async (token) => {
     }
 
 }
+
 export const punchTimeLog = async (type, token) => {
     let url = type === 'in' ? '/attendance/punchin/' : type === 'out' ? '/attendance/punchout/' : ''
     if (url == '') return
@@ -37,6 +38,7 @@ export const punchTimeLog = async (type, token) => {
     }
 
 }
+
 export const getCurrentMonthtats = async (token) => {
 
     try {
@@ -59,6 +61,7 @@ export const getCurrentMonthtats = async (token) => {
     }
 
 }
+
 export const getMothSpecificUserTimeSheet = async (month, year, token) => {
 
     try {
@@ -85,22 +88,63 @@ export const getMothSpecificUserTimeSheet = async (month, year, token) => {
     }
 
 }
-// export const getEmployeeList = async (token) => {
 
-//     try {
-//         let res = await axios.get('https://sso.hivecorelimited.com/users',
-//             {
+export const getEmployeeList = async (token) => {
+
+    try {
+        let res = await axios.get('https://sso.hivecorelimited.com/users',
+            {
                 
-//                 headers: {
-//                     'Authorization': `Bearer ${token}`
-//                 }
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
 
-//             })
+            })
 
-//         return res.data
-//     } catch (error) {
-//         return error
+        return res.data
+    } catch (error) {
+        return error
 
-//     }
+    }
 
-// }
+}
+
+export const getAllDesignations = async (token) => {
+
+    try {
+        let res=await axios.get('https://sso.hivecorelimited.com/designations',{
+    
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+    
+        })
+       return res.data
+      } catch (error) {
+        console.log(error);
+        
+      }
+
+}
+
+export const searchEmployee = async (params,token) => {
+
+    try {
+        let res = await axios.get('https://sso.hivecorelimited.com/users',
+
+          {
+              params: params,
+              headers: {
+                  'Authorization': `Bearer ${token}`
+              }
+
+          }
+      )
+       return res.data
+      } catch (error) {
+        console.log(error);
+        return error
+        
+      }
+
+}

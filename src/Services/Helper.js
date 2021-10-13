@@ -14,7 +14,7 @@ export const monthSpecifictiemSheetdataFormater = async (data) => {
     const minutes = parseInt(Math.abs(dateww.getTime() - datedd.getTime()) / (1000 * 60) % 60);
     let prod = `${hours}:${minutes} hrs`
     let p = {
-      sl: idx + 1,
+      sl: idx,
       date: x.date,
       punch_in: pi,
       punch_out: po,
@@ -24,7 +24,7 @@ export const monthSpecifictiemSheetdataFormater = async (data) => {
     }
     return p
   }
-  return new Array(data.length).fill(null).map((y, idx) => objmaker(data[idx], idx))
+  return new Array(data.length).fill(null).map((y, idx) => objmaker(data[idx], data.length-idx))
 
 }
 
@@ -70,22 +70,3 @@ export const makeMonthStatsDataFormater = async (data) => {
   
 }
 
-export const getEmployeeList = async (token) => {
-
-    try {
-        let res = await axios.get('https://sso.hivecorelimited.com/users',
-            {
-                
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-
-            })
-
-        return res.data
-    } catch (error) {
-        return error
-
-    }
-
-}

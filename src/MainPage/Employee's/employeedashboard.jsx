@@ -31,7 +31,7 @@ const EmployeeDashboard = () => {
           <div className="col-md-12">
             <div className="welcome-box">
               <div className="welcome-img">
-                <img alt="" src={Avatar_02} />
+                <img alt="" className="welcome-img" style={{objectFit:"cover"}} src={profile.photo||Avatar_02} />
               </div>
               <div className="welcome-det">
                 <h3>{`Welcome,${profile.first_name}`}</h3>

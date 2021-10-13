@@ -69,7 +69,7 @@ const EmployeeProfile = () => {
                 <div className="profile-view">
                   <div className="profile-img-wrap">
                     <div className="profile-img">
-                      <a href="#"><img alt="" src={Avatar_02} /></a>
+                      <a><img alt="" style={{objectFit:"cover"}} src={userInfo.photo||Avatar_02} /></a>
                     </div>
                   </div>
                   <div className="profile-basic">

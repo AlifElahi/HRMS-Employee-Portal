@@ -17,7 +17,7 @@ class Sidebar extends Component {
               <li className="menue">
                 <a className="active subdrop"><i className="la la-user" /> <span> Employee Portal</span> <span className="menu-arrow" /></a>
                 <ul style={{ display: 'block' }}>
-                  <li><a className={pathname.includes('employee-dashboard') ? "active" : ""}
+                  <li><a className={pathname.includes('dashboard') ? "active" : ""}
                     href="/hive_hrm/app/employees/employee-dashboard">Employee Dashboard</a></li>
                   <li><a className={pathname.includes('my-profile') ? "active" : ""} href="/hive_hrm/app/employees/my-profile"> My Profile </a></li>
 
