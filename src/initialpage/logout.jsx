@@ -43,28 +43,6 @@ const LogoutPage = () => {
           <div className="account-box">
             <div className="account-wrapper">
               <h3 className="account-title">Logout</h3>
-
-              {/* Account Form */}
-              {/* <form action="/hive_hrm/app/employees/dashboard">
-                 <div className="form-group">
-                   <label>Email Address</label>
-                   <input className="form-control" type="text" />
-                 </div>
-                 <div className="form-group">
-                   <div className="row">
-                     <div className="col">
-                       <label>Password</label>
-                     </div>
-                     <div className="col-auto">
-                       <a className="text-muted" href="/hive_hrm/forgotpassword">
-                         Forgot password?
-                       </a>
-                     </div>
-                   </div>
-                   <input className="form-control" type="password" />
-                 </div>
-               </form>
-                 */}
               <div className="form-group text-center">
                 <button className="btn btn-primary account-btn" >
                   Login again</button>

@@ -15,7 +15,7 @@ const EmployeeProfile = () => {
 
   useEffect(() => {
     ff()
-    return ()=>{}
+    return () => { }
   }, [])
 
   const ff = async () => {
@@ -47,7 +47,7 @@ const EmployeeProfile = () => {
   return (
     <div className="page-wrapper">
       <Helmet>
-        <title>Employee Profile - Hive HRMS</title>
+        <title>{`Employee Profile - Hive HRMS`}</title>
         <meta name="description" content="Reactify Blank Page" />
       </Helmet>
       {/* {console.log(employeeProfile)} */}
@@ -57,7 +57,7 @@ const EmployeeProfile = () => {
         <div className="page-header">
           <div className="row">
             <div className="col-sm-12">
-              <h3 className="page-title">Profile</h3>
+              <h3 className="page-title">{`Profile`}</h3>
             </div>
           </div>
         </div>
@@ -76,49 +76,49 @@ const EmployeeProfile = () => {
                     <div className="row">
                       <div className="col-md-5">
                         <div className="profile-info-left">
-                          <h3 className="user-name m-t-0 mb-0">{userInfo.first_name||<Skeleton width={200} />}</h3>
-                          <h3 className="user-name m-t-0 mb-0">{userInfo.last_name||<Skeleton width={100} />}</h3>
+                          <h3 className="user-name m-t-0 mb-0">{userInfo.first_name || <Skeleton width={200} />}</h3>
+                          <h3 className="user-name m-t-0 mb-0">{userInfo.last_name || <Skeleton width={100} />}</h3>
                           <h6 className="text-muted">UI/UX Design Team [dummy]</h6>
                           <small className="text-muted">{userInfo.designation}</small>
                           <div className="staff-id">Employee ID : FT-0001[dummy]</div>
-                          <div className="small doj text-muted">Date of Join : 1st Jan 2013 [dummy]</div>
+                          <div className="small doj text-muted">{userInfo.join_date ? `Date of Join : ${userInfo.join_date}` : <Skeleton width={100} />} </div>
                         </div>
                       </div>
                       <div className="col-md-7">
                         <ul className="personal-info">
                           <li>
                             <div className="title">Phone:</div>
-                            <div className="text"><a href="">{userInfo.phone||<Skeleton width={250}/>}</a></div>
+                            <div className="text"><a href="">{userInfo.phone || <Skeleton width={250} />}</a></div>
                           </li>
                           <li>
                             <div className="title">Email:</div>
-                            <div className="text"><a href="">{userInfo.email||<Skeleton width={250}/>}</a></div>
+                            <div className="text"><a href="">{userInfo.email || <Skeleton width={250} />}</a></div>
                           </li>
                           <li>
                             <div className="title">Birthday:</div>
-                            <div className="text">{userInfo.birthday||<Skeleton width={250}/>}</div>
+                            <div className="text">{userInfo.birthday || <Skeleton width={250} />}</div>
                           </li>
                           {!id && <li>
                             <div className="title">Address:</div>
-                            <div className="text">{userInfo.address||<Skeleton width={250}/>}, {userInfo.postal_code}</div>
+                            <div className="text">{userInfo.address || <Skeleton width={250} />}, {userInfo.postal_code}</div>
                           </li>}
                           <li>
                             <div className="title">Gender:</div>
-                            <div className="text">{userInfo.gender||<Skeleton width={250}/>}</div>
+                            <div className="text">{userInfo.gender || <Skeleton width={250} />}</div>
                           </li>
-                          <li>
+                          {userInfo.reports_to ? <li>
                             <div className="title">Reports to:</div>
                             <div className="text">
                               <div className="avatar-box">
                                 <div className="avatar avatar-xs">
-                                  <img src={Avatar_16} alt="" />
+                                  <img src={userInfo.reports_to.photo} alt="" />
                                 </div>
                               </div>
-                              <a >
-                                Jeffery Lalor [dummy]
+                              <a href={`/app/employees/employee-profile/${userInfo.reports_to.id}`} >
+                                {userInfo.reports_to.name}
                               </a>
                             </div>
-                          </li>
+                          </li> : <li />}
                         </ul>
                       </div>
                     </div>
@@ -153,29 +153,29 @@ const EmployeeProfile = () => {
                       {/* <a href="#" className="edit-icon" data-toggle="modal" data-target="#personal_info_modal"><i className="fa fa-pencil" /></a> */}
                     </h3>
                     <ul className="personal-info">
-                      {!id && <li>
+                      {!id && userInfo.citizen_id && <li>
                         <div className="title">Citzen Id</div>
-                        <div className="text">{userInfo.citizen_id||<Skeleton width={250}/>}</div>
+                        <div className="text">{userInfo.citizen_id || <Skeleton width={250} />}</div>
                       </li>}
                       <li>
                         <div className="title">Tel</div>
-                        <div className="text"><a href="">{userInfo.phone||<Skeleton width={250}/>}</a></div>
+                        <div className="text"><a href="">{userInfo.phone || <Skeleton width={250} />}</a></div>
                       </li>
                       <li>
                         <div className="title">Nationality</div>
-                        <div className="text">{userInfo.nationality||<Skeleton width={250}/>}</div>
+                        <div className="text">{userInfo.nationality || <Skeleton width={250} />}</div>
                       </li>
                       <li>
                         <div className="title">Religion</div>
-                        <div className="text">{userInfo.nationality||<Skeleton width={250}/>}</div>
+                        <div className="text">{userInfo.nationality || <Skeleton width={250} />}</div>
                       </li>
                       <li>
                         <div className="title">Marital status</div>
-                        <div className="text">{userInfo.maritial_status||<Skeleton width={250}/>}</div>
+                        <div className="text">{userInfo.maritial_status || <Skeleton width={250} />}</div>
                       </li>
                       {!id && <li>
                         <div className="title">No. of children</div>
-                        <div className="text">{userInfo.no_of_children||<Skeleton width={250}/>}</div>
+                        <div className="text">{userInfo.no_of_children >= 0 ? userInfo.no_of_children : <Skeleton width={250} />}</div>
                       </li>}
                     </ul>
                   </div>

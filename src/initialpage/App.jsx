@@ -3,13 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 // We will create these two pages in a moment
 //Authendication
 import LoginPage from './loginpage'
-import RegistrationPage from './RegistrationPage'
-import ForgotPassword from './forgotpassword'
-import OTP from './otp'
-import LockScreen from './lockscreen'
-import { AuthenticationProvider, oidcLog } from '@axa-fr/react-oidc-context';
 
-import { OidcSecure } from '@axa-fr/react-oidc-context';
 
 //Main App
 import DefaultLayout from './Sidebar/DefaultLayout';

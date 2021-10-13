@@ -14,15 +14,12 @@ class Sidebar extends Component {
         <div className="sidebar-inner slimscroll">
           <div id="sidebar-menu" className="sidebar-menu">
             <ul>
-              {/* <li className="menu-title">
-                <span>Employee Portal</span>
-              </li> */}
               <li className="menue">
-                <a href="#" ><i className="la la-user" /> <span> Employee Portal</span> <span className="menu-arrow" /></a>
-                <ul style={{ display: 'none' }}>
+                <a className="active subdrop"><i className="la la-user" /> <span> Employee Portal</span> <span className="menu-arrow" /></a>
+                <ul style={{ display: 'block' }}>
                   <li><a className={pathname.includes('employee-dashboard') ? "active" : ""}
                     href="/hive_hrm/app/employees/employee-dashboard">Employee Dashboard</a></li>
-                  <li><a className={pathname.includes('employee-profile') ? "active" : ""} href="/hive_hrm/app/employees/employee-profile"> Employee Profile </a></li>
+                  <li><a className={pathname.includes('my-profile') ? "active" : ""} href="/hive_hrm/app/employees/my-profile"> My Profile </a></li>
 
                   <li><a className={pathname.includes('allemployees') ? "active" : pathname.includes('employees-list') ? "active" : ""}
                     href="/hive_hrm/app/employees/allemployees">All Employees</a></li>
