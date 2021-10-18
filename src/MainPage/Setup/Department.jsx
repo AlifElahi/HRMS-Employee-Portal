@@ -90,7 +90,7 @@
      return (
          <div className="page-wrapper">
              <Helmet>
-                 <title>Branch - Hive HRMS</title>
+                 <title>Departments - Hive HRMS</title>
                  <meta name="description" content="Login page" />
              </Helmet>
              {/* Page Content */}
@@ -99,7 +99,7 @@
                  <div className="page-header">
                      <div className="row align-items-center">
                          <div className="col">
-                             <h3 className="page-title">Branch List</h3>
+                             <h3 className="page-title">Departmenmts</h3>
  
                          </div>
                          <div className="col-auto float-right ml-auto">
