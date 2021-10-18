@@ -83,7 +83,7 @@ const App =(props) => {
                     {/* </OidcSecure> */}
                 </Route>
                 {/* <Route path="/app" component={DefaultLayout} /> */}
-                <Route path="/settings" component={Settinglayout} />
+                <Route path="/setups" component={Settinglayout} />
             </Switch>
         )
     }

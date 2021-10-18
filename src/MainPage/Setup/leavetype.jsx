@@ -6,10 +6,10 @@ import React, { Component } from 'react';
 import { Helmet } from "react-helmet";
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
-import {itemRender,onShowSizeChange} from "../../paginationfunction"
-import "../../antdstyle.css"
+import {itemRender,onShowSizeChange} from "../paginationfunction"
+import "../antdstyle.css"
 
-class LeaveType extends Component {
+class LeaveSetup extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -293,4 +293,4 @@ class LeaveType extends Component {
    }
 }
 
-export default LeaveType;
+export default LeaveSetup;

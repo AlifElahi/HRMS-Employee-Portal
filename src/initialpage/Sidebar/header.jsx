@@ -141,14 +141,14 @@ const Header = () => {
         {name ?
           <li className="nav-item dropdown has-arrow main-drop">
             <a  className="dropdown-toggle nav-link" data-toggle="dropdown">
-              <span className="user-img"><img  style={{objectFit:"cover"}} src={photo||Avatar_21} alt="" />
+              <span className="user-img"><img className="user-img" style={{objectFit:"cover"}} src={photo||Avatar_21} alt="" />
                 {/* <span className="status online" /> */}
               </span>
               <span>{name}</span>
             </a>
             <div className="dropdown-menu">
               <a className="dropdown-item" href="/hive_hrm/app/employees/my-profile">My Profile</a>
-              {/* <a className="dropdown-item" href="/hive_hrm/settings/companysetting">Settings</a> */}
+              <a className="dropdown-item" href="/hive_hrm/setups/leave-setup">Setups</a>
               {/* <a className="dropdown-item" href="/hive_hrm/logout">Logout</a> */}
               <button className="dropdown-item" onClick={() => logout()} >Logout</button>
 
@@ -161,7 +161,7 @@ const Header = () => {
         <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fa fa-ellipsis-v" /></a>
         <div className="dropdown-menu dropdown-menu-right">
           <a className="dropdown-item" href="/hive_hrm/app/employees/employee-profile">My Profile</a>
-          {/* <a className="dropdown-item" href="/hive_hrm/settings/companysetting">Settings</a> */}
+          <a className="dropdown-item" href="/hive_hrm/setups/leave-setup">Setups</a>
           <button className="dropdown-item" onClick={() => logout()} >Logout</button>
         </div>
       </div>}
