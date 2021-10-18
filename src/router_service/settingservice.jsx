@@ -4,6 +4,7 @@ import Department from '../MainPage/Setup/Department';
 import Holidays from '../MainPage/Setup/holidays';
 import LeaveSetup from '../MainPage/Setup/leavetype';
 import ShiftList from '../MainPage/Setup/shiftlist';
+import Designation from '../MainPage/Setup/Designation';
 
 
 
@@ -30,6 +31,10 @@ export default [
    {
       path: 'shift-setup',
       component: ShiftList
+   },
+   {
+      path: 'designations-setup',
+      component: Designation
    }
   
 ]
