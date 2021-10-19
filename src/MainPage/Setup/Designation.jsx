@@ -9,8 +9,13 @@ import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
 import Select from "react-select";
+import { useForm } from "react-hook-form";
 
 const Designation = () => {
+
+  const { register, handleSubmit,formState: { errors }, } = useForm();
+  const onSubmit = (data) => console.log(data);
+
   const [data, setData] = useState([
     {
       id: 1,
@@ -60,7 +65,7 @@ const Designation = () => {
       title: "Department",
       dataIndex: "department",
     },
- 
+
     {
       title: "Action",
       render: (text, record) => (
@@ -76,7 +81,6 @@ const Designation = () => {
           <div className="dropdown-menu dropdown-menu-right">
             <a
               className="dropdown-item"
-              href="#"
               data-toggle="modal"
               data-target="#edit_leavetype"
             >
@@ -96,7 +100,6 @@ const Designation = () => {
     },
   ];
 
-  
   return (
     <div className="page-wrapper">
       <Helmet>
@@ -257,17 +260,18 @@ const Designation = () => {
               </button>
             </div>
             <div className="modal-body">
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <label>
                     Designation <span className="text-danger">*</span>
                   </label>
-                  <input className="form-control" type="text" />
+                  <input className="form-control" type="text" {...register("designation_name", { required: true})} />
+                  {errors.designation_name?.type === 'required' && "Designation is required"}
                 </div>
-                
+
                 <div className="form-group">
                   <label>
-                     Department <span className="text-danger">*</span>
+                    Department <span className="text-danger">*</span>
                   </label>
                   <Select
                     classNamePrefix="select"
@@ -305,17 +309,17 @@ const Designation = () => {
               </button>
             </div>
             <div className="modal-body">
-            <form>
+              <form>
                 <div className="form-group">
                   <label>
                     Designation <span className="text-danger">*</span>
                   </label>
                   <input className="form-control" type="text" />
                 </div>
-                
+
                 <div className="form-group">
                   <label>
-                     Department <span className="text-danger">*</span>
+                    Department <span className="text-danger">*</span>
                   </label>
                   <Select
                     classNamePrefix="select"
@@ -325,7 +329,7 @@ const Designation = () => {
                   />
                 </div>
                 <div className="submit-section">
-                  <button className="btn btn-primary submit-btn">Submit</button>
+                  <button className="btn btn-primary submit-btn" type='submit'>Submit</button>
                 </div>
               </form>
             </div>
