@@ -10,6 +10,7 @@ import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
+import AddDepartmentModal from "./modals/AddDepartmentModal";
 
 const Department = () => {
   const {
@@ -69,15 +70,7 @@ const Department = () => {
     setValue("reportingdepartment", x.reportingdepartment);
     setItemId(x.id);
   };
-  const openAdd = () => {
-    console.log("on");
-
-    setValue("department_name","");
-    setValue("departmenthead", "");
-    setValue("reportingdepartment", "");
-  };
   const closeEdit = () => {
-    console.log("Close");
     setValue("department_name",'');
     setValue("departmenthead", '');
     setValue("reportingdepartment", '');
@@ -182,9 +175,7 @@ const Department = () => {
               <a
                 className="btn add-btn"
                 data-toggle="modal"
-                data-target="#add_leavetype"
-                onClick={()=>openAdd()}
-                
+                data-target="#add_leavetype"                
               >
                 <i className="fa fa-plus" /> Add Department
               </a>
@@ -217,87 +208,7 @@ const Department = () => {
       {/* /Page Content */}
       {/* Add Leavetype Modal */}
       <div id="add_leavetype" className="modal custom-modal fade" role="dialog">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Add Department</h5>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onClick={()=>closeEdit()}
-              >
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="form-group">
-                  <label>
-                    Department Name <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    {...register("department_name", { required: true })}
-                  />
-                  {errors.departmnet_name?.type === "required" &&
-                    "departmnet name is required"}
-                </div>
-                <div className="form-group">
-                  <label>
-                    Head of Department <span className="text-danger">*</span>
-                  </label>
-                  <Controller
-                    control={control}
-                    name="departmenthead"
-                    rules={{ required: true }}
-                    render={({ field: { onChange, value, name, ref } }) => {
-                      return (
-                        <Select
-                          inputRef={ref}
-                          classNamePrefix="select"
-                          options={emplist}
-                          value={emplist.find((c) => c.value === value)}
-                          onChange={(val) => onChange(val.value)}
-                        />
-                      );
-                    }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>
-                    Reporting Department <span className="text-danger">*</span>
-                  </label>
-
-                  <Controller
-                    control={control}
-                    name="reportingdepartment"
-                    rules={{ required: true }}
-                    render={({ field: { onChange, value, name, ref } }) => {
-                      return (
-                        <Select
-                          inputRef={ref}
-                          classNamePrefix="select"
-                          options={departments}
-                          value={departments.find((c) => c.value === value)}
-                          onChange={(val) => onChange(val.value)}
-                        />
-                      );
-                    }}
-                  />
-
-                </div>
-                <div className="submit-section">
-                  <button className="btn btn-primary submit-btn" type="submit">
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <AddDepartmentModal submitFunction={(x)=>console.log(x,"ghgh")}/>
       </div>
       {/* /Add Leavetype Modal */}
       {/* Edit Leavetype Modal */}

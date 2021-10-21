@@ -2,7 +2,7 @@
 import Branch from '../MainPage/Setup/Branch';
 import Department from '../MainPage/Setup/Department';
 import Holidays from '../MainPage/Setup/holidays';
-import LeaveSetup from '../MainPage/Setup/leavetype';
+import LeaveSetup from '../MainPage/Setup/LeaveSetup';
 import ShiftList from '../MainPage/Setup/shiftlist';
 import Designation from '../MainPage/Setup/Designation';
 

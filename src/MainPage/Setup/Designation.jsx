@@ -9,12 +9,40 @@ import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
 import Select from "react-select";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import AddDesignationModal from "./modals/AddDesignationModal";
+
 
 const Designation = () => {
 
-  const { register, handleSubmit,formState: { errors }, } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm();
+  const onSubmit = (data) => alert(JSON.stringify(data));
+  const [itemId, setItemId] = useState("");
+
+
+  const openEdit = (x) => {
+    setValue("designation_name", x.designation_name);
+    setValue("department", x.department);
+    setItemId(x.id);
+  };
+  const closeEdit = () => {
+    setValue("designation_name",'');
+    setValue("department", '');
+    setItemId("");
+  };
+  const openDelate = (x) => {
+    setItemId(x.id);
+  };
+  const closeDelete = () => {
+    setItemId("");
+  };
+
 
   const [data, setData] = useState([
     {
@@ -33,12 +61,7 @@ const Designation = () => {
       department: "IT",
     },
   ]);
-  const emplist = [
-    { value: "mr.x", label: "mr.x" },
-    { value: "mr.y", label: "mr.y" },
-    { value: "mr.z", label: "mr.z" },
-    { value: "mr.k", label: "mr.k" },
-  ];
+ 
   const departments = [
     { value: "HR", label: "HR" },
     { value: "IT", label: "IT" },
@@ -71,7 +94,6 @@ const Designation = () => {
       render: (text, record) => (
         <div className="dropdown dropdown-action text-right">
           <a
-            href="#"
             className="action-icon dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false"
@@ -83,14 +105,15 @@ const Designation = () => {
               className="dropdown-item"
               data-toggle="modal"
               data-target="#edit_leavetype"
+              onClick={()=>openEdit(record)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </a>
             <a
               className="dropdown-item"
-              href="#"
               data-toggle="modal"
               data-target="#delete_leavetype"
+              onClick={()=>openDelate(record)}
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
             </a>
@@ -246,47 +269,8 @@ const Designation = () => {
       {/* /Page Content */}
       {/* Add Leavetype Modal */}
       <div id="add_leavetype" className="modal custom-modal fade" role="dialog">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Add Designation</h5>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-group">
-                  <label>
-                    Designation <span className="text-danger">*</span>
-                  </label>
-                  <input className="form-control" type="text" {...register("designation_name", { required: true})} />
-                  {errors.designation_name?.type === 'required' && "Designation is required"}
-                </div>
+      <AddDesignationModal SubmitFunc={(x)=>console.log(x)}/>
 
-                <div className="form-group">
-                  <label>
-                    Department <span className="text-danger">*</span>
-                  </label>
-                  <Select
-                    classNamePrefix="select"
-                    styles={customStyles}
-                    value={departments[0]}
-                    options={departments}
-                  />
-                </div>
-                <div className="submit-section">
-                  <button className="btn btn-primary submit-btn">Submit</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
       </div>
       {/* /Add Leavetype Modal */}
       {/* Edit Leavetype Modal */}
@@ -304,28 +288,44 @@ const Designation = () => {
                 className="close"
                 data-dismiss="modal"
                 aria-label="Close"
+                onClick={()=>closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-              <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
+
                 <div className="form-group">
                   <label>
                     Designation <span className="text-danger">*</span>
                   </label>
-                  <input className="form-control" type="text" />
+                  <input
+                className="form-control"
+                type="text"
+                {...register("designation_name", { required: true })}
+              />
                 </div>
 
                 <div className="form-group">
                   <label>
                     Department <span className="text-danger">*</span>
                   </label>
-                  <Select
-                    classNamePrefix="select"
-                    styles={customStyles}
-                    value={departments[0]}
-                    options={departments}
+                  <Controller
+                    control={control}
+                    name="department"
+                    rules={{ required: true }}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      return (
+                        <Select
+                          inputRef={ref}
+                          classNamePrefix="select"
+                          options={departments}
+                          value={departments.find((c) => c.value === value)}
+                          onChange={(val) => onChange(val.value)}
+                        />
+                      );
+                    }}
                   />
                 </div>
                 <div className="submit-section">
@@ -353,13 +353,14 @@ const Designation = () => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a href="" className="btn btn-primary continue-btn">
+                    <a className="btn btn-primary continue-btn">
                       Delete
                     </a>
                   </div>
                   <div className="col-6">
                     <a
-                      href=""
+                onClick={()=>closeDelete()}
+                     
                       data-dismiss="modal"
                       className="btn btn-primary cancel-btn"
                     >
