@@ -6,6 +6,7 @@ import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
+import { AddShift } from "./modals/AddShift";
 
 // class ShiftList extends Component {
 const ShiftList = () => {
@@ -263,138 +264,8 @@ const ShiftList = () => {
             <div className="modal-body">
               {/* form  */}
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
-                  <div className="col-sm-12">
-                    <div className="form-group">
-                      <label className="col-form-label">
-                        Shift Name <span className="text-danger">*</span>
-                      </label>
-                      <div className="input-group time timepicker">
-                        {/* <input className="form-control" /> */}
-                        <input
-                          className="form-control"
-                          type="text"
-                          {...register("shift_name", { required: true })}
-                        />
-                        <span className="input-group-append input-group-addon"></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label>
-                        Start Time <span className="text-danger">*</span>
-                      </label>
-                      <div className="input-group time timepicker">
-                        <input
-                          className="form-control"
-                          type="time"
-                          {...register("start_time", { required: true })}
-                        />
-                        {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label>
-                        End Time <span className="text-danger">*</span>
-                      </label>
-                      <div className="input-group time timepicker">
-                        <input
-                          className="form-control"
-                          type="time"
-                          {...register("end_time", { required: true })}
-                        />
-                        {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label>Buffer (In Minutes) </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("buffer_time", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label className="col-form-label">
-                        No of working days/week
-                      </label>
-                      {/* <Select
-                        classNamePrefix="select"
-                        styles={customStyles}
-                        value={noWeekWorkingdays}
-                        onChange={handleChangeWorkingweek}
-                        options={weekoptions}
-                      /> */}
-                      <Controller
-                        control={control}
-                        name="noofworkingdays"
-                        rules={{ required: true }}
-                        render={({ field: { onChange, value, name, ref } }) => {
-                          return (
-                            <Select
-                              inputRef={ref}
-                              classNamePrefix="select"
-                              options={weekoptions}
-                              value={weekoptions.find((c) => c.value === value)}
-                              onChange={(val) => onChange(val.value)}
-                            />
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label className="col-form-label">Week starts from</label>
-                      {/* <Select
-                        classNamePrefix="select"
-                        styles={customStyles}
-                        value={weekStartDay}
-                        onChange={handleChangeWeekstart}
-                        options={weekendoptions}
-                      /> */}
-                      <Controller
-                        control={control}
-                        name="weeksstartfrom"
-                        rules={{ required: true }}
-                        render={({ field: { onChange, value, name, ref } }) => {
-                          return (
-                            <Select
-                              inputRef={ref}
-                              classNamePrefix="select"
-                              options={weekendoptions}
-                              value={weekendoptions.find(
-                                (c) => c.value === value
-                              )}
-                              onChange={(val) => onChange(val.value)}
-                            />
-                          );
-                        }}
-                      />
-                      {/* <Select
-                        inputRef={ref}
-                        classNamePrefix="select"
-                        options={emplist}
-                        value={emplist.find((c) => c.value === value)}
-                        onChange={(val) => onChange(val.value)}
-                      /> */}
-                    </div>
-                  </div>
-                </div>
-                <div className="submit-section">
-                  <button className="btn btn-primary submit-btn" type="submit">
-                    Submit
-                  </button>
-                </div>
-              </form>
+          <AddShift/>
+          
             </div>
           </div>
         </div>
