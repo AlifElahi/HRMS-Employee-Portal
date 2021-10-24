@@ -7,11 +7,22 @@ const AddDepartmentModal = ({ submitFunction }) => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm();
+
+  const closeEdit = () => {
+    setValue("department_name", null);
+    setValue("departmenthead", null);
+    setValue("reportingdepartment", "");
+    setItemId("");
+  };
+
   const onSubmit = (data) => {
     submitFunction(data);
     alert(JSON.stringify(data));
+    closeEdit(data);
+    reset(data);
   };
   const emplist = [
     { value: "Mr x", label: "Mr x" },
@@ -41,6 +52,7 @@ const AddDepartmentModal = ({ submitFunction }) => {
             className="close"
             data-dismiss="modal"
             aria-label="Close"
+            // onClick={(data) => closeEdit(data)}
           >
             <span aria-hidden="true">×</span>
           </button>
@@ -56,8 +68,9 @@ const AddDepartmentModal = ({ submitFunction }) => {
                 type="text"
                 {...register("department_name", { required: true })}
               />
-              {errors.departmnet_name?.type === "required" &&
-                "departmnet name is required"}
+              {errors.department_name && (
+                <div style={{ color: "red" , fontSize: "small" }}>is required</div>
+              )}
             </div>
             <div className="form-group">
               <label>
@@ -79,7 +92,11 @@ const AddDepartmentModal = ({ submitFunction }) => {
                   );
                 }}
               />
+              {errors.departmenthead && (
+                <div style={{ color: "red" , fontSize: "small" }}>is required</div>
+              )}
             </div>
+
             <div className="form-group">
               <label>
                 Reporting Department <span className="text-danger">*</span>
@@ -101,6 +118,9 @@ const AddDepartmentModal = ({ submitFunction }) => {
                   );
                 }}
               />
+              {errors.reportingdepartment && (
+                <div style={{ color: "red", fontSize: "small" }}>is required</div>
+              )}
             </div>
             <div className="submit-section">
               <button className="btn btn-primary submit-btn" type="submit">

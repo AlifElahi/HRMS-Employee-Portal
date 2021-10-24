@@ -48,6 +48,7 @@ export const AddShift = () => {
                 />
                 <span className="input-group-append input-group-addon"></span>
               </div>
+         
             </div>
           </div>
           <div className="col-md-4">
@@ -63,7 +64,11 @@ export const AddShift = () => {
                 />
                 {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
               </div>
+              {errors.exampleRequired && <span>This field is required</span>}
             </div>
+            {errors.start_time && (
+              <div style={{ color: "red" }}>Start Time is required</div>
+            )}
           </div>
           <div className="col-md-4">
             <div className="form-group">
@@ -79,16 +84,22 @@ export const AddShift = () => {
                 {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
               </div>
             </div>
+            {errors.end_time && (
+              <div style={{ color: "red" }}>End Time is required</div>
+            )}
           </div>
           <div className="col-md-4">
             <div className="form-group">
               <label>Buffer (In Minutes) </label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 {...register("buffer_time", { required: true })}
               />
             </div>
+            {errors.buffer_time && (
+              <div style={{ color: "red" }}>Buffer time is required</div>
+            )}
           </div>
           <div className="col-sm-6">
             <div className="form-group">
@@ -111,6 +122,11 @@ export const AddShift = () => {
                 }}
               />
             </div>
+            {errors.noofworkingdays
+             && (
+              <div
+              >No of working day is required</div>
+            )}
           </div>
           <div className="col-sm-6">
             <div className="form-group">
@@ -133,6 +149,10 @@ export const AddShift = () => {
                 }}
               />
             </div>
+            {errors.weeksstartfrom
+             && (
+              <div style={{ color: "red" }}>Week Start from is required</div>
+            )}
           </div>
         </div>
         <div className="submit-section">

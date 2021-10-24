@@ -74,7 +74,7 @@ const ShiftList = () => {
       id: 1,
       shift_name: "10'o clock Shift",
       start_time: "10:00:00",
-      end_time: "19:00:00",
+      end_time: "07:00:00",
       buffer_time: "30",
       status: "Active",
       noofworkingdays: 5,

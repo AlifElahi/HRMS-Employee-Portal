@@ -29,7 +29,9 @@ export const AddBranch = () => {
             type="text"
             {...register("branch_name", { required: true })}
           />
+        {errors.branch_name && <span style={{color: "red", fontSize: "small"}}>is required</span>}
         </div>
+        
         <div className="form-group">
           <label>
             Address <span className="text-danger">*</span>
@@ -39,7 +41,9 @@ export const AddBranch = () => {
             type="text"
             {...register("address", { required: true })}
           />
+        {errors.branch_name && <span style={{color: "red", fontSize: "small"}}>is required</span>}
         </div>
+
         <div className="form-group">
           <label>
             Branch Manager <span className="text-danger">*</span>
@@ -60,6 +64,7 @@ export const AddBranch = () => {
               );
             }}
           />
+        {errors.branch_name && <span style={{color: "red", fontSize: "small"}}>is required</span>}
         </div>
         <div className="submit-section">
           <button className="btn btn-primary submit-btn">Submit</button>

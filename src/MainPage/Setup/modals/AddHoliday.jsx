@@ -22,6 +22,9 @@ export const AddHoliday = () => {
             type="text"
             {...register("holiday", { required: true })}
           />
+          {errors.holiday && (
+            <span style={{ color: "red", fontSize: "small" }}>is required</span>
+          )}
         </div>
         <div className="form-group">
           <label>
@@ -33,6 +36,11 @@ export const AddHoliday = () => {
               type="text"
               {...register("holidaydate", { required: true })}
             />
+            {errors.holiday && (
+              <span style={{ color: "red", fontSize: "small" }}>
+                is required
+              </span>
+            )}
           </div>
         </div>
         <div className="submit-section">

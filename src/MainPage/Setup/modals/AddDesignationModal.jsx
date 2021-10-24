@@ -2,25 +2,24 @@ import React from "react";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 
-const AddDesignationModal = ({SubmitFunc}) => {
+const AddDesignationModal = ({ SubmitFunc }) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm();
+  const onSubmit = (data) => {
+    SubmitFunc(data);
+    alert(JSON.stringify(data));
+  };
 
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: { errors },
-        setValue,
-      } = useForm();
-      const onSubmit = (data) => {
-        SubmitFunc(data)
-          alert(JSON.stringify(data));}
-
-    const departments = [
-        { value: "HR", label: "HR" },
-        { value: "IT", label: "IT" },
-        { value: "Admin", label: "Admin" },
-        
-      ];
+  const departments = [
+    { value: "HR", label: "HR" },
+    { value: "IT", label: "IT" },
+    { value: "Admin", label: "Admin" },
+  ];
   return (
     <div className="modal-dialog modal-dialog-centered" role="document">
       <div className="modal-content">
@@ -46,6 +45,11 @@ const AddDesignationModal = ({SubmitFunc}) => {
                 type="text"
                 {...register("designation_name", { required: true })}
               />
+              {errors.designation_name && (
+                <span style={{ color: "red", fontSize: "small" }}>
+                  is required
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -68,7 +72,13 @@ const AddDesignationModal = ({SubmitFunc}) => {
                   );
                 }}
               />
+              {errors.designation_name && (
+                <span style={{ color: "red", fontSize: "small" }}>
+                  is required
+                </span>
+              )}
             </div>
+
             <div className="submit-section">
               <button className="btn btn-primary submit-btn" type="submit">
                 Submit
