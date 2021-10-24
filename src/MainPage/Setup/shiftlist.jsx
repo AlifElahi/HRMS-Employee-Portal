@@ -34,14 +34,16 @@ const ShiftList = () => {
     setValue("end_time", x.end_time);
     setValue("buffer_time", x.buffer_time);
     setValue("noofworkingdays", x.noofworkingdays);
+    setValue("weeksstartfrom", x.weeksstartfrom);
     setItemId(x.id);
   };
   const closeEdit = () => {
-    setValue("shift_name", x.shift_name);
-    setValue("start_time", x.start_time);
-    setValue("end_time", x.end_time);
-    setValue("buffer_time", x.buffer_time);
-    setValue("noofworkingdays", x.noofworkingdays);
+    setValue("shift_name", "");
+    setValue("start_time", "");
+    setValue("end_time","");
+    setValue("buffer_time", "");
+    setValue("noofworkingdays", "");
+    setValue("weeksstartfrom", "");
     setItemId("");
   };
   const openDelate = (x) => {
@@ -59,7 +61,7 @@ const ShiftList = () => {
     { value: 5, label: 5 },
     { value: 6, label: 6 },
   ];
-  const weekendoptions = [
+  const weekstartoption = [
     { value: "sun", label: "sun" },
     { value: "mon", label: "mon" },
     { value: "tue", label: "tue" },
@@ -71,12 +73,12 @@ const ShiftList = () => {
     {
       id: 1,
       shift_name: "10'o clock Shift",
-      start_time: "10:00:00 am",
-      end_time: "07:00:00 pm",
+      start_time: "10:00:00",
+      end_time: "19:00:00",
       buffer_time: "30",
       status: "Active",
-      workDays: 5,
-      starts: 0,
+      noofworkingdays: 5,
+      weeksstartfrom: "sun",
     },
     {
       id: 2,
@@ -85,8 +87,8 @@ const ShiftList = () => {
       end_time: "09:00:00 pm",
       buffer_time: "30",
       status: "Active",
-      workDays: 5,
-      starts: 1,
+      noofworkingdays: 5,
+      weeksstartfrom: "sun"
     },
     {
       id: 3,
@@ -95,13 +97,13 @@ const ShiftList = () => {
       end_time: "10:00:00 pm",
       buffer_time: "30",
       status: "Active",
-      workDays: 5,
-      starts: 2,
+      noofworkingdays: 5,
+      weeksstartfrom: "sun",
     },
   ]);
 
   const [noWeekWorkingdays, setworkdays] = useState(weekoptions[0]);
-  const [weekStartDay, setStartDay] = useState(weekendoptions[0]);
+  const [weekStartDay, setStartDay] = useState(weekstartoption[0]);
 
   const handleChangeWorkingweek = (e) => {
     setworkdays(e);
@@ -265,7 +267,6 @@ const ShiftList = () => {
               {/* form  */}
 
           <AddShift/>
-          
             </div>
           </div>
         </div>
@@ -387,7 +388,7 @@ const ShiftList = () => {
                         styles={customStyles}
                         value={weekStartDay}
                         onChange={handleChangeWeekstart}
-                        options={weekendoptions}
+                        options={weekstartoption}
                       /> */}
                       <Controller
                         control={control}
@@ -398,8 +399,8 @@ const ShiftList = () => {
                             <Select
                               inputRef={ref}
                               classNamePrefix="select"
-                              options={weekendoptions}
-                              value={weekendoptions.find(
+                              options={weekstartoption}
+                              value={weekstartoption.find(
                                 (c) => c.value === value
                               )}
                               onChange={(val) => onChange(val.value)}

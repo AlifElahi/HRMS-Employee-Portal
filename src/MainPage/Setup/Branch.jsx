@@ -9,8 +9,38 @@ import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
 import Select from "react-select";
+import { useForm, Controller } from "react-hook-form";
+import { AddBranch } from "./modals/AddBranch";
 
 const Branch = () => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm();
+  const onSubmit = (data) => alert(JSON.stringify(data));
+
+  const openEdit = (x) => {
+    setValue("branch_name", x.branch_name);
+    setValue("address", x.address);
+    setValue("manager", x.manager);
+    setItemId(x.id);
+  };
+  const closeEdit = () => {
+    setValue("designation_name", "");
+    setValue("address", "");
+    setValue("manager", "");
+    setItemId("");
+  };
+  const openDelate = (x) => {
+    setItemId(x.id);
+  };
+  const closeDelete = () => {
+    setItemId("");
+  };
+
   const [data, setData] = useState([
     {
       id: 1,
@@ -105,6 +135,7 @@ const Branch = () => {
               href="#"
               data-toggle="modal"
               data-target="#edit_leavetype"
+              onClick={() => openEdit(record)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </a>
@@ -113,6 +144,7 @@ const Branch = () => {
               href="#"
               data-toggle="modal"
               data-target="#delete_leavetype"
+              onClick={() => openDelate(record)}
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
             </a>
@@ -187,34 +219,7 @@ const Branch = () => {
               </button>
             </div>
             <div className="modal-body">
-              <form>
-                <div className="form-group">
-                  <label>
-                    Branch Name <span className="text-danger">*</span>
-                  </label>
-                  <input className="form-control" type="text" />
-                </div>
-                <div className="form-group">
-                  <label>
-                    Address <span className="text-danger">*</span>
-                  </label>
-                  <input className="form-control" type="text" />
-                </div>
-                <div className="form-group">
-                  <label>
-                    Branch Manager <span className="text-danger">*</span>
-                  </label>
-                  <Select
-                    classNamePrefix="select"
-                    styles={customStyles}
-                    value={emplist[0]}
-                    options={emplist}
-                  />
-                </div>
-                <div className="submit-section">
-                  <button className="btn btn-primary submit-btn">Submit</button>
-                </div>
-              </form>
+              <AddBranch />
             </div>
           </div>
         </div>
@@ -235,32 +240,52 @@ const Branch = () => {
                 className="close"
                 data-dismiss="modal"
                 aria-label="Close"
+                onClick={() => closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <label>
                     Branch Name <span className="text-danger">*</span>
                   </label>
-                  <input className="form-control" type="text" />
+                  <input
+                    className="form-control"
+                    type="text"
+                    {...register("branch_name", { required: true })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>
                     Address <span className="text-danger">*</span>
                   </label>
-                  <input className="form-control" type="text" />
+                  <input
+                    className="form-control"
+                    type="text"
+                    {...register("address", { required: true })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>
                     Branch Manager <span className="text-danger">*</span>
                   </label>
-                  <Select
-                    styles={customStyles}
-                    value={emplist[0]}
-                    options={emplist}
+                  <Controller
+                    control={control}
+                    name="manager"
+                    rules={{ required: true }}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      return (
+                        <Select
+                          inputRef={ref}
+                          classNamePrefix="select"
+                          options={emplist}
+                          value={emplist.find((c) => c.value === value)}
+                          onChange={(val) => onChange(val.value)}
+                        />
+                      );
+                    }}
                   />
                 </div>
                 <div className="submit-section">
@@ -297,6 +322,7 @@ const Branch = () => {
                       href=""
                       data-dismiss="modal"
                       className="btn btn-primary cancel-btn"
+                      onClick={()=>closeDelete()}
                     >
                       Cancel
                     </a>

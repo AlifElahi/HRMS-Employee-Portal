@@ -12,9 +12,7 @@ import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import AddDesignationModal from "./modals/AddDesignationModal";
 
-
 const Designation = () => {
-
   const {
     register,
     handleSubmit,
@@ -25,15 +23,14 @@ const Designation = () => {
   const onSubmit = (data) => alert(JSON.stringify(data));
   const [itemId, setItemId] = useState("");
 
-
   const openEdit = (x) => {
     setValue("designation_name", x.designation_name);
     setValue("department", x.department);
     setItemId(x.id);
   };
   const closeEdit = () => {
-    setValue("designation_name",'');
-    setValue("department", '');
+    setValue("designation_name", "");
+    setValue("department", "");
     setItemId("");
   };
   const openDelate = (x) => {
@@ -42,7 +39,6 @@ const Designation = () => {
   const closeDelete = () => {
     setItemId("");
   };
-
 
   const [data, setData] = useState([
     {
@@ -61,7 +57,7 @@ const Designation = () => {
       department: "IT",
     },
   ]);
- 
+
   const departments = [
     { value: "HR", label: "HR" },
     { value: "IT", label: "IT" },
@@ -105,7 +101,7 @@ const Designation = () => {
               className="dropdown-item"
               data-toggle="modal"
               data-target="#edit_leavetype"
-              onClick={()=>openEdit(record)}
+              onClick={() => openEdit(record)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </a>
@@ -113,7 +109,8 @@ const Designation = () => {
               className="dropdown-item"
               data-toggle="modal"
               data-target="#delete_leavetype"
-              onClick={()=>openDelate(record)}
+            
+              
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
             </a>
@@ -168,100 +165,7 @@ const Designation = () => {
                 dataSource={data}
                 rowKey={(record) => record.id}
               />
-              {/* <table className="table table-striped custom-table datatable mb-0">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Leave Type</th>
-                        <th>Leave Days</th>
-                        <th>Status</th>
-                        <th className="text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          1
-                        </td>
-                        <td>Casual Leave</td>
-                        <td>12 Days</td>
-                        <td>
-                          <div className="dropdown action-label">
-                            <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                              <i className="fa fa-dot-circle-o text-success" /> Active
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <a href="#" className="dropdown-item"><i className="fa fa-dot-circle-o text-success" /> Active</a>
-                              <a href="#" className="dropdown-item"><i className="fa fa-dot-circle-o text-danger" /> Inactive</a>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-right">
-                          <div className="dropdown dropdown-action">
-                            <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leavetype"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_leavetype"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          2
-                        </td>
-                        <td>Medical Leave</td>
-                        <td>12 Days</td>
-                        <td>
-                          <div className="dropdown action-label">
-                            <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                              <i className="fa fa-dot-circle-o text-danger" /> Inactive
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-success" /> Active</a>
-                              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-danger" /> Inactive</a>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-right">
-                          <div className="dropdown dropdown-action">
-                            <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leavetype"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_leavetype"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          3
-                        </td>
-                        <td>Loss of Pay</td>
-                        <td>-</td>
-                        <td>
-                          <div className="dropdown action-label">
-                            <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                              <i className="fa fa-dot-circle-o text-success" /> Active
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-success" /> Active</a>
-                              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-danger" /> Inactive</a>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-right">
-                          <div className="dropdown dropdown-action">
-                            <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leavetype"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_leavetype"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table> */}
+            
             </div>
           </div>
         </div>
@@ -269,8 +173,7 @@ const Designation = () => {
       {/* /Page Content */}
       {/* Add Leavetype Modal */}
       <div id="add_leavetype" className="modal custom-modal fade" role="dialog">
-      <AddDesignationModal SubmitFunc={(x)=>console.log(x)}/>
-
+        <AddDesignationModal SubmitFunc={(x) => console.log(x)} />
       </div>
       {/* /Add Leavetype Modal */}
       {/* Edit Leavetype Modal */}
@@ -288,23 +191,22 @@ const Designation = () => {
                 className="close"
                 data-dismiss="modal"
                 aria-label="Close"
-                onClick={()=>closeEdit()}
+                onClick={() => closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-            <form onSubmit={handleSubmit(onSubmit)}>
-
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <label>
                     Designation <span className="text-danger">*</span>
                   </label>
                   <input
-                className="form-control"
-                type="text"
-                {...register("designation_name", { required: true })}
-              />
+                    className="form-control"
+                    type="text"
+                    {...register("designation_name", { required: true })}
+                  />
                 </div>
 
                 <div className="form-group">
@@ -329,7 +231,9 @@ const Designation = () => {
                   />
                 </div>
                 <div className="submit-section">
-                  <button className="btn btn-primary submit-btn" type='submit'>Submit</button>
+                  <button className="btn btn-primary submit-btn" type="submit">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>
@@ -353,14 +257,11 @@ const Designation = () => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a className="btn btn-primary continue-btn">
-                      Delete
-                    </a>
+                    <a className="btn btn-primary continue-btn">Delete</a>
                   </div>
                   <div className="col-6">
                     <a
-                onClick={()=>closeDelete()}
-                     
+                      onClick={() => closeDelete()}
                       data-dismiss="modal"
                       className="btn btn-primary cancel-btn"
                     >
