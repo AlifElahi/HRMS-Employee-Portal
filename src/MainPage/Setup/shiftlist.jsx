@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet";
 import { Table } from "antd";
 import "antd/dist/antd.css";
@@ -7,9 +7,18 @@ import "../antdstyle.css";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import { AddShift } from "./modals/AddShift";
+import { useReactOidc } from "@axa-fr/react-oidc-context";
+import $ from "jquery";
+import { addShiftData, deleteShiftData, getShiftData, updateShiftData } from "../../Services/setupServices";
+
+
+
 
 // class ShiftList extends Component {
 const ShiftList = () => {
+
+  const [itemId, setItemId] = useState("");
+  const { oidcUser } = useReactOidc()
   const {
     register,
     handleSubmit,
@@ -18,38 +27,38 @@ const ShiftList = () => {
     setValue,
   } = useForm();
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const shiftEditfromSubmit = (data) => upDateShiftFunction(data);
 
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      height: 50,
-      minHeight: 50,
-    }),
-  };
 
   const openEdit = (x) => {
-    setValue("shift_name", x.shift_name);
-    setValue("start_time", x.start_time);
-    setValue("end_time", x.end_time);
+    setValue("name", x.name);
+    setValue("from_time", x.from_time);
+    setValue("to_time", x.to_time);
     setValue("buffer_time", x.buffer_time);
-    setValue("noofworkingdays", x.noofworkingdays);
-    setValue("weeksstartfrom", x.weeksstartfrom);
+    setValue("work_days", x.work_days);
+    setValue("day_of_the_week", x.day_of_the_week);
+    setValue("is_active", x.is_active);
+    setValue("is_default", x.is_default);
     setItemId(x.id);
   };
   const closeEdit = () => {
-    setValue("shift_name", "");
-    setValue("start_time", "");
-    setValue("end_time","");
+    $("#edit_shift").modal("hide");
+    $("#add_shift").modal("hide");
+    setValue("name", "");
+    setValue("from_time", "");
+    setValue("to_time", "");
     setValue("buffer_time", "");
-    setValue("noofworkingdays", "");
-    setValue("weeksstartfrom", "");
+    setValue("work_days", "");
+    setValue("day_of_the_week", "");
+    setValue("is_active", false);
+    setValue("is_default", false);
     setItemId("");
   };
   const openDelate = (x) => {
     setItemId(x.id);
   };
   const closeDelete = () => {
+    $("#delete_shift").modal("hide");
     setItemId("");
   };
 
@@ -62,64 +71,65 @@ const ShiftList = () => {
     { value: 6, label: 6 },
   ];
   const weekstartoption = [
-    { value: "sun", label: "sun" },
-    { value: "mon", label: "mon" },
-    { value: "tue", label: "tue" },
-    { value: "wed", label: "wed" },
-    { value: "thu", label: "thu" },
-    { value: "fri", label: "fri" },
+    { value: 0, label: "sun" },
+    { value: 1, label: "mon" },
+    { value: 2, label: "tue" },
+    { value: 3, label: "wed" },
+    { value: 4, label: "thu" },
+    { value: 5, label: "fri" },
   ];
-  const [data, setData] = useState([
-    {
-      id: 1,
-      shift_name: "10'o clock Shift",
-      start_time: "10:00:00",
-      end_time: "07:00:00",
-      buffer_time: "30",
-      status: "Active",
-      noofworkingdays: 5,
-      weeksstartfrom: "sun",
-    },
-    {
-      id: 2,
-      shift_name: "12'o clock Shift",
-      start_time: "12:00:00 pm",
-      end_time: "09:00:00 pm",
-      buffer_time: "30",
-      status: "Active",
-      noofworkingdays: 5,
-      weeksstartfrom: "sun"
-    },
-    {
-      id: 3,
-      shift_name: "5'o clock Shift",
-      start_time: "05:00:00 pm",
-      end_time: "10:00:00 pm",
-      buffer_time: "30",
-      status: "Active",
-      noofworkingdays: 5,
-      weeksstartfrom: "sun",
-    },
-  ]);
+  const [data, setData] = useState([]);
 
-  const [noWeekWorkingdays, setworkdays] = useState(weekoptions[0]);
-  const [weekStartDay, setStartDay] = useState(weekstartoption[0]);
 
-  const handleChangeWorkingweek = (e) => {
-    setworkdays(e);
-  };
+  useEffect(() => {
+    getData();
+  }, [])
 
-  const handleChangeWeekstart = (e) => {
-    setStartDay(e);
-  };
 
-  const formadd = useRef();
+  const getData = async () => {
+    let res = await getShiftData(oidcUser.access_token)
+    console.log(res);
+    if (res.length) setData(res)
+    return
+  }
 
-  const addFunc = (e) => {
-    e.preventDefault();
-    console.log(e.target[0].value);
-    console.log(e.target.noday.value);
-  };
+  const addShiftFunction = async (data) => {
+    data.is_active = true,
+      data.is_default = false
+    let res = await addShiftData(oidcUser.access_token, data)
+    console.log(res);
+    if (res) {
+      getData();
+      closeEdit();
+    }
+    return
+
+  }
+  const upDateShiftFunction = async (data) => {
+    data.id = itemId
+    let res = await updateShiftData(oidcUser.access_token, data)
+    if (res) {
+      getData();
+      closeEdit()
+    }
+    return
+
+  }
+  const deleteShiftFunction = async () => {
+    data.id = itemId
+    let res = await deleteShiftData(oidcUser.access_token, data)
+
+    if (res) {
+      getData();
+      closeDelete();
+    }
+
+    return
+
+  }
+
+
+
   const columns = [
     {
       title: "#",
@@ -127,16 +137,16 @@ const ShiftList = () => {
     },
     {
       title: "Shift Name",
-      dataIndex: "shift_name",
+      dataIndex: "name",
     },
 
     {
       title: "Start Time",
-      dataIndex: "start_time",
+      dataIndex: "from_time",
     },
     {
       title: "End Time",
-      dataIndex: "end_time",
+      dataIndex: "to_time",
     },
     {
       title: "Buffer Time",
@@ -146,12 +156,17 @@ const ShiftList = () => {
       title: "Status",
       render: (text, record) => (
         <div className="action-label">
-          <a
+          {record.is_active ? <a
             className="btn btn-white btn-sm btn-rounded"
-            href="javascript:void(0);"
           >
+
             <i className="fa fa-dot-circle-o text-success" /> Active
-          </a>
+          </a> : <a
+            className="btn btn-white btn-sm btn-rounded"
+          >
+
+            <i className="fa fa-dot-circle-o text-danger" /> In active
+          </a>}
         </div>
       ),
     },
@@ -178,7 +193,8 @@ const ShiftList = () => {
             <a
               className="dropdown-item"
               data-toggle="modal"
-              data-target="#delete_employee"
+              data-target="#delete_shift"
+              onClick={() => openDelate(record)}
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
             </a>
@@ -235,7 +251,7 @@ const ShiftList = () => {
                   // bordered
                   dataSource={data}
                   rowKey={(record) => record.id}
-                  // onChange={this.handleTableChange}
+                // onChange={this.handleTableChange}
                 />
               </div>
             </div>
@@ -257,7 +273,7 @@ const ShiftList = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
               >
                 <span aria-hidden="true">×</span>
@@ -266,7 +282,7 @@ const ShiftList = () => {
             <div className="modal-body">
               {/* form  */}
 
-          <AddShift/>
+              <AddShift submitFunc={(data) => addShiftFunction(data)} />
             </div>
           </div>
         </div>
@@ -284,7 +300,7 @@ const ShiftList = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
                 onClick={() => closeEdit()}
               >
@@ -292,7 +308,7 @@ const ShiftList = () => {
               </button>
             </div>
             <div className="modal-body">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(shiftEditfromSubmit)}>
                 <div className="row">
                   <div className="col-sm-12">
                     <div className="form-group">
@@ -304,7 +320,7 @@ const ShiftList = () => {
                         <input
                           className="form-control"
                           type="text"
-                          {...register("shift_name", { required: true })}
+                          {...register("name", { required: true })}
                         />
                         <span className="input-group-append input-group-addon"></span>
                       </div>
@@ -319,7 +335,7 @@ const ShiftList = () => {
                         <input
                           className="form-control"
                           type="time"
-                          {...register("start_time", { required: true })}
+                          {...register("from_time", { required: true })}
                         />
                         {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
                       </div>
@@ -334,7 +350,7 @@ const ShiftList = () => {
                         <input
                           className="form-control"
                           type="time"
-                          {...register("end_time", { required: true })}
+                          {...register("to_time", { required: true })}
                         />
                         {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
                       </div>
@@ -364,7 +380,7 @@ const ShiftList = () => {
                       /> */}
                       <Controller
                         control={control}
-                        name="noofworkingdays"
+                        name="work_days"
                         rules={{ required: true }}
                         render={({ field: { onChange, value, name, ref } }) => {
                           return (
@@ -392,7 +408,7 @@ const ShiftList = () => {
                       /> */}
                       <Controller
                         control={control}
-                        name="weeksstartfrom"
+                        name="day_of_the_week"
                         rules={{ required: true }}
                         render={({ field: { onChange, value, name, ref } }) => {
                           return (
@@ -417,6 +433,18 @@ const ShiftList = () => {
                       /> */}
                     </div>
                   </div>
+                  <div className="col-sm-4">
+                    <div className="custom-control custom-checkbox">
+                      <input type="checkbox" className="custom-control-input" id="customCheck4" {...register('is_default')} />
+                      <label className="custom-control-label" htmlFor="customCheck4">Is Default</label>
+                    </div>
+                  </div>
+                  <div className="col-sm-4">
+                    <div className="custom-control custom-checkbox">
+                      <input type="checkbox" className="custom-control-input" id="customCheck5" {...register('is_active')} />
+                      <label className="custom-control-label" htmlFor="customCheck5">Is Active</label>
+                    </div>
+                  </div>
                 </div>
                 <div className="submit-section">
                   <button className="btn btn-primary submit-btn" type="submit">
@@ -434,7 +462,7 @@ const ShiftList = () => {
       {/* Delete Shift Modal */}
       <div
         className="modal custom-modal fade"
-        id="delete_employee"
+        id="delete_shift"
         role="dialog"
       >
         <div className="modal-dialog modal-dialog-centered">
@@ -448,17 +476,20 @@ const ShiftList = () => {
                 <div className="row">
                   <div className="col-6">
                     <a
-                      href="javascript:void(0);"
                       className="btn btn-primary continue-btn"
+                      onClick={() => deleteShiftFunction()}
                     >
                       Delete
                     </a>
                   </div>
                   <div className="col-6">
                     <a
-                      href="javascript:void(0);"
-                      data-dismiss="modal"
+                      // data_dismiss="modal"
+                      // data_dismiss='modal'
                       className="btn btn-primary cancel-btn"
+                      onClick={
+                        () => closeDelete()
+                      }
                     >
                       Cancel
                     </a>

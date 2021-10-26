@@ -28,7 +28,7 @@ const AddDesignationModal = ({ SubmitFunc }) => {
           <button
             type="button"
             className="close"
-            data-dismiss="modal"
+            data_dismiss="modal"
             aria-label="Close"
           >
             <span aria-hidden="true">×</span>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 
-export const AddHoliday = () => {
+export const AddHoliday = ({submitFunc}) => {
   const {
     register,
     handleSubmit,
@@ -9,7 +9,7 @@ export const AddHoliday = () => {
     formState: { errors },
     setValue,
   } = useForm();
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const onSubmit = (data) => submitFunc(data);
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -20,7 +20,7 @@ export const AddHoliday = () => {
           <input
             className="form-control"
             type="text"
-            {...register("holiday", { required: true })}
+            {...register("name", { required: true })}
           />
           {errors.holiday && (
             <span style={{ color: "red", fontSize: "small" }}>is required</span>
@@ -34,7 +34,7 @@ export const AddHoliday = () => {
             <input
               className="form-control datetimepicker"
               type="text"
-              {...register("holidaydate", { required: true })}
+              {...register("date", { required: true })}
             />
             {errors.holiday && (
               <span style={{ color: "red", fontSize: "small" }}>

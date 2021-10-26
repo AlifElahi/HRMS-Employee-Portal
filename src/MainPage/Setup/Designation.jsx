@@ -189,7 +189,7 @@ const Designation = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
                 onClick={() => closeEdit()}
               >
@@ -262,7 +262,7 @@ const Designation = () => {
                   <div className="col-6">
                     <a
                       onClick={() => closeDelete()}
-                      data-dismiss="modal"
+                      data_dismiss="modal"
                       className="btn btn-primary cancel-btn"
                     >
                       Cancel

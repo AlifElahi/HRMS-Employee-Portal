@@ -167,7 +167,7 @@ class Managedjobs extends Component {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Add Job</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -296,11 +296,11 @@ class Managedjobs extends Component {
       {/* Edit Job Modal */}
       <div id="edit_job" className="modal custom-modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <button type="button" className="close" data-dismiss="modal">×</button>
+          <button type="button" className="close" data_dismiss="modal">×</button>
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Edit Job</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -441,7 +441,7 @@ class Managedjobs extends Component {
                     <a href="" className="btn btn-primary continue-btn">Delete</a>
                   </div>
                   <div className="col-6">
-                    <a href="" data-dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
+                    <a href="" data_dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
                   </div>
                 </div>
               </div>

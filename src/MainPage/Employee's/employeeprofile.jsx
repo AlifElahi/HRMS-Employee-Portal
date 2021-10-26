@@ -704,7 +704,7 @@ const EmployeeProfile = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Profile Information</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -832,7 +832,7 @@ const EmployeeProfile = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Personal Information</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -911,7 +911,7 @@ const EmployeeProfile = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title"> Family Informations</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -999,7 +999,7 @@ const EmployeeProfile = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Personal Information</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -1082,7 +1082,7 @@ const EmployeeProfile = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title"> Education Informations</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -1202,7 +1202,7 @@ const EmployeeProfile = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Experience Informations</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>

@@ -108,11 +108,11 @@ class Jobdetails extends Component {
        {/* Edit Job Modal */}
        <div id="edit_job" className="modal custom-modal fade" role="dialog">
          <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
-           <button type="button" className="close" data-dismiss="modal">×</button>
+           <button type="button" className="close" data_dismiss="modal">×</button>
            <div className="modal-content">
              <div className="modal-header">
                <h5 className="modal-title">Edit Job</h5>
-               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+               <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                  <span aria-hidden="true">×</span>
                </button>
              </div>

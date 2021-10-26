@@ -8,17 +8,25 @@ import {
   Avatar_06, Avatar_08, Avatar_09, Avatar_13, Avatar_17, Avatar_21
 } from '../../Entryfile/imagepath'
 import { useReactOidc } from '@axa-fr/react-oidc-context';
+// import { chcekPermission } from '../../Services/Helper';
+
 
 
 const Header = () => {
 
+  const chcekPermission =  (permission_arr, feature) => {
+    return (permission_arr.find((x)=>x.includes(`hrms:admin:${feature}`)))
+  }
+
   const { oidcUser, logout } = useReactOidc();
   const [name, setName] = useState("")
   const [photo, setPhoto] = useState("")
+  const [setupPermission, setsetupPermission] = useState(false)
   useEffect(() => {
     if (oidcUser) {
       setName(oidcUser.profile.first_name)
       setPhoto(oidcUser.profile.photo)
+      setsetupPermission(chcekPermission(oidcUser.profile.permissions,'setup'))
     }
   })
 
@@ -32,7 +40,7 @@ const Header = () => {
       </div>
       {/* /Logo */}
       {/* <a id="toggle_btn" href="" style={{ display: pathname.includes('tasks') ? "none" : pathname.includes('compose') ? "none" : "" }}> */}
-      <a id="toggle_btn" href="" style={{ display: '' }}>
+      <a id="toggle_btn"  style={{ display: '' }}>
         <span className="bar-icon"><span />
           <span />
           <span />
@@ -148,7 +156,8 @@ const Header = () => {
             </a>
             <div className="dropdown-menu">
               <a className="dropdown-item" href="/hive_hrm/app/employees/my-profile">My Profile</a>
-              <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setups</a>
+              {setupPermission?
+          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setups</a>:""}
               {/* <a className="dropdown-item" href="/hive_hrm/logout">Logout</a> */}
               <button className="dropdown-item" onClick={() => logout()} >Logout</button>
 
@@ -161,7 +170,8 @@ const Header = () => {
         <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fa fa-ellipsis-v" /></a>
         <div className="dropdown-menu dropdown-menu-right">
           <a className="dropdown-item" href="/hive_hrm/app/employees/employee-profile">My Profile</a>
-          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setups</a>
+          {setupPermission?
+          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setups</a>:""}
           <button className="dropdown-item" onClick={() => logout()} >Logout</button>
         </div>
       </div>}

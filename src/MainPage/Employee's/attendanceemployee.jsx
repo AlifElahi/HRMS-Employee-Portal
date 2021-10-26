@@ -9,9 +9,11 @@ import 'antd/dist/antd.css';
 import Select from 'react-select';
 import AttendancestatCard from './components/attendancestatCard';
 import { makeMonthStats, makeMonthStatsDataFormater } from '../../Services/Helper';
+import { useToastify } from '../../Contexts/ToastContext';
 
 
 const Attendance = () => {
+  const { startLoading, stopLoading, successToast, errorToast } = useToastify();
   const monthOptions = [
     { value: 1, label: 'Jan' },
     { value: 2, label: 'Feb' },
@@ -38,8 +40,8 @@ const Attendance = () => {
   const [selectedYearoption, setYearoption] = useState({ value: toDay.getFullYear(), label: toDay.getFullYear() });
   const [selectedYear, setYear] = useState(toDay.getFullYear());
   const [dataSource, setData] = useState([]);
-  const [statData,setStatData]=useState('')
-  const [Latecount,setLateCount]=useState(0)
+  const [statData, setStatData] = useState('')
+  const [Latecount, setLateCount] = useState(0)
 
   const customStyles = {
     control: base => ({
@@ -90,12 +92,12 @@ const Attendance = () => {
   }, [])
 
 
-const getStatData=async()=>{
-  let res = await getCurrentMonthtats(oidcUser.access_token)
-  let o = await makeMonthStatsDataFormater(res)
-  setStatData(o)
+  const getStatData = async () => {
+    let res = await getCurrentMonthtats(oidcUser.access_token)
+    let o = await makeMonthStatsDataFormater(res)
+    setStatData(o)
 
-} 
+  }
 
   function handleChangeMonth(event) {
     setMonth(event.value)
@@ -108,27 +110,38 @@ const getStatData=async()=>{
 
   const onSearch = async () => {
     if (!(selectedMonth && selectedYear)) return
+    startLoading();
     let month = selectedMonth;
     let year = selectedYear;
     let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token)
-    setData([])
-    setData(response)
+    if (!!!response.error) {
+      setData([])
+      setData(response)
+    } else {
+      errorToast(response.error.message)
+    }
+    stopLoading();
   }
   const onFirstSearch = async () => {
     if (!(selectedMonth && selectedYear)) return
+    
     let month = selectedMonth;
     let year = selectedYear;
     let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token)
+    if (!!!response.error) {
     setData(response)
-    let count=response.reduce((total,x)=>{
-      if(x.remark==='Late')
-      return total + 1;
-      return total 
-    },0);
-    setLateCount(count)
+    let count = response.reduce((total, x) => {
+      if (x.remark === 'Late')
+        return total + 1;
+      return total
+    }, 0);
+    setLateCount(count)}
+    else{
+      errorToast(response.error.message)
+    }
 
   }
- 
+
 
 
   return (
@@ -172,7 +185,7 @@ const getStatData=async()=>{
                 </div>
               </section>
               <section>
-                <AttendancestatCard  data={statData}/>
+                <AttendancestatCard data={statData} />
               </section>
             </div>
           </div>

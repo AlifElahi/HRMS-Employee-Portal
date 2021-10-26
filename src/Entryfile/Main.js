@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch,HashRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, HashRouter } from 'react-router-dom';
 import App from '../initialpage/App';
 import config from 'config';
 
@@ -37,6 +37,7 @@ import { AuthenticationProvider, oidcLog } from '@axa-fr/react-oidc-context';
 import oidcConfiguration from '../auth/configuration';
 import { LocalWebStorage } from '../auth/clasess/Store';
 import LoaderPage from '../MainPage/loader';
+import { ToastProvider } from '../Contexts/ToastContext';
 
 
 
@@ -51,12 +52,14 @@ const MainApp = () => (
       // isEnabled={false}
       callbackComponentOverride={LoaderPage}
       UserStore={LocalWebStorage}
-    >
-   <Router basename={`${config.publicPath}`}>
-      <Switch>
-         <Route path="/" component={App} />
-      </Switch>
-	</Router>
+   >
+      <ToastProvider>
+         <Router basename={`${config.publicPath}`}>
+            <Switch>
+               <Route path="/" component={App} />
+            </Switch>
+         </Router>
+      </ToastProvider>
    </AuthenticationProvider>
 );
 

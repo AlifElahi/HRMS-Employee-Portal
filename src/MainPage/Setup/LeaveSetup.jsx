@@ -2,17 +2,24 @@
  * Signin Firebase
  */
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Table } from "antd";
 import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
-import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { AddLeave } from "./modals/AddLeave";
+import { useReactOidc } from "@axa-fr/react-oidc-context";
+import $ from "jquery";
+import { addLeaveTypeData, deleteLeaveTypeData, getLeaveData, updateLeaveTypeData } from "../../Services/setupServices";
+
+
 
 const LeaveSetup = () => {
+
+  const { oidcUser } = useReactOidc()
+
   const {
     register,
     handleSubmit,
@@ -21,32 +28,79 @@ const LeaveSetup = () => {
     setValue,
   } = useForm();
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const LeaveTypeEditFromSubmit = (data) =>upDateLeaveTypeFunction(data);
 
   const [itemId, setItemId] = useState("");
+  const [data, setData] = useState([]);
 
-  const [data, setdata] = useState([
-    { id: 1, leavetype: "Medical Leave", leavedays: "12 days" },
-    { id: 2, leavetype: "Loss of Pay", leavedays: "-" },
-    { id: 3, leavetype: "Casual Leave", leavedays: "12 days" },
-  ]);
 
   const openEdit = (x) => {
-    setValue("leavetype", x.leavetype);
-    setValue("leavedays", x.leavedays);
+    setValue("name", x.name);
+    setValue("count", x.count);
+    setValue("is_active", x.is_active);
     setItemId(x.id);
   };
   const closeEdit = () => {
-    setValue("leavetype", "");
-    setValue("leavedays", "");
+    $("#edit_leavetype").modal("hide");
+    $("#add_leavetype").modal("hide");
+    setValue("name", "");
+    setValue("count", "");
     setItemId("");
   };
   const openDelate = (x) => {
     setItemId(x.id);
   };
   const closeDelete = () => {
+    $("#delete_leavetype").modal("hide");
     setItemId("");
   };
+
+
+
+  useEffect(() => {
+    getData();
+  }, [])
+
+
+  const getData = async () => {
+    let res = await getLeaveData(oidcUser.access_token)
+    if (res.length) setData(res)
+    return
+  }
+
+  const addLeaveFunction = async (data) => {
+    data.is_active = true
+    let res = await addLeaveTypeData(oidcUser.access_token, data)
+    console.log(res);
+    if (res) {
+      getData();
+      closeEdit();}
+    return
+
+  }
+  const upDateLeaveTypeFunction = async (data) => {
+    data.id = itemId
+    let res = await updateLeaveTypeData(oidcUser.access_token, data)
+    if (res) {
+      getData();
+    closeEdit()}
+    return
+
+  }
+  const deleteLeaveFunction = async () => {
+    data.id = itemId
+    let res = await deleteLeaveTypeData(oidcUser.access_token, data)
+  
+    if (res) {
+      getData();
+      closeDelete();
+    }
+
+    return
+
+  }
+
+ 
 
   const columns = [
     {
@@ -55,33 +109,28 @@ const LeaveSetup = () => {
     },
     {
       title: "Leave Type",
-      dataIndex: "leavetype",
+      dataIndex: "name",
     },
 
     {
       title: "Leave Days",
-      dataIndex: "leavedays",
+      dataIndex: "count",
     },
     {
       title: "Status",
       render: (text, record) => (
-        <div className="dropdown action-label">
-          <a
-            className="btn btn-white btn-sm btn-rounded dropdown-toggle"
-            href="#"
-            data-toggle="dropdown"
-            aria-expanded="false"
+        <div className="action-label">
+          {record.is_active ? <a
+            className="btn btn-white btn-sm btn-rounded"
           >
+
             <i className="fa fa-dot-circle-o text-success" /> Active
-          </a>
-          <div className="dropdown-menu dropdown-menu-right">
-            <a href="#" className="dropdown-item">
-              <i className="fa fa-dot-circle-o text-success" /> Active
-            </a>
-            <a href="#" className="dropdown-item">
-              <i className="fa fa-dot-circle-o text-danger" /> Inactive
-            </a>
-          </div>
+          </a> : <a
+            className="btn btn-white btn-sm btn-rounded"
+          >
+
+            <i className="fa fa-dot-circle-o text-danger" /> In active
+          </a>}
         </div>
       ),
     },
@@ -118,6 +167,7 @@ const LeaveSetup = () => {
       ),
     },
   ];
+
   return (
     <div className="page-wrapper">
       <Helmet>
@@ -168,100 +218,6 @@ const LeaveSetup = () => {
                 dataSource={data}
                 rowKey={(record) => record.id}
               />
-              {/* <table className="table table-striped custom-table datatable mb-0">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Leave Type</th>
-                      <th>Leave Days</th>
-                      <th>Status</th>
-                      <th className="text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        1
-                      </td>
-                      <td>Casual Leave</td>
-                      <td>12 Days</td>
-                      <td>
-                        <div className="dropdown action-label">
-                          <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i className="fa fa-dot-circle-o text-success" /> Active
-                          </a>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <a href="#" className="dropdown-item"><i className="fa fa-dot-circle-o text-success" /> Active</a>
-                            <a href="#" className="dropdown-item"><i className="fa fa-dot-circle-o text-danger" /> Inactive</a>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-right">
-                        <div className="dropdown dropdown-action">
-                          <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leavetype"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_leavetype"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        2
-                      </td>
-                      <td>Medical Leave</td>
-                      <td>12 Days</td>
-                      <td>
-                        <div className="dropdown action-label">
-                          <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i className="fa fa-dot-circle-o text-danger" /> Inactive
-                          </a>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-success" /> Active</a>
-                            <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-danger" /> Inactive</a>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-right">
-                        <div className="dropdown dropdown-action">
-                          <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leavetype"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_leavetype"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        3
-                      </td>
-                      <td>Loss of Pay</td>
-                      <td>-</td>
-                      <td>
-                        <div className="dropdown action-label">
-                          <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <i className="fa fa-dot-circle-o text-success" /> Active
-                          </a>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-success" /> Active</a>
-                            <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-danger" /> Inactive</a>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-right">
-                        <div className="dropdown dropdown-action">
-                          <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leavetype"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_leavetype"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table> */}
             </div>
           </div>
         </div>
@@ -269,7 +225,7 @@ const LeaveSetup = () => {
       {/* /Page Content */}
       {/* Add Leavetype Modal */}
       <div id="add_leavetype" className="modal custom-modal fade" role="dialog">
-        <AddLeave submitFunction={(x) => console.log(x)} />
+        <AddLeave submitFunction={(x) => addLeaveFunction(x)} />
       </div>
       {/* /Add Leavetype Modal */}
       {/* Edit Leavetype Modal */}
@@ -285,7 +241,7 @@ const LeaveSetup = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
                 onClick={() => closeEdit()}
               >
@@ -293,7 +249,7 @@ const LeaveSetup = () => {
               </button>
             </div>
             <div className="modal-body">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(LeaveTypeEditFromSubmit)}>
                 <div className="form-group">
                   <label>
                     Leave Type <span className="text-danger">*</span>
@@ -301,7 +257,7 @@ const LeaveSetup = () => {
                   <input
                     className="form-control"
                     type="text"
-                    {...register("leavetype", { required: true })}
+                    {...register("name", { required: true })}
                   />
                 </div>
                 <div className="form-group">
@@ -311,9 +267,15 @@ const LeaveSetup = () => {
                   <input
                     className="form-control"
                     type="text"
-                    {...register("leavedays", { required: true })}
+                    {...register("count", { required: true })}
                   />
                 </div>
+                <div className="col-sm-4">
+                    <div className="custom-control custom-checkbox">
+                      <input type="checkbox" className="custom-control-input" id="customCheck5" {...register('is_active')} />
+                      <label className="custom-control-label" htmlFor="customCheck5">Is Active</label>
+                    </div>
+                  </div>
                 <div className="submit-section">
                   <button className="btn btn-primary submit-btn" type="submit">
                     Submit
@@ -341,12 +303,11 @@ const LeaveSetup = () => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a className="btn btn-primary continue-btn">Delete</a>
+                    <a className="btn btn-primary continue-btn" onClick={()=>deleteLeaveFunction()}>Delete</a>
                   </div>
                   <div className="col-6">
                     <a
                       onClick={() => closeDelete()}
-                      data-dismiss="modal"
                       className="btn btn-primary cancel-btn"
                     >
                       Cancel

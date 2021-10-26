@@ -212,7 +212,7 @@ const Branch = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
               >
                 <span aria-hidden="true">×</span>
@@ -238,7 +238,7 @@ const Branch = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
                 onClick={() => closeEdit()}
               >
@@ -320,7 +320,7 @@ const Branch = () => {
                   <div className="col-6">
                     <a
                       href=""
-                      data-dismiss="modal"
+                      data_dismiss="modal"
                       className="btn btn-primary cancel-btn"
                       onClick={()=>closeDelete()}
                     >

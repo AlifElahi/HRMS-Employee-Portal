@@ -15,7 +15,7 @@ export const getPunchcardInfo = async (token) => {
             })
         return res.data
     } catch (error) {
-        return error
+        return {error}
     }
 
 }
@@ -33,7 +33,7 @@ export const punchTimeLog = async (type, token) => {
             })
         return res.data
     } catch (error) {
-        return error
+        return {error}
 
     }
 
@@ -56,7 +56,7 @@ export const getCurrentMonthtats = async (token) => {
 
 
 
-        return error
+        return {error}
 
     }
 
@@ -83,7 +83,7 @@ export const getMothSpecificUserTimeSheet = async (month, year, token) => {
 
 
 
-        return error
+        return {error}
 
     }
 
@@ -103,7 +103,7 @@ export const getEmployeeList = async (token) => {
 
         return res.data
     } catch (error) {
-        return error
+        return {error}
 
     }
 
@@ -121,7 +121,8 @@ export const getAllDesignations = async (token) => {
         })
        return res.data
       } catch (error) {
-        console.log(error);
+        return {error}
+
         
       }
 
@@ -142,8 +143,7 @@ export const searchEmployee = async (params,token) => {
       )
        return res.data
       } catch (error) {
-        console.log(error);
-        return error
+        return {error}
         
       }
 

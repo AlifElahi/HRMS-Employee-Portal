@@ -50,7 +50,7 @@ const AddDepartmentModal = ({ submitFunction }) => {
           <button
             type="button"
             className="close"
-            data-dismiss="modal"
+            data_dismiss="modal"
             aria-label="Close"
             // onClick={(data) => closeEdit(data)}
           >

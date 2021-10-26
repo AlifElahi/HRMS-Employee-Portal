@@ -15,6 +15,8 @@ import Settinglayout from './Sidebar/Settinglayout';
 
 import $ from 'jquery';
 import LogoutPage from './logout';
+import { withOidcSecure, OidcSecure } from '@axa-fr/react-oidc-context';
+
 // window.jQuery = $;
 // window.$ = $;
 // import UserPage from './pages/UserPage'
@@ -83,7 +85,7 @@ const App =(props) => {
                     {/* </OidcSecure> */}
                 </Route>
                 {/* <Route path="/app" component={DefaultLayout} /> */}
-                <Route path="/setups" component={Settinglayout} />
+                <Route path="/setups" component={withOidcSecure(Settinglayout)} />
             </Switch>
         )
     }

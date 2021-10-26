@@ -1,33 +1,171 @@
-import React, { Component, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Table } from "antd";
 import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import "../antdstyle.css";
-import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import { AddHoliday } from "./modals/AddHoliday";
+import { useReactOidc } from "@axa-fr/react-oidc-context";
+import $ from "jquery";
+import dateFormat from "dateformat";
+import { useToastify } from "../../Contexts/ToastContext";
+
+import { getHolidayData, addHolidayData, updateHolidayData, deleteHolidayData } from "../../Services/setupServices";
+import { holidayDataShaper, holidayCsvToJSON } from "../../Services/Helper";
+
 
 const Holidays = () => {
+  const { oidcUser } = useReactOidc()
+  const { showToast, startLoading, stopLoading, successToast, errorToast } = useToastify()
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
     setValue,
   } = useForm();
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const holidayEditFromSubmit = (data) => upDateHolidayFunction(data);
 
   const [year, setYear] = useState("2021");
+  const [csvFlie, setCsvFlie] = useState();
+  const [data, setData] = useState([]);
+  const [itemId, setItemId] = useState("");
+  const fileRef = useRef();
 
-  const [data, setData] = useState([
-    { id: 1, title: "Eid-e-miladun nabi", date: "12-10-2021", day: "Wed" },
-    { id: 2, title: "Eid-e-miladun nabi", date: "13-10-2021", day: "Wed" },
-    { id: 3, title: "Eid-e-miladun nabi", date: "14-10-2021", day: "Wed" },
-    { id: 4, title: "Eid-e-miladun nabi", date: "15-10-2021", day: "Wed" },
-    { id: 5, title: "Eid-e-miladun nabi", date: "16-10-2021", day: "Wed" },
-  ]);
+
+
+  const openEdit = (x) => {
+    setValue("name", x.name);
+    let r = x.date.split('-')
+    let dateStr = `${r[2]}/${r[1]}/${r[0]}`
+    setValue("date", dateStr);
+    setValue("day", x.day);
+    setValue("is_active", x.is_active);
+    setItemId(x.id);
+  };
+  const closeEdit = () => {
+    $("#edit_holiday").modal("hide");
+    $("#add_holiday").modal("hide");
+    setValue("name", '');
+    setValue("date", '');
+    setValue("day", '');
+    setItemId("");
+  };
+  const openDelate = (x) => {
+    setItemId(x.id);
+  };
+  const closeDelete = () => {
+    $("#delete_holiday").modal("hide");
+    setItemId("");
+  };
+  const closeImport = () => {
+    $("#import_holiday").modal('hide');
+    setCsvFlie();
+  };
+
+
+  const submitCsvFile = () => {
+    const file = csvFlie;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const text = e.target.result;
+      processCSV(text) // plugged in here
+    }
+    reader.readAsText(file);
+  }
+
+
+  const processCSV = (str) => {
+    let uuu = holidayCsvToJSON(str)
+    addHolidayFunctionfromCsv(uuu)
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
+
+  const getData = async () => {
+    startLoading();
+    let res = await getHolidayData(oidcUser.access_token)
+    if (res.length) {
+      let data = await holidayDataShaper(res)
+      setData(data)
+    }
+    stopLoading();
+    return
+  }
+
+  const addHolidayFunction = async (data) => {
+
+    let r = data.date.split('/')
+    let dateStr = `${r[2]}-${r[1]}-${r[0]}`
+    data.date = dateStr
+    data.is_active = true
+    let res = await addHolidayData(oidcUser.access_token, [data])
+    if (!!!res.error) {
+      showToast('success', 'added sucessfully')
+      getData();
+      closeEdit();
+    } else {
+      showToast('error', res.error.message)
+    }
+    return
+
+  }
+  const addHolidayFunctionfromCsv = async (data) => {
+    startLoading()
+    let res = await addHolidayData(oidcUser.access_token, data)
+    if (!!!res.error) {
+      successToast("Import Successfull")
+      getData();
+      closeImport();
+    } else {
+      errorToast(res.error.message)
+    }
+    stopLoading()
+    return
+
+  }
+
+
+  const upDateHolidayFunction = async (data) => {
+    startLoading()
+    let r = data.date.split('/')
+    let dateStr = `${r[2]}-${r[1]}-${r[0]}`
+    data.date = dateStr
+    data.id = itemId
+    let res = await updateHolidayData(oidcUser.access_token, data)
+    if (!!!res.error) {
+      successToast("Update Successfull")
+      getData();
+      closeEdit()
+    }else{
+      errorToast(res.error.message)
+    }
+    stopLoading()
+
+    return
+
+  }
+  const deleteHolidayFunction = async () => {
+    startLoading()
+    data.id = itemId
+    let res = await deleteHolidayData(oidcUser.access_token, data)
+
+    if (!!!res.error) {
+      showToast('success', "Deleted")
+      getData();
+      closeDelete();
+    } else {
+      showToast('error', res.error.message)
+    }
+    stopLoading()
+    return
+
+  }
+
+
 
   const columns = [
     {
@@ -36,11 +174,16 @@ const Holidays = () => {
     },
     {
       title: "Title",
-      dataIndex: "title",
+      dataIndex: "name",
     },
     {
       title: "Date",
-      dataIndex: "date",
+      render: (text, record) => (
+        <div className='dant-table-cell'>
+
+          {dateFormat(record.date, 'mmmm dd')}
+        </div>
+      ),
     },
 
     {
@@ -52,7 +195,6 @@ const Holidays = () => {
       render: (text, record) => (
         <div className="dropdown dropdown-action text-right">
           <a
-            href="#"
             className="action-icon dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false"
@@ -62,7 +204,6 @@ const Holidays = () => {
           <div className="dropdown-menu dropdown-menu-right">
             <a
               className="dropdown-item"
-              href="#"
               data-toggle="modal"
               data-target="#edit_holiday"
               onClick={() => openEdit(record)}
@@ -71,7 +212,6 @@ const Holidays = () => {
             </a>
             <a
               className="dropdown-item"
-              href="#"
               data-toggle="modal"
               data-target="#delete_holiday"
               onClick={() => openDelate(record)}
@@ -83,25 +223,6 @@ const Holidays = () => {
       ),
     },
   ];
-
-  const openEdit = (x) => {
-    setValue("title", x.title);
-    setValue("date", x.date);
-    setValue("day", x.day);
-    setItemId(x.id);
-  };
-  const closeEdit = () => {
-    setValue("title",'');
-    setValue("date", '');
-    setValue("day", '');
-    setItemId("");
-  };
-  const openDelate = (x) => {
-    setItemId(x.id);
-  };
-  const closeDelete = () => {
-    setItemId("");
-  };
 
   return (
     <div className="page-wrapper">
@@ -119,13 +240,33 @@ const Holidays = () => {
             </div>
             <div className="col-auto float-right ml-auto">
               <a
-                href="#"
                 className="btn add-btn"
                 data-toggle="modal"
                 data-target="#add_holiday"
               >
                 <i className="fa fa-plus" /> Add Holiday
               </a>
+            </div>
+            <div className="col-auto float-right ml-auto">
+              <a
+                className="btn add-btn"
+                onClick={() => fileRef.current.click()}
+              >
+                <i className="fa fa-file" /> Import Holiday
+              </a>
+              <input
+                className="btn add-btn"
+                ref={fileRef}
+                type='file'
+                accept='.csv'
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  setCsvFlie(e.target.files[0])
+                  $("#import_holiday").modal('show');
+                }}
+
+              >
+              </input>
             </div>
           </div>
         </div>
@@ -162,14 +303,14 @@ const Holidays = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-              <AddHoliday />
+              <AddHoliday submitFunc={addHolidayFunction} />
             </div>
           </div>
         </div>
@@ -184,15 +325,15 @@ const Holidays = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
-                onClick={()=>closeEdit()}
+                onClick={() => closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(holidayEditFromSubmit)}>
                 <div className="form-group">
                   <label>
                     Holiday Name <span className="text-danger">*</span>
@@ -200,7 +341,7 @@ const Holidays = () => {
                   <input
                     className="form-control"
                     type="text"
-                    {...register("title", { required: true })}
+                    {...register("name", { required: true })}
                   />
                 </div>
                 <div className="form-group">
@@ -213,6 +354,12 @@ const Holidays = () => {
                       type="text"
                       {...register("date", { required: true })}
                     />
+                  </div>
+                </div>
+                <div className="col-sm-4">
+                  <div className="custom-control custom-checkbox">
+                    <input type="checkbox" className="custom-control-input" id="customCheck5" {...register('is_active')} />
+                    <label className="custom-control-label" htmlFor="customCheck5">Is Active</label>
                   </div>
                 </div>
                 <div className="submit-section">
@@ -242,16 +389,15 @@ const Holidays = () => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a href="" className="btn btn-primary continue-btn">
+                    <a onClick={() => deleteHolidayFunction()} className="btn btn-primary continue-btn">
                       Delete
                     </a>
                   </div>
                   <div className="col-6">
                     <a
-                      href=""
-                      data-dismiss="modal"
+                      data_dismiss="modal"
                       className="btn btn-primary cancel-btn"
-                      onClick={()=>closeDelete()}
+                      onClick={() => closeDelete()}
                     >
                       Cancel
                     </a>
@@ -263,6 +409,43 @@ const Holidays = () => {
         </div>
       </div>
       {/* /Delete Holiday Modal */}
+      {/* Import Holiday Modal */}
+      <div
+        className="modal custom-modal fade"
+        id="import_holiday"
+        role="dialog"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="form-header">
+                <h3>Import Holiday</h3>
+                <p>Are you sure want to Import?</p>
+              </div>
+              <div className="modal-btn delete-action">
+                <div className="row">
+                  <div className="col-6">
+                    <a onClick={() => submitCsvFile()} className="btn btn-primary continue-btn">
+                      Yes
+                    </a>
+                  </div>
+                  <div className="col-6">
+                    <a
+                      data_dismiss="modal"
+                      href="#"
+                      className="btn btn-primary cancel-btn"
+                      onClick={() => closeImport()}
+                    >
+                      Cancel
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Import Holiday Modal */}
     </div>
   );
 };

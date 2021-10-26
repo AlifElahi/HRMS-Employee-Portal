@@ -11,6 +11,7 @@ import "../antdstyle.css";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import AddDepartmentModal from "./modals/AddDepartmentModal";
+import {punchTimeLog} from '../../Services/dashBoardServices'
 
 const Department = () => {
   const {
@@ -107,17 +108,17 @@ const Department = () => {
         <div className="dropdown action-label">
           <a
             className="btn btn-white btn-sm btn-rounded dropdown-toggle"
-            href="#"
+          
             data-toggle="dropdown"
             aria-expanded="false"
           >
             <i className="fa fa-dot-circle-o text-success" /> Active
           </a>
           <div className="dropdown-menu dropdown-menu-right">
-            <a href="#" className="dropdown-item">
+            <a className="dropdown-item">
               <i className="fa fa-dot-circle-o text-success" /> Active
             </a>
-            <a href="#" className="dropdown-item">
+            <a className="dropdown-item">
               <i className="fa fa-dot-circle-o text-danger" /> Inactive
             </a>
           </div>
@@ -224,7 +225,7 @@ const Department = () => {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
+                data_dismiss="modal"
                 aria-label="Close"
                 onClick={()=>closeEdit()}
               >
@@ -322,7 +323,7 @@ const Department = () => {
                   </div>
                   <div className="col-6">
                     <a
-                      data-dismiss="modal"
+                      data_dismiss="modal"
                       className="btn btn-primary cancel-btn"
                       onClick={()=>closeDelete()}
                     >

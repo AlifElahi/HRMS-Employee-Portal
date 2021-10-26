@@ -124,7 +124,7 @@
                <div className="modal-content">
                  <div className="modal-header">
                    <h5 className="modal-title">Add Candidates</h5>
-                   <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                   <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">×</span>
                    </button>
                  </div>
@@ -183,7 +183,7 @@
                <div className="modal-content">
                  <div className="modal-header">
                    <h5 className="modal-title">Edit Candidates</h5>
-                   <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                   <button type="button" className="close" data_dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">×</span>
                    </button>
                  </div>
@@ -251,7 +251,7 @@
                          <a className="btn btn-primary continue-btn">Delete</a>
                        </div>
                        <div className="col-6">
-                         <a data-dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
+                         <a data_dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
                        </div>
                      </div>
                    </div>
