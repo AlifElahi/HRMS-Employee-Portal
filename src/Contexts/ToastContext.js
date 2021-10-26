@@ -7,6 +7,7 @@ import { Spin } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
 
 export const ToastContext = React.createContext();
+
 export const useToastify = () => {
     const toastHelpers = useContext(ToastContext);
 

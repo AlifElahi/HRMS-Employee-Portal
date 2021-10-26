@@ -2,7 +2,7 @@
  * Signin Firebase
  */
 
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Table } from "antd";
 import "antd/dist/antd.css";
@@ -12,13 +12,18 @@ import { useForm } from "react-hook-form";
 import { AddLeave } from "./modals/AddLeave";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import $ from "jquery";
-import { addLeaveTypeData, deleteLeaveTypeData, getLeaveData, updateLeaveTypeData } from "../../Services/setupServices";
-
-
+import {
+  addLeaveTypeData,
+  deleteLeaveTypeData,
+  getLeaveData,
+  updateLeaveTypeData,
+} from "../../Services/setupServices";
+import { useToastify } from "../../Contexts/ToastContext";
 
 const LeaveSetup = () => {
-
-  const { oidcUser } = useReactOidc()
+  const { showToast, startLoading, stopLoading, successToast, errorToast } =
+    useToastify();
+  const { oidcUser } = useReactOidc();
 
   const {
     register,
@@ -28,11 +33,10 @@ const LeaveSetup = () => {
     setValue,
   } = useForm();
 
-  const LeaveTypeEditFromSubmit = (data) =>upDateLeaveTypeFunction(data);
+  const LeaveTypeEditFromSubmit = (data) => upDateLeaveTypeFunction(data);
 
   const [itemId, setItemId] = useState("");
   const [data, setData] = useState([]);
-
 
   const openEdit = (x) => {
     setValue("name", x.name);
@@ -55,52 +59,61 @@ const LeaveSetup = () => {
     setItemId("");
   };
 
-
-
   useEffect(() => {
     getData();
-  }, [])
-
+  }, []);
 
   const getData = async () => {
-    let res = await getLeaveData(oidcUser.access_token)
-    if (res.length) setData(res)
-    return
-  }
+    let res = await getLeaveData(oidcUser.access_token);
+    if (!!!res.error) setData(res);
+    else errorToast(res.error.message);
+    return;
+  };
 
   const addLeaveFunction = async (data) => {
-    data.is_active = true
-    let res = await addLeaveTypeData(oidcUser.access_token, data)
-    console.log(res);
-    if (res) {
+    startLoading();
+    data.is_active = true;
+    let res = await addLeaveTypeData(oidcUser.access_token, data);
+ 
+    if (!!!res.error) {
+      successToast("Added Successfully");
       getData();
-      closeEdit();}
-    return
-
-  }
-  const upDateLeaveTypeFunction = async (data) => {
-    data.id = itemId
-    let res = await updateLeaveTypeData(oidcUser.access_token, data)
-    if (res) {
-      getData();
-    closeEdit()}
-    return
-
-  }
-  const deleteLeaveFunction = async () => {
-    data.id = itemId
-    let res = await deleteLeaveTypeData(oidcUser.access_token, data)
-  
-    if (res) {
-      getData();
-      closeDelete();
+      closeEdit();
+    } else {
+      errorToast(res.error.message);
     }
 
-    return
+    stopLoading();
+  };
+  const upDateLeaveTypeFunction = async (data) => {
+    startLoading();
+    data.id = itemId;
+    let res = await updateLeaveTypeData(oidcUser.access_token, data);
+    if (!!!res.error) {
+      successToast("Updated Successfully");
+      getData();
+      closeEdit();
+    } else {
+      errorToast(res.error.message);
+    }
+    stopLoading();
+  };
+  const deleteLeaveFunction = async () => {
 
-  }
+    startLoading();
 
- 
+    data.id = itemId;
+    let res = await deleteLeaveTypeData(oidcUser.access_token, data);
+
+    if (!!!res.error) {
+      successToast("Deleted Successfully");
+      getData();
+      closeDelete();
+    } else {
+      errorToast(res.error.message);
+    }
+    stopLoading();
+  };
 
   const columns = [
     {
@@ -120,17 +133,15 @@ const LeaveSetup = () => {
       title: "Status",
       render: (text, record) => (
         <div className="action-label">
-          {record.is_active ? <a
-            className="btn btn-white btn-sm btn-rounded"
-          >
-
-            <i className="fa fa-dot-circle-o text-success" /> Active
-          </a> : <a
-            className="btn btn-white btn-sm btn-rounded"
-          >
-
-            <i className="fa fa-dot-circle-o text-danger" /> In active
-          </a>}
+          {record.is_active ? (
+            <a className="btn btn-white btn-sm btn-rounded">
+              <i className="fa fa-dot-circle-o text-success" /> Active
+            </a>
+          ) : (
+            <a className="btn btn-white btn-sm btn-rounded">
+              <i className="fa fa-dot-circle-o text-danger" /> In active
+            </a>
+          )}
         </div>
       ),
     },
@@ -271,11 +282,21 @@ const LeaveSetup = () => {
                   />
                 </div>
                 <div className="col-sm-4">
-                    <div className="custom-control custom-checkbox">
-                      <input type="checkbox" className="custom-control-input" id="customCheck5" {...register('is_active')} />
-                      <label className="custom-control-label" htmlFor="customCheck5">Is Active</label>
-                    </div>
+                  <div className="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="customCheck5"
+                      {...register("is_active")}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="customCheck5"
+                    >
+                      Is Active
+                    </label>
                   </div>
+                </div>
                 <div className="submit-section">
                   <button className="btn btn-primary submit-btn" type="submit">
                     Submit
@@ -303,7 +324,12 @@ const LeaveSetup = () => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a className="btn btn-primary continue-btn" onClick={()=>deleteLeaveFunction()}>Delete</a>
+                    <a
+                      className="btn btn-primary continue-btn"
+                      onClick={() => deleteLeaveFunction()}
+                    >
+                      Delete
+                    </a>
                   </div>
                   <div className="col-6">
                     <a

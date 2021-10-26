@@ -9,26 +9,30 @@ import { useForm, Controller } from "react-hook-form";
 import { AddShift } from "./modals/AddShift";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import $ from "jquery";
-import { addShiftData, deleteShiftData, getShiftData, updateShiftData } from "../../Services/setupServices";
-
-
-
+import {
+  addShiftData,
+  deleteShiftData,
+  getShiftData,
+  updateShiftData,
+} from "../../Services/setupServices";
+import { useToastify } from "../../Contexts/ToastContext";
 
 // class ShiftList extends Component {
 const ShiftList = () => {
-
+  const { showToast, startLoading, stopLoading, successToast, errorToast } =
+    useToastify();
   const [itemId, setItemId] = useState("");
-  const { oidcUser } = useReactOidc()
+  const { oidcUser } = useReactOidc();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
     setValue,
+    reset
   } = useForm();
 
   const shiftEditfromSubmit = (data) => upDateShiftFunction(data);
-
 
   const openEdit = (x) => {
     setValue("name", x.name);
@@ -80,55 +84,57 @@ const ShiftList = () => {
   ];
   const [data, setData] = useState([]);
 
-
   useEffect(() => {
     getData();
-  }, [])
-
+  }, []);
 
   const getData = async () => {
-    let res = await getShiftData(oidcUser.access_token)
-    console.log(res);
-    if (res.length) setData(res)
-    return
-  }
+    let res = await getShiftData(oidcUser.access_token);
+    if (!!!res.error) setData(res);
+    else errorToast(res.error.message)
+  };
 
   const addShiftFunction = async (data) => {
-    data.is_active = true,
-      data.is_default = false
-    let res = await addShiftData(oidcUser.access_token, data)
-    console.log(res);
-    if (res) {
+    startLoading();
+    (data.is_active = true), (data.is_default = false);
+    let res = await addShiftData(oidcUser.access_token, data);
+    if (!!!res.error) {
+      successToast("Added sucessfully");
+      closeEdit()
       getData();
       closeEdit();
+    } else {
+      errorToast(res.error.message);
     }
-    return
-
-  }
+    stopLoading();
+    return;
+  };
   const upDateShiftFunction = async (data) => {
-    data.id = itemId
-    let res = await updateShiftData(oidcUser.access_token, data)
-    if (res) {
+    data.id = itemId;
+    let res = await updateShiftData(oidcUser.access_token, data);
+    if (!!!res.error) {
+      successToast("Updated sucessfully");
       getData();
-      closeEdit()
+      closeEdit();
+    } else {
+      errorToast(res.error.message);
     }
-    return
-
-  }
+    return;
+  };
   const deleteShiftFunction = async () => {
-    data.id = itemId
-    let res = await deleteShiftData(oidcUser.access_token, data)
+    data.id = itemId;
+    let res = await deleteShiftData(oidcUser.access_token, data);
 
-    if (res) {
+    if (!!!res.error) {
+      successToast("Deleted");
       getData();
       closeDelete();
+    } else {
+      showToast('error', res.error.message)
     }
 
-    return
-
-  }
-
-
+    return;
+  };
 
   const columns = [
     {
@@ -156,17 +162,15 @@ const ShiftList = () => {
       title: "Status",
       render: (text, record) => (
         <div className="action-label">
-          {record.is_active ? <a
-            className="btn btn-white btn-sm btn-rounded"
-          >
-
-            <i className="fa fa-dot-circle-o text-success" /> Active
-          </a> : <a
-            className="btn btn-white btn-sm btn-rounded"
-          >
-
-            <i className="fa fa-dot-circle-o text-danger" /> In active
-          </a>}
+          {record.is_active ? (
+            <a className="btn btn-white btn-sm btn-rounded">
+              <i className="fa fa-dot-circle-o text-success" /> Active
+            </a>
+          ) : (
+            <a className="btn btn-white btn-sm btn-rounded">
+              <i className="fa fa-dot-circle-o text-danger" /> In active
+            </a>
+          )}
         </div>
       ),
     },
@@ -251,7 +255,7 @@ const ShiftList = () => {
                   // bordered
                   dataSource={data}
                   rowKey={(record) => record.id}
-                // onChange={this.handleTableChange}
+                  // onChange={this.handleTableChange}
                 />
               </div>
             </div>
@@ -435,14 +439,34 @@ const ShiftList = () => {
                   </div>
                   <div className="col-sm-4">
                     <div className="custom-control custom-checkbox">
-                      <input type="checkbox" className="custom-control-input" id="customCheck4" {...register('is_default')} />
-                      <label className="custom-control-label" htmlFor="customCheck4">Is Default</label>
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customCheck4"
+                        {...register("is_default")}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="customCheck4"
+                      >
+                        Is Default
+                      </label>
                     </div>
                   </div>
                   <div className="col-sm-4">
                     <div className="custom-control custom-checkbox">
-                      <input type="checkbox" className="custom-control-input" id="customCheck5" {...register('is_active')} />
-                      <label className="custom-control-label" htmlFor="customCheck5">Is Active</label>
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customCheck5"
+                        {...register("is_active")}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="customCheck5"
+                      >
+                        Is Active
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -460,11 +484,7 @@ const ShiftList = () => {
       {/* Add Schedule Modal */}
       {/* /Add Schedule Modal */}
       {/* Delete Shift Modal */}
-      <div
-        className="modal custom-modal fade"
-        id="delete_shift"
-        role="dialog"
-      >
+      <div className="modal custom-modal fade" id="delete_shift" role="dialog">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-body">
@@ -487,9 +507,7 @@ const ShiftList = () => {
                       // data_dismiss="modal"
                       // data_dismiss='modal'
                       className="btn btn-primary cancel-btn"
-                      onClick={
-                        () => closeDelete()
-                      }
+                      onClick={() => closeDelete()}
                     >
                       Cancel
                     </a>
