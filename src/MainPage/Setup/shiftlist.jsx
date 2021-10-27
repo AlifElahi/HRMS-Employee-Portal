@@ -9,6 +9,8 @@ import { useForm, Controller } from "react-hook-form";
 import { AddShift } from "./modals/AddShift";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import $ from "jquery";
+import messages from "../../message"
+
 import {
   addShiftData,
   deleteShiftData,
@@ -99,7 +101,7 @@ const ShiftList = () => {
     (data.is_active = true), (data.is_default = false);
     let res = await addShiftData(oidcUser.access_token, data);
     if (!!!res.error) {
-      successToast("Added sucessfully");
+      successToast(messages.addedSuccess)
       closeEdit()
       getData();
       closeEdit();
@@ -113,7 +115,7 @@ const ShiftList = () => {
     data.id = itemId;
     let res = await updateShiftData(oidcUser.access_token, data);
     if (!!!res.error) {
-      successToast("Updated sucessfully");
+      successToast(messages.updateSuccess);
       getData();
       closeEdit();
     } else {
@@ -126,7 +128,7 @@ const ShiftList = () => {
     let res = await deleteShiftData(oidcUser.access_token, data);
 
     if (!!!res.error) {
-      successToast("Deleted");
+      successToast(messages.deleteSuccess);
       getData();
       closeDelete();
     } else {

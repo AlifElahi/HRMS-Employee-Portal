@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { AddLeave } from "./modals/AddLeave";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import $ from "jquery";
+import messages from "../../message"
+
 import {
   addLeaveTypeData,
   deleteLeaveTypeData,
@@ -76,7 +78,7 @@ const LeaveSetup = () => {
     let res = await addLeaveTypeData(oidcUser.access_token, data);
  
     if (!!!res.error) {
-      successToast("Added Successfully");
+      successToast(messages.addedSuccess);
       getData();
       closeEdit();
     } else {
@@ -90,7 +92,7 @@ const LeaveSetup = () => {
     data.id = itemId;
     let res = await updateLeaveTypeData(oidcUser.access_token, data);
     if (!!!res.error) {
-      successToast("Updated Successfully");
+      successToast(messages.updateSuccess);
       getData();
       closeEdit();
     } else {
@@ -106,7 +108,7 @@ const LeaveSetup = () => {
     let res = await deleteLeaveTypeData(oidcUser.access_token, data);
 
     if (!!!res.error) {
-      successToast("Deleted Successfully");
+      successToast(messages.deleteSucceess);
       getData();
       closeDelete();
     } else {

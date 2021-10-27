@@ -10,6 +10,8 @@ import { useReactOidc } from "@axa-fr/react-oidc-context";
 import $ from "jquery";
 import dateFormat from "dateformat";
 import { useToastify } from "../../Contexts/ToastContext";
+import messages from "../../message"
+
 
 import { getHolidayData, addHolidayData, updateHolidayData, deleteHolidayData } from "../../Services/setupServices";
 import { holidayDataShaper, holidayCsvToJSON } from "../../Services/Helper";
@@ -104,7 +106,7 @@ const Holidays = () => {
     data.is_active = true
     let res = await addHolidayData(oidcUser.access_token, [data])
     if (!!!res.error) {
-      showToast('success', 'added sucessfully')
+     successToast(messages.addedSuccess)
       getData();
       closeEdit();
     } else {
@@ -117,7 +119,7 @@ const Holidays = () => {
     startLoading()
     let res = await addHolidayData(oidcUser.access_token, data)
     if (!!!res.error) {
-      successToast("Import Successfull")
+      successToast(messages.addedSuccess)
       getData();
       closeImport();
     } else {
@@ -137,7 +139,7 @@ const Holidays = () => {
     data.id = itemId
     let res = await updateHolidayData(oidcUser.access_token, data)
     if (!!!res.error) {
-      successToast("Update Successfull")
+      successToast(messages.updateSuccess)
       getData();
       closeEdit()
     }else{
@@ -154,7 +156,7 @@ const Holidays = () => {
     let res = await deleteHolidayData(oidcUser.access_token, data)
 
     if (!!!res.error) {
-      showToast('success', "Deleted")
+      successToast(messages.deleteSuccess)
       getData();
       closeDelete();
     } else {
