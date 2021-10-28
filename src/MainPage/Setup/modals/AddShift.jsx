@@ -1,6 +1,7 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
+import { Helmet } from "react-helmet";
 
 export const AddShift = ({ submitFunc }) => {
   const {
@@ -9,7 +10,18 @@ export const AddShift = ({ submitFunc }) => {
     control,
     formState: { errors },
     setValue,
+    getValues
   } = useForm();
+
+
+  const handletime = e => {
+    console.log(e.target.value);
+  }
+
+  // {
+  //   const startValue = getValues("from_time");
+  //   console.log(startValue, "fsdf");
+  // }
 
   useEffect(() => {
     setValue("name", "");
@@ -20,9 +32,9 @@ export const AddShift = ({ submitFunc }) => {
     setValue("day_of_the_week", "");
     setValue("is_active", false);
     setValue("is_default", false);
-  }, [])
+  }, []);
 
-  const onSubmit = (data) => submitFunc(data);
+
 
   const weekoptions = [
     { value: 1, label: 1 },
@@ -41,9 +53,32 @@ export const AddShift = ({ submitFunc }) => {
     { value: 5, label: "fri" },
   ];
 
+  const OnSubmit=(data) => {
+    const startTime = getValues("from_time");
+    const endTime = getValues("to_time");
+    console.log();
+    console.log(endTime);
+
+    if(startTime===endTime){
+      alert("Start Time and End Time same");
+     return {
+      error: true,
+      message: 'Parameter needed'
+     }
+    }
+    else if(startTime>endTime){
+      alert("Start Time can not be larger than End Time")
+    
+    } else {
+      submitFunc(data);
+    }
+    
+
+  }
+
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(OnSubmit)}>
         <div className="row">
           <div className="col-sm-12">
             <div className="form-group">
@@ -77,6 +112,8 @@ export const AddShift = ({ submitFunc }) => {
                 <input
                   className="form-control"
                   type="time"
+                  onBlur={handletime}
+             
                   {...register("from_time", { required: true })}
                 />
                 {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
@@ -98,7 +135,7 @@ export const AddShift = ({ submitFunc }) => {
                   className="form-control"
                   type="time"
                   defaultValue=""
-
+      
                   {...register("to_time", { required: true })}
                 />
                 {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
@@ -118,7 +155,7 @@ export const AddShift = ({ submitFunc }) => {
                 type="number"
                 {...register("buffer_time", { required: true })}
               />
-              {errors.to_time && (
+              {errors.buffer_time && (
                 <span style={{ color: "red", fontSize: "small" }}>
                   is required
                 </span>
@@ -128,7 +165,7 @@ export const AddShift = ({ submitFunc }) => {
           <div className="col-sm-6">
             <div className="form-group">
               <label className="col-form-label">No of working days/week</label>
-         
+
               <Controller
                 control={control}
                 name="work_days"
@@ -193,7 +230,7 @@ export const AddShift = ({ submitFunc }) => {
                   </div>*/}
         </div>
         <div className="submit-section">
-          <button className="btn btn-primary submit-btn" type="submit">
+          <button className="btn btn-primary submit-btn"  type="submit" >
             Submit
           </button>
         </div>

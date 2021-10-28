@@ -22,7 +22,7 @@ export const AddHoliday = ({submitFunc}) => {
             type="text"
             {...register("name", { required: true })}
           />
-          {errors.holiday && (
+          {errors.name && (
             <span style={{ color: "red", fontSize: "small" }}>is required</span>
           )}
         </div>
@@ -36,7 +36,7 @@ export const AddHoliday = ({submitFunc}) => {
               type="text"
               {...register("date", { required: true })}
             />
-            {errors.holiday && (
+            {errors.date && (
               <span style={{ color: "red", fontSize: "small" }}>
                 is required
               </span>

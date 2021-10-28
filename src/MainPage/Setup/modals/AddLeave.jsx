@@ -41,7 +41,13 @@ export const AddLeave = ({ submitFunction }) => {
                 type="text"
                 {...register("name", { required: true })}
               />
+                      {errors.name && (
+                <span style={{ color: "red", fontSize: "small" }}>
+                  is required
+                </span>
+              )}
             </div>
+    
             <div className="form-group">
               <label>
                 Number of days <span className="text-danger">*</span>
@@ -51,6 +57,11 @@ export const AddLeave = ({ submitFunction }) => {
                 type="text"
                 {...register("count", { required: true })}
               />
+                    {errors.count && (
+                <span style={{ color: "red", fontSize: "small" }}>
+                  is required
+                </span>
+              )}
             </div>
             <div className="submit-section">
               <button className="btn btn-primary submit-btn" type="submit">
