@@ -23,7 +23,6 @@ const SettingsLayout =(props)=> {
 	const [setupPermission, setsetupPermission] = useState(true)
 
 	useEffect(() => {
-		// console.log(oidcUser,oidcUser);
 		setsetupPermission(chcekPermission(oidcUser.profile.permissions,'setup'))
 	}, [])
 

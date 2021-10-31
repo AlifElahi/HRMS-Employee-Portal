@@ -8,15 +8,11 @@ import {
   Avatar_06, Avatar_08, Avatar_09, Avatar_13, Avatar_17, Avatar_21
 } from '../../Entryfile/imagepath'
 import { useReactOidc } from '@axa-fr/react-oidc-context';
-// import { chcekPermission } from '../../Services/Helper';
+import { chcekPermission } from '../../Services/Helper';
 
 
 
 const Header = () => {
-
-  const chcekPermission =  (permission_arr, feature) => {
-    return (permission_arr.find((x)=>x.includes(`hrms:admin:${feature}`)))
-  }
 
   const { oidcUser, logout } = useReactOidc();
   const [name, setName] = useState("")
@@ -157,7 +153,7 @@ const Header = () => {
             <div className="dropdown-menu">
               <a className="dropdown-item" href="/hive_hrm/app/employees/my-profile">My Profile</a>
               {setupPermission?
-          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setups</a>:""}
+          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setup</a>:""}
               {/* <a className="dropdown-item" href="/hive_hrm/logout">Logout</a> */}
               <button className="dropdown-item" onClick={() => logout()} >Logout</button>
 
@@ -171,7 +167,7 @@ const Header = () => {
         <div className="dropdown-menu dropdown-menu-right">
           <a className="dropdown-item" href="/hive_hrm/app/employees/employee-profile">My Profile</a>
           {setupPermission?
-          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setups</a>:""}
+          <a className="dropdown-item" href="/hive_hrm/setups/shift-setup">Setup</a>:""}
           <button className="dropdown-item" onClick={() => logout()} >Logout</button>
         </div>
       </div>}

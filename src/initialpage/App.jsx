@@ -79,12 +79,7 @@ const App =(props) => {
                     <Route path="/register" component={RegistrationPage} />
                     <Route path="/otp" component={OTP} />
                     <Route path="/lockscreen" component={LockScreen} /> */}
-                <Route path="/app">
-                    {/* <OidcSecure> */}
-                        <DefaultLayout />
-                    {/* </OidcSecure> */}
-                </Route>
-                {/* <Route path="/app" component={DefaultLayout} /> */}
+                <Route path="/app" component={DefaultLayout} />
                 <Route path="/setups" component={withOidcSecure(Settinglayout)} />
             </Switch>
         )

@@ -30,8 +30,7 @@ const ShiftList = () => {
     handleSubmit,
     control,
     formState: { errors },
-    setValue,
-    reset
+    setValue
   } = useForm();
 
   const shiftEditfromSubmit = (data) => upDateShiftFunction(data);
@@ -98,13 +97,12 @@ const ShiftList = () => {
 
   const addShiftFunction = async (data) => {
     startLoading();
-    (data.is_active = true), (data.is_default = false);
+    data.is_active = true, data.is_default = false;
     let res = await addShiftData(oidcUser.access_token, data);
     if (!!!res.error) {
       successToast(messages.addedSuccess)
       closeEdit()
       getData();
-      closeEdit();
     } else {
       errorToast(res.error.message);
     }

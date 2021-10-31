@@ -56,9 +56,6 @@ export const AddShift = ({ submitFunc }) => {
   const OnSubmit=(data) => {
     const startTime = getValues("from_time");
     const endTime = getValues("to_time");
-    console.log();
-    console.log(endTime);
-
     if(startTime===endTime){
       alert("Start Time and End Time same");
      return {
