@@ -31,19 +31,21 @@ const Leaves = (props) => {
     { value: "Casual3", label: "Casual3" },
   ];
   const [leaveTypes, setLeaveTypes] = useState(leavetypeOption);
-  const [startDay, setStart] = useState();
-  const [endDay, setEnd] = useState();
+  const [startDay, setStart] = useState(moment());
+  const [endDay, setEnd] = useState(moment());
   const [itemId, setItemId] = useState("");
 
 
   // const [leaveTypes,setLeaveTypes]=useState(leavetypeOption)
 
   const openEdit = (x) => {
+    console.log(moment(x.from));
+    setStart(moment(x.from));
+    setEnd(moment(x.to));
     setValue("noofdays", x.name);
-    setValue("from",x.from);
-    setValue("to", x.to);
-    setStart(moment(x.from.split("-")));
-    setEnd(moment(x.to.split("-")));
+    setValue("leavetype", x.leavetype);
+    setValue("from",p);
+    setValue("to", p);
     setValue("reason", x.reason);
     setItemId(x.id);
   };
@@ -88,8 +90,8 @@ const Leaves = (props) => {
       image: Avatar_09,
       name: "Richard Miles",
       leavetype:"Casual",
-      from:"2021-10-5",
-      to: "2021-10-6",
+      from:"2021-10-05",
+      to: "2021-10-06",
       fdays: "2 days",
       reason: "Going to Hospital",
       status: "Pending",
@@ -174,11 +176,7 @@ const Leaves = (props) => {
     },
   ]);
 
-  const sayHello = () => {
-    // console.log(this.state.data.length)
-    console.log(this.state.data.filter((x) => x.leavetype == "Casual Leave"));
-    // console.log(this.state.data);
-  };
+ 
 
   const columns = [
     {
@@ -275,7 +273,7 @@ const Leaves = (props) => {
             <a
               className="dropdown-item"
               data-toggle="modal"
-              data-target="#delete_approve"
+              data-target="#delete_leave"
               onClick={() => openDelate(record)}
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
@@ -314,7 +312,7 @@ const Leaves = (props) => {
         {/* Leave Statistics */}
 
         <div className="row">
-          <div className="col-md-3" onClick={sayHello}>
+          <div className="col-md-3" >
             <div className="stats-info">
               <h6>Annual Leave</h6>
               <h4>{data.length}</h4>
@@ -437,7 +435,7 @@ const Leaves = (props) => {
                   </label>
                   <DatePicker
                     className="form-control datetimepicker"
-                    defaultValue={startDay?startDay.format("YYYY-MM-DD"):""}
+                    defaultValue={startDay}
                     onChange={(e) => {
                       setStart(e);
                       if (e) setValue("from", e.format("YYYY-MM-DD"));
@@ -451,8 +449,7 @@ const Leaves = (props) => {
                   </label>
                   <DatePicker
                     className="form-control datetimepicker"
-                    defaultValue={endDay?endDay.format("YYYY-MM-DD"):""}
-
+                    defaultValue={endDay}
                     onChange={(e) => {
                       setEnd(e);
                       if (e) setValue("to", e.format("YYYY-MM-DD"));
@@ -505,7 +502,7 @@ const Leaves = (props) => {
       {/* Delete Leave Modal */}
       <div
         className="modal custom-modal fade"
-        id="delete_approve"
+        id="delete_leave"
         role="dialog"
       >
         <div className="modal-dialog modal-dialog-centered">
