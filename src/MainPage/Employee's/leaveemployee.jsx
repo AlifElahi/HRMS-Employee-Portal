@@ -32,13 +32,16 @@ const Leaves = (props) => {
     { value: "Casual3", label: "Casual3" },
   ];
   const [leaveTypes, setLeaveTypes] = useState(leavetypeOption);
-  const [startDay, setStart] = useState();
-  const [endDay, setEnd] = useState();
+  const [startDay, setStart] = useState(moment());
+  const [endDay, setEnd] = useState(moment());
   const [itemId, setItemId] = useState("");
 
   // const [leaveTypes,setLeaveTypes]=useState(leavetypeOption)
 
   const openEdit = (x) => {
+    console.log(moment(x.from));
+    setStart(moment(x.from));
+    setEnd(moment(x.to));
     setValue("noofdays", x.name);
     setValue("from", x.from);
     setStart(x.from);
@@ -265,7 +268,7 @@ const Leaves = (props) => {
             <a
               className="dropdown-item"
               data-toggle="modal"
-              data-target="#delete_approve"
+              data-target="#delete_leave"
               onClick={() => openDelate(record)}
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
@@ -502,7 +505,7 @@ const Leaves = (props) => {
       {/* Delete Leave Modal */}
       <div
         className="modal custom-modal fade"
-        id="delete_approve"
+        id="delete_leave"
         role="dialog"
       >
         <div className="modal-dialog modal-dialog-centered">
