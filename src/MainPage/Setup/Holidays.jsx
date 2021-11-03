@@ -41,6 +41,7 @@ const Holidays = () => {
     setValue("name", x.name);
     let r = x.date.split('-')
     let dateStr = `${r[2]}/${r[1]}/${r[0]}`
+    console.log(dateStr);
     setValue("date", dateStr);
     setValue("day", x.day);
     setValue("is_active", x.is_active);
@@ -335,6 +336,7 @@ const Holidays = () => {
               </button>
             </div>
             <div className="modal-body">
+
               <form onSubmit={handleSubmit(holidayEditFromSubmit)}>
                 <div className="form-group">
                   <label>

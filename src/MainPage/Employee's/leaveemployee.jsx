@@ -20,6 +20,7 @@ const Leaves = (props) => {
     control,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm();
 
   const onSubmit = (data) => alert(JSON.stringify(data));
@@ -35,26 +36,29 @@ const Leaves = (props) => {
   const [endDay, setEnd] = useState();
   const [itemId, setItemId] = useState("");
 
-
   // const [leaveTypes,setLeaveTypes]=useState(leavetypeOption)
 
   const openEdit = (x) => {
     setValue("noofdays", x.name);
-    setValue("from",x.from);
+    setValue("from", x.from);
+    setStart(x.from);
     setValue("to", x.to);
-    setStart(moment(x.from.split("-")));
-    setEnd(moment(x.to.split("-")));
+    setEnd(x.to);
+    setValue("noofdays", x.noofdays);
+    setValue("leavetype", x.leavetype);
     setValue("reason", x.reason);
     setItemId(x.id);
+    $("#edit_leave").modal("show");
   };
+
   const closeEdit = () => {
     $("#edit_leave").modal("hide");
     $("#add_leave").modal("hide");
-    setValue("noofdays", "");
+    setValue("noofdays", 0);
     setValue("from", "");
     setValue("to", "");
     setStart(null);
-    setend(null);
+    setEnd(null);
     setValue("reason", "");
     setItemId("");
   };
@@ -66,18 +70,10 @@ const Leaves = (props) => {
     setItemId("");
   };
 
-  useEffect(() => {
-    register("from", {
-      required: true,
-    });
-    register("to", {
-      required: true,
-    });
-  }, []);
 
   useEffect(() => {
-    if (startDay && endDay) {
-      let b = endDay.diff(startDay, "days") + 1;
+    if (startDay && endDay ) {
+      let b = moment(endDay).diff(moment(startDay), "days") + 1;
       setValue("noofdays", b);
     } else setValue("noofdays", 0);
   }, [startDay, endDay]);
@@ -87,10 +83,10 @@ const Leaves = (props) => {
       id: 1,
       image: Avatar_09,
       name: "Richard Miles",
-      leavetype:"Casual",
-      from:"2021-10-5",
-      to: "2021-10-6",
-      fdays: "2 days",
+      leavetype: "Casual",
+      from: "2021-10-05",
+      to: "2021-10-06",
+      fdays: 2,
       reason: "Going to Hospital",
       status: "Pending",
     },
@@ -98,10 +94,10 @@ const Leaves = (props) => {
       id: 2,
       image: Avatar_09,
       name: "Richard Miles",
-      leavetype:"Casual",
-      from:"2021-10-5",
-      to: "2021-10-6",
-      noofdays: "Second Half",
+      leavetype: "Casual",
+      from: "2021-10-05",
+      to: "2021-10-06",
+      noofdays: 3,
       reason: "Going to Hospital",
       status: "Pending",
     },
@@ -109,10 +105,10 @@ const Leaves = (props) => {
       id: 3,
       image: Avatar_09,
       name: "Richard Miles",
-      leavetype:"Casual",
-      from:"2021-10-5",
-      to: "2021-10-6",
-      noofdays: "2 days",
+      leavetype: "Casual",
+      from: "2021-10-05",
+      to: "2021-10-06",
+      noofdays: 5,
       reason: "Going to Hospital",
       status: "Approved",
     },
@@ -120,9 +116,9 @@ const Leaves = (props) => {
       id: 4,
       image: Avatar_09,
       name: "Richard Miles",
-      leavetype:"Casual",
-      from:"2021-10-5",
-      to: "2021-10-6",
+      leavetype: "Casual",
+      from: "2021-10-05",
+      to: "2021-10-06",
       noofdays: "First Half",
       reason: "Going to Hospital",
       status: "Declined",
@@ -131,9 +127,9 @@ const Leaves = (props) => {
       id: 5,
       image: Avatar_09,
       name: "Richard Miles",
-      leavetype:"Casual",
-      from:"2021-10-5",
-      to: "2021-10-6",
+      leavetype: "Casual",
+      from: "2021-10-05",
+      to: "2021-10-06",
       noofdays: "10 days",
       reason:
         "Going to Hospital for my kanna kati Hospital for my kanna katiHospital for my kanna katiHospital for my kanna kati",
@@ -144,8 +140,8 @@ const Leaves = (props) => {
       image: Avatar_09,
       name: "Richard Miles",
       leavetype: "LOP",
-      from:"2021-10-5",
-      to: "2021-10-6",
+      from: "2021-10-05",
+      to: "2021-10-06",
       noofdays: "2 days",
       reason: "Personnal",
       status: "Approved",
@@ -155,8 +151,8 @@ const Leaves = (props) => {
       image: Avatar_09,
       name: "Richard Miles",
       leavetype: "Medical Leave",
-      from:"2021-10-5",
-      to: "2021-10-6",
+      from: "2021-10-05",
+      to: "2021-10-06",
       noofdays: "1 days",
       reason: "Going to Hospital",
       status: "Approved",
@@ -166,19 +162,13 @@ const Leaves = (props) => {
       image: Avatar_09,
       name: "Richard Miles",
       leavetype: "Paternity Leave",
-      from:"2021-10-5",
-      to: "2021-10-6",
+      from: "2021-10-05",
+      to: "2021-10-06",
       noofdays: "5 days",
       reason: "Going to Hospital",
       status: "Declined",
     },
   ]);
-
-  const sayHello = () => {
-    // console.log(this.state.data.length)
-    console.log(this.state.data.filter((x) => x.leavetype == "Casual Leave"));
-    // console.log(this.state.data);
-  };
 
   const columns = [
     {
@@ -266,8 +256,8 @@ const Leaves = (props) => {
           <div className="dropdown-menu dropdown-menu-right">
             <a
               className="dropdown-item"
-              data-toggle="modal"
-              data-target="#edit_leave"
+              // data-toggle="modal"
+              // data-target="#edit_leave"
               onClick={() => openEdit(record)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
@@ -314,7 +304,7 @@ const Leaves = (props) => {
         {/* Leave Statistics */}
 
         <div className="row">
-          <div className="col-md-3" onClick={sayHello}>
+          <div className="col-md-3">
             <div className="stats-info">
               <h6>Annual Leave</h6>
               <h4>{data.length}</h4>
@@ -377,8 +367,7 @@ const Leaves = (props) => {
                 className="close"
                 data_dismiss="modal"
                 aria-label="Close"
-                onClick={() => closeEdit(record)}
-                
+                onClick={() => closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -404,12 +393,13 @@ const Leaves = (props) => {
                 className="close"
                 data_dismiss="modal"
                 aria-label="Close"
-                onClick={() => closeEdit(record)}
+                onClick={() => closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
+              {/* working  */}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <label>
@@ -435,29 +425,36 @@ const Leaves = (props) => {
                   <label>
                     From <span className="text-danger">*</span>
                   </label>
-                  <DatePicker
+                  <input
                     className="form-control datetimepicker"
-                    defaultValue={startDay?startDay.format("YYYY-MM-DD"):""}
-                    onChange={(e) => {
-                      setStart(e);
-                      if (e) setValue("from", e.format("YYYY-MM-DD"));
-                      else setValue("from", null);
-                    }}
+                    type="date"
+                    {...register("from", {
+                      required: true,
+                      onChange: (e) => {
+                        e.persist();
+                        setStart(e.target.value);
+                        if (e) setValue("from", e.target.value);
+                        else setValue("from", null);
+                      },
+                    })}
                   />
                 </div>
                 <div className="form-group">
                   <label>
                     To <span className="text-danger">*</span>
                   </label>
-                  <DatePicker
+                  <input
                     className="form-control datetimepicker"
-                    defaultValue={endDay?endDay.format("YYYY-MM-DD"):""}
-
-                    onChange={(e) => {
-                      setEnd(e);
-                      if (e) setValue("to", e.format("YYYY-MM-DD"));
-                      else setValue("to", null);
-                    }}
+                    type="date"
+                    {...register("to", {
+                      required: true,
+                      onChange: (e) => {
+                        e.persist();
+                        setEnd(e.target.value);
+                        if (e.target.value) setValue("to", e.target.value);
+                        else setValue("to", null);
+                      },
+                    })}
                   />
                 </div>
                 <div className="form-group">
