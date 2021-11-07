@@ -12,26 +12,26 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import AddLeaveEmployee from "./modals/addLeaveEmployee";
 import moment from "moment";
+import { useReactOidc } from "@axa-fr/react-oidc-context";
+import {getLeaveTypeCount, postLeavefromEmployeeEnd,getLeaveforEmployeeEnd, updateLeavefromdata, deleteLeaveforEmployeeEnd} from '../../Services/dashBoardServices'
+import { leaveDataShaper, leaveTypeOptionShaper } from "../../Services/Helper";
 
 const Leaves = (props) => {
+
+  const { oidcUser } = useReactOidc()
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-    setValue,
-    getValues,
+    setValue
   } = useForm();
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const onSubmit = (data) => updateLeave(data);
 
-  const leavetypeOption = [
-    { value: "Casual", label: "Casual" },
-    { value: "Casual1", label: "Casual1" },
-    { value: "Casual2", label: "Casual2" },
-    { value: "Casual3", label: "Casual3" },
-  ];
-  const [leaveTypes, setLeaveTypes] = useState(leavetypeOption);
+ 
+  const [leaveTypes, setLeaveTypes] = useState([]);
   const [startDay, setStart] = useState(moment());
   const [endDay, setEnd] = useState(moment());
   const [itemId, setItemId] = useState("");
@@ -39,16 +39,16 @@ const Leaves = (props) => {
   // const [leaveTypes,setLeaveTypes]=useState(leavetypeOption)
 
   const openEdit = (x) => {
-    console.log(moment(x.from));
-    setStart(moment(x.from));
-    setEnd(moment(x.to));
-    setValue("noofdays", x.name);
-    setValue("from", x.from);
-    setStart(x.from);
-    setValue("to", x.to);
-    setEnd(x.to);
-    setValue("noofdays", x.noofdays);
-    setValue("leavetype", x.leavetype);
+ 
+    setStart(moment(x.date_from));
+    setEnd(moment(x.date_to));
+    setValue("no_of_days", x.no_of_days);
+    setValue("date_from", x.date_from);
+    setStart(x.date_from);
+    setValue("date_to", x.date_to);
+    setEnd(x.date_to);
+    setValue("no_of_days", x.no_of_days);
+    setValue("leave_type", x.leave_type_id);
     setValue("reason", x.reason);
     setItemId(x.id);
     $("#edit_leave").modal("show");
@@ -57,9 +57,10 @@ const Leaves = (props) => {
   const closeEdit = () => {
     $("#edit_leave").modal("hide");
     $("#add_leave").modal("hide");
-    setValue("noofdays", 0);
-    setValue("from", "");
-    setValue("to", "");
+    setValue("no_of_days", 0);
+    setValue("leave_type","");
+    setValue("date_from", "");
+    setValue("date_to", "");
     setStart(null);
     setEnd(null);
     setValue("reason", "");
@@ -73,6 +74,63 @@ const Leaves = (props) => {
     setItemId("");
   };
 
+  useEffect(() => {
+    getLeaveCount()
+    getLeave()
+  }, [])
+
+  const getLeaveCount=async()=>{
+    let res=await getLeaveTypeCount(oidcUser.access_token);
+    if(!res.error){
+      let options=await leaveTypeOptionShaper(res)
+      setLeaveTypes(options)
+    }
+    else{
+      console.log(res.error);
+    }
+  }
+  const addLeave=async(data)=>{
+    let res=await postLeavefromEmployeeEnd(data,oidcUser.access_token);
+    if(!res.error){
+    window.location.reload()
+    closeEdit();
+    }
+    else{
+      console.log(res.error);
+    }
+  }
+  const getLeave=async()=>{
+    let res=await getLeaveforEmployeeEnd(oidcUser.access_token);
+    if(!!!res.error){
+    let data= await leaveDataShaper(res.data)
+    setData(data)
+    }
+    else{
+      console.log(res.error);
+    }
+  }
+  const deleteLeave=async()=>{
+    let res=await deleteLeaveforEmployeeEnd(itemId,oidcUser.access_token);
+    if(!res.error){
+    getLeave()
+    closeDelete()
+    }
+    else{
+      console.log(res.error);
+    }
+  }
+  const updateLeave=async(data)=>{
+  
+    data.id=itemId;
+    let res=await updateLeavefromdata(data,oidcUser.access_token);
+    if(!res.error){
+    getLeave()
+    closeEdit()
+    }
+    else{
+      console.log(res.error);
+    }
+  }
 
   useEffect(() => {
     if (startDay && endDay ) {
@@ -81,116 +139,26 @@ const Leaves = (props) => {
     } else setValue("noofdays", 0);
   }, [startDay, endDay]);
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Casual",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      fdays: 2,
-      reason: "Going to Hospital",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Casual",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: 3,
-      reason: "Going to Hospital",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Casual",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: 5,
-      reason: "Going to Hospital",
-      status: "Approved",
-    },
-    {
-      id: 4,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Casual",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: "First Half",
-      reason: "Going to Hospital",
-      status: "Declined",
-    },
-    {
-      id: 5,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Casual",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: "10 days",
-      reason:
-        "Going to Hospital for my kanna kati Hospital for my kanna katiHospital for my kanna katiHospital for my kanna kati",
-      status: "Approved",
-    },
-    {
-      id: 6,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "LOP",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: "2 days",
-      reason: "Personnal",
-      status: "Approved",
-    },
-    {
-      id: 7,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Medical Leave",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: "1 days",
-      reason: "Going to Hospital",
-      status: "Approved",
-    },
-    {
-      id: 8,
-      image: Avatar_09,
-      name: "Richard Miles",
-      leavetype: "Paternity Leave",
-      from: "2021-10-05",
-      to: "2021-10-06",
-      noofdays: "5 days",
-      reason: "Going to Hospital",
-      status: "Declined",
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   const columns = [
     {
       title: "Leave Type",
-      dataIndex: "leavetype",
+      dataIndex: "leave_type",
     },
 
     {
       title: "From",
-      dataIndex: "from",
+      dataIndex: "date_from",
     },
     {
       title: "To",
-      dataIndex: "to",
+      dataIndex: "date_to",
     },
 
     {
       title: "No Of Days",
-      dataIndex: "noofdays",
+      dataIndex: "no_of_days",
     },
 
     {
@@ -213,15 +181,15 @@ const Leaves = (props) => {
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "approval_type",
       render: (text, record) => (
         <div className="action-label text-center">
           <a className="btn btn-white btn-sm btn-rounded">
             <i
               className={
-                text === "Pending"
+                text.toLowerCase() == "pending"
                   ? "fa fa-dot-circle-o text-info"
-                  : text === "Approved"
+                  : text.toLowerCase() == "approved"
                   ? "fa fa-dot-circle-o text-success"
                   : "fa fa-dot-circle-o text-danger"
               }
@@ -230,20 +198,20 @@ const Leaves = (props) => {
           </a>
         </div>
       ),
-      sorter: (a, b) => a.status.length - b.status.length,
+      sorter: (a, b) => a.approval_type.length - b.approval_type.length,
     },
     {
       title: "Authority Body",
-      dataIndex: "name",
+      dataIndex: "authority_name",
       render: (text, record) => (
         <h2 className="table-avatar">
           <a className="avatar">
-            <img alt="" src={record.image} />
+            <img alt="" src={record.authority_image} />
           </a>
           <a>{text} </a>
         </h2>
       ),
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.authority_name.length - b.authority_name.length,
     },
     {
       title: "Action",
@@ -259,8 +227,6 @@ const Leaves = (props) => {
           <div className="dropdown-menu dropdown-menu-right">
             <a
               className="dropdown-item"
-              // data-toggle="modal"
-              // data-target="#edit_leave"
               onClick={() => openEdit(record)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
@@ -371,6 +337,7 @@ const Leaves = (props) => {
                 data_dismiss="modal"
                 aria-label="Close"
                 onClick={() => closeEdit()}
+              
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -378,7 +345,7 @@ const Leaves = (props) => {
             <div className="modal-body">
               <AddLeaveEmployee
                 leaveTypes={leaveTypes}
-                submitFunction={(datas) => alert(JSON.stringify(datas))}
+                submitFunction={(datas) => addLeave(datas)}
               />
             </div>
           </div>
@@ -410,7 +377,7 @@ const Leaves = (props) => {
                   </label>
                   <Controller
                     control={control}
-                    name="leavetype"
+                    name="leave_type"
                     rules={{ required: true }}
                     render={({ field: { onChange, value, name, ref } }) => {
                       return (
@@ -431,13 +398,13 @@ const Leaves = (props) => {
                   <input
                     className="form-control datetimepicker"
                     type="date"
-                    {...register("from", {
+                    {...register("date_from", {
                       required: true,
                       onChange: (e) => {
                         e.persist();
                         setStart(e.target.value);
-                        if (e) setValue("from", e.target.value);
-                        else setValue("from", null);
+                        if (e) setValue("date_from", e.target.value);
+                        else setValue("date_from", null);
                       },
                     })}
                   />
@@ -449,13 +416,13 @@ const Leaves = (props) => {
                   <input
                     className="form-control datetimepicker"
                     type="date"
-                    {...register("to", {
+                    {...register("date_to", {
                       required: true,
                       onChange: (e) => {
                         e.persist();
                         setEnd(e.target.value);
-                        if (e.target.value) setValue("to", e.target.value);
-                        else setValue("to", null);
+                        if (e.target.value) setValue("date_to", e.target.value);
+                        else setValue("date_to", null);
                       },
                     })}
                   />
@@ -518,7 +485,7 @@ const Leaves = (props) => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a className="btn btn-primary continue-btn">Delete</a>
+                    <a  onClick={()=>deleteLeave()} className="btn btn-primary continue-btn">Delete</a>
                   </div>
                   <div className="col-6">
                     <a

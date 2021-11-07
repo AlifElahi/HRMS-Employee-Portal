@@ -11,17 +11,14 @@ export const AddShift = ({ submitFunc }) => {
     formState: { errors },
     setValue,
     getValues
-  } = useForm();
+  } = useForm(); 
 
 
   const handletime = e => {
     console.log(e.target.value);
   }
 
-  // {
-  //   const startValue = getValues("from_time");
-  //   console.log(startValue, "fsdf");
-  // }
+  
 
   useEffect(() => {
     setValue("name", "");

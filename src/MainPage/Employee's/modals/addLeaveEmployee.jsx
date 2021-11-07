@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import { DatePicker } from "antd";
 import "../../antdstyle.css";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
@@ -15,27 +14,27 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
     setValue,
   } = useForm();
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const onSubmit = (data) => submitFunction(data);
 
   const [startDay, setStart] = useState();
   const [endDay, setEnd] = useState();
   useEffect(() => {
-    setValue("noofdays", 0);
-    setValue("from", "");
-    setValue("to", "");
+    setValue("no_of_days", 0);
+    setValue("date_from", "");
+    setValue("date_to", "");
     setStart(null);
     setEnd(null);
     setValue("reason", "");
-    setValue("leavetype", '');
+    setValue("leave_type", '');
 
   }, []);
 
   useEffect(() => {
     if (startDay && endDay) {
-      let b = endDay.diff(startDay, "days") + 1;
+      let b = moment(endDay).diff(moment(startDay), "days") + 1;
 
-      setValue("noofdays", b);
-    } else setValue("noofdays", 0);
+      setValue("no_of_days", b);
+    } else setValue("no_of_days", 0);
   }, [startDay, endDay]);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -45,7 +44,7 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
         </label>
         <Controller
           control={control}
-          name="leaveTypes"
+          name="leave_type"
           rules={{ required: true }}
           render={({ field: { onChange, value, name, ref } }) => {
             return (
@@ -66,13 +65,13 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
         <input
           className="form-control datetimepicker"
           type="date"
-          {...register("from", {
+          {...register("date_from", {
             required: true,
             onChange: (e) => {
               e.persist();
               setStart(e.target.value);
-              if (e) setValue("from", e.target.value);
-              else setValue("from", null);
+              if (e) setValue("date_from", e.target.value);
+              else setValue("date_from", null);
             },
           })}
         />
@@ -84,13 +83,13 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
         <input
           className="form-control datetimepicker"
           type="date"
-          {...register("to", {
+          {...register("date_to", {
             required: true,
             onChange: (e) => {
               e.persist();
               setEnd(e.target.value);
-              if (e.target.value) setValue("to", e.target.value);
-              else setValue("to", null);
+              if (e.target.value) setValue("date_to", e.target.value);
+              else setValue("date_to", null);
             },
           })}
         />
@@ -103,7 +102,7 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
           className="form-control"
           readOnly
           type="number"
-          {...register("noofdays", { required: false })}
+          {...register("no_of_days", { required: false })}
         />
       </div>
       <div className="form-group">

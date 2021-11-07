@@ -148,3 +148,77 @@ export const searchEmployee = async (params,token) => {
       }
 
 }
+
+export const getLeaveTypeCount= async (token) =>{
+    try {
+        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/leavetypes/',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res.data
+        
+    } catch (error) {
+        return {error}
+        
+    }
+}
+
+export const postLeavefromEmployeeEnd= async(body,token)=>{
+   
+    try {
+        
+        let res= axios.post('https://timesheet.hivecorelimited.com/leave/leaveforms/',body,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        return {error}
+        
+    }
+}
+export const updateLeavefromdata= async(body,token)=>{
+   
+    try {
+        
+        let res= axios.put(`https://timesheet.hivecorelimited.com/leave/leaveforms/${body.id}/`,body,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        return {error}
+        
+    }
+}
+export const getLeaveforEmployeeEnd= async(token)=>{
+    try {
+        
+        let res= axios.get('https://timesheet.hivecorelimited.com/leave/leaveforms/',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        return {error}
+        
+    }
+}
+export const deleteLeaveforEmployeeEnd= async(id,token)=>{
+    try {
+        
+        let res= axios.delete(`https://timesheet.hivecorelimited.com/leave/leaveforms/${id}/`,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        return {error}
+        
+    }
+}

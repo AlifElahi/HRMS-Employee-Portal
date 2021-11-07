@@ -95,25 +95,57 @@ export const holidayDataShaper = async (data) => {
 
 }
 
-export const  holidayCsvToJSON=(csv)=> {
+export const holidayCsvToJSON = (csv) => {
   var lines = csv.split("\r\n");
   var result = [];
   var headers;
   headers = lines[0].split(",");
 
   for (var i = 1; i < lines.length; i++) {
-      var obj = {};
+    var obj = {};
 
-      if(lines[i] == undefined || lines[i].trim() == "") {
-          continue;
-      }
+    if (lines[i] == undefined || lines[i].trim() == "") {
+      continue;
+    }
 
-      var words = lines[i].split(",");
-      for(var j = 0; j < words.length; j++) {
-          obj[headers[j].trim()] = words[j];
-      }
+    var words = lines[i].split(",");
+    for (var j = 0; j < words.length; j++) {
+      obj[headers[j].trim()] = words[j];
+    }
 
-      result.push(obj);
+    result.push(obj);
   }
   return result
+}
+
+export const leaveTypeOptionShaper = async (data) => {
+  const objmaker = (x) => {
+    let obj = {
+      value: x.id,
+      label: x.name
+    }
+    return obj
+  }
+  return new Array(data.length).fill(null).map((y, idx) => objmaker(data[idx]))
+
+}
+export const leaveDataShaper = async (data) => {
+  const objmaker = (x) => {
+    let obj = {
+      id: x.id,
+      leave_type: x.leave_type.name,
+      leave_type_id: x.leave_type.id,
+      date_from: x.date_from,
+      date_to: x.date_to,
+      no_of_days: x.no_of_days,
+      authority_name: x.approval.modified_by ? x.approval.modified_by.name : "dummy",
+      authority_image: x.approval.modified_by ? x.approval.modified_by.image : "",
+      authority_id: x.approval.modified_by ? x.approval.modified_by.id : "dummy",
+      approval_type: x.approval.approval_type,
+      reason: x.reason
+    }
+    return obj
+  }
+  return new Array(data.length).fill(null).map((y, idx) => objmaker(data[idx]))
+
 }
