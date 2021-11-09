@@ -89,13 +89,13 @@ const Holidays = () => {
   }, [])
 
   const getData = async () => {
-    startLoading();
+
     let res = await getHolidayData(oidcUser.access_token)
     if (res.length) {
       let data = await holidayDataShaper(res)
       setData(data)
     }
-    stopLoading();
+
     return
   }
 
@@ -107,7 +107,7 @@ const Holidays = () => {
     data.is_active = true
     let res = await addHolidayData(oidcUser.access_token, [data])
     if (!!!res.error) {
-     successToast(messages.addedSuccess)
+      successToast(messages.addedSuccess)
       getData();
       closeEdit();
     } else {
@@ -143,7 +143,7 @@ const Holidays = () => {
       successToast(messages.updateSuccess)
       getData();
       closeEdit()
-    }else{
+    } else {
       errorToast(res.error.message)
     }
     stopLoading()
@@ -157,7 +157,7 @@ const Holidays = () => {
     let res = await deleteHolidayData(oidcUser.access_token, data)
 
     if (!!!res.error) {
-      successToast(messages.deleteSuccess)
+      successToast(messages.deleteSucceess)
       getData();
       closeDelete();
     } else {

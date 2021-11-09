@@ -2,8 +2,13 @@ import React, { useEffect } from "react";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import { Helmet } from "react-helmet";
+import { useToastify } from "../../../../src/Contexts/ToastContext";
+
 
 export const AddShift = ({ submitFunc }) => {
+  const { startLoading, stopLoading, successToast, errorToast } =
+    useToastify();
+
   const {
     register,
     handleSubmit,
@@ -11,14 +16,9 @@ export const AddShift = ({ submitFunc }) => {
     formState: { errors },
     setValue,
     getValues
-  } = useForm(); 
+  } = useForm();
 
 
-  const handletime = e => {
-    console.log(e.target.value);
-  }
-
-  
 
   useEffect(() => {
     setValue("name", "");
@@ -50,23 +50,23 @@ export const AddShift = ({ submitFunc }) => {
     { value: 5, label: "fri" },
   ];
 
-  const OnSubmit=(data) => {
+  const OnSubmit = (data) => {
     const startTime = getValues("from_time");
     const endTime = getValues("to_time");
-    if(startTime===endTime){
-      alert("Start Time and End Time same");
-     return {
-      error: true,
-      message: 'Parameter needed'
-     }
+    if (startTime === endTime) {
+      errorToast("Start Time and End Time same");
+      return {
+        error: true,
+        message: 'Parameter needed'
+      }
     }
-    else if(startTime>endTime){
-      alert("Start Time can not be larger than End Time")
-    
+    else if (startTime > endTime) {
+      errorToast("Start Time can not be larger than End Time")
+
     } else {
       submitFunc(data);
     }
-    
+
 
   }
 
@@ -106,8 +106,7 @@ export const AddShift = ({ submitFunc }) => {
                 <input
                   className="form-control"
                   type="time"
-                  onBlur={handletime}
-             
+
                   {...register("from_time", { required: true })}
                 />
                 {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
@@ -129,7 +128,7 @@ export const AddShift = ({ submitFunc }) => {
                   className="form-control"
                   type="time"
                   defaultValue=""
-      
+
                   {...register("to_time", { required: true })}
                 />
                 {/* <input className="form-control" /><span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-clock-o" /></span></span> */}
@@ -224,7 +223,7 @@ export const AddShift = ({ submitFunc }) => {
                   </div>*/}
         </div>
         <div className="submit-section">
-          <button className="btn btn-primary submit-btn"  type="submit" >
+          <button className="btn btn-primary submit-btn" type="submit" >
             Submit
           </button>
         </div>

@@ -54,7 +54,7 @@ export const AddLeave = ({ submitFunction }) => {
               </label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 {...register("count", { required: true })}
               />
                     {errors.count && (

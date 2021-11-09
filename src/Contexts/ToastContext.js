@@ -1,10 +1,10 @@
-
 import React, { useContext, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'antd/dist/antd.css';
 import { Spin } from 'antd';
 import Backdrop from '@mui/material/Backdrop';
+import Alert from 'react-popup-alert'
 
 export const ToastContext = React.createContext();
 
@@ -18,6 +18,11 @@ export const ToastProvider = (props) => {
 
     const [isloading, setLoading] = useState(false)
     const [tip, setTip] = useState('Loading...')
+    const [alert, setAlert] = React.useState({
+        type: 'error',
+        text: 'This is a alert message',
+        show: false
+      })
 
     const startLoading = () => setLoading(true)
     const stopLoading = () => setLoading(false)

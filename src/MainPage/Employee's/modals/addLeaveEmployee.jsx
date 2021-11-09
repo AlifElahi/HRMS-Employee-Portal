@@ -14,7 +14,20 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
     setValue,
   } = useForm();
 
-  const onSubmit = (data) => submitFunction(data);
+
+  const onSubmit = (data) => {
+    const startTime = getValues("from_time");
+    const endTime = getValues("to_time");
+    if (startTime > endTime) {
+      alert("Start Time can not be larger than End Time")
+
+    } else {
+      submitFunction(data);
+    }
+
+
+  }
+
 
   const [startDay, setStart] = useState();
   const [endDay, setEnd] = useState();
@@ -57,6 +70,7 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
             );
           }}
         />
+        {errors.leave_type && <span style={{ color: "red", fontSize: "small" }}>is required</span>}
       </div>
       <div className="form-group">
         <label>
@@ -75,6 +89,8 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
             },
           })}
         />
+        {errors.date_from && <span style={{ color: "red", fontSize: "small" }}>is required</span>}
+
       </div>
       <div className="form-group">
         <label>
@@ -91,8 +107,11 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
               if (e.target.value) setValue("date_to", e.target.value);
               else setValue("date_to", null);
             },
+
           })}
         />
+        {errors.date_to && <span style={{ color: "red", fontSize: "small" }}>is required</span>}
+
       </div>
       <div className="form-group">
         <label>
@@ -102,7 +121,7 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
           className="form-control"
           readOnly
           type="number"
-          {...register("no_of_days", { required: false })}
+          {...register("no_of_days", { required: true })}
         />
       </div>
       <div className="form-group">
@@ -126,6 +145,7 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
           defaultValue={""}
           {...register("reason", { required: true })}
         />
+        {errors.reason && <span style={{ color: "red", fontSize: "small" }}>is required</span>}
       </div>
       <div className="submit-section">
         <button className="btn btn-primary submit-btn">Submit</button>

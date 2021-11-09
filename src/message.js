@@ -1,7 +1,7 @@
 const messages = {
     addedSuccess : "Added Successfully",
     updateSuccess : "Updated Successfully",
-    deleteSucceess : "Deleted Successfully",   
+    deleteSucceess : "Deleted Successfully"  
 
 }
 

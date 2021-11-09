@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Avatar_09 } from "../../Entryfile/imagepath";
-
+import $ from "jquery";
+import messages from "../../message"
+import { useToastify } from "../../Contexts/ToastContext";
 import { Table } from "antd";
 import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
@@ -13,10 +15,12 @@ import Select from "react-select";
 import AddLeaveEmployee from "./modals/addLeaveEmployee";
 import moment from "moment";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
-import {getLeaveTypeCount, postLeavefromEmployeeEnd,getLeaveforEmployeeEnd, updateLeavefromdata, deleteLeaveforEmployeeEnd} from '../../Services/dashBoardServices'
+import { getLeaveTypeCount, postLeavefromEmployeeEnd, getLeaveforEmployeeEnd, updateLeavefromdata, deleteLeaveforEmployeeEnd } from '../../Services/dashBoardServices'
 import { leaveDataShaper, leaveTypeOptionShaper } from "../../Services/Helper";
 
 const Leaves = (props) => {
+  const { startLoading, stopLoading, successToast, errorToast } =
+    useToastify();
 
   const { oidcUser } = useReactOidc()
 
@@ -28,9 +32,20 @@ const Leaves = (props) => {
     setValue
   } = useForm();
 
-  const onSubmit = (data) => updateLeave(data);
+  const onSubmit = (data) => {
+    const startTime = getValues("from_time");
+    const endTime = getValues("to_time");
+    if (startTime > endTime) {
+      errorToast("Start Time can not be larger than End Time");
 
- 
+    } else {
+      updateLeave(data);
+    }
+
+
+  }
+
+
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [startDay, setStart] = useState(moment());
   const [endDay, setEnd] = useState(moment());
@@ -39,7 +54,7 @@ const Leaves = (props) => {
   // const [leaveTypes,setLeaveTypes]=useState(leavetypeOption)
 
   const openEdit = (x) => {
- 
+
     setStart(moment(x.date_from));
     setEnd(moment(x.date_to));
     setValue("no_of_days", x.no_of_days);
@@ -58,7 +73,7 @@ const Leaves = (props) => {
     $("#edit_leave").modal("hide");
     $("#add_leave").modal("hide");
     setValue("no_of_days", 0);
-    setValue("leave_type","");
+    setValue("leave_type", "");
     setValue("date_from", "");
     setValue("date_to", "");
     setStart(null);
@@ -79,61 +94,72 @@ const Leaves = (props) => {
     getLeave()
   }, [])
 
-  const getLeaveCount=async()=>{
-    let res=await getLeaveTypeCount(oidcUser.access_token);
-    if(!res.error){
-      let options=await leaveTypeOptionShaper(res)
+  const getLeaveCount = async () => {
+    let res = await getLeaveTypeCount(oidcUser.access_token);
+    if (!res.error) {
+      let options = await leaveTypeOptionShaper(res)
       setLeaveTypes(options)
     }
-    else{
+    else {
       console.log(res.error);
     }
   }
-  const addLeave=async(data)=>{
-    let res=await postLeavefromEmployeeEnd(data,oidcUser.access_token);
-    if(!res.error){
-    window.location.reload()
-    closeEdit();
+  const addLeave = async (data) => {
+    startLoading();
+    let res = await postLeavefromEmployeeEnd(data, oidcUser.access_token);
+    if (!res.error) {
+      successToast(messages.addedSuccess)
+      closeEdit();
+      window.location.reload()
     }
-    else{
-      console.log(res.error);
+    else {
+      errorToast(res.error.messages);
     }
+    stopLoading();
   }
-  const getLeave=async()=>{
-    let res=await getLeaveforEmployeeEnd(oidcUser.access_token);
-    if(!!!res.error){
-    let data= await leaveDataShaper(res.data)
-    setData(data)
+  const getLeave = async () => {
+
+    let res = await getLeaveforEmployeeEnd(oidcUser.access_token);
+    if (!!!res.error) {
+      let data = await leaveDataShaper(res.data)
+      setData(data)
     }
-    else{
-      console.log(res.error);
+    else {
+      errorToast(res.error.messages);
     }
+
   }
-  const deleteLeave=async()=>{
-    let res=await deleteLeaveforEmployeeEnd(itemId,oidcUser.access_token);
-    if(!res.error){
-    getLeave()
-    closeDelete()
+  const deleteLeave = async () => {
+    startLoading();
+    let res = await deleteLeaveforEmployeeEnd(itemId, oidcUser.access_token);
+    if (!res.error) {
+      getLeave()
+      closeDelete()
+      successToast(messages.deleteSucceess)
     }
-    else{
-      console.log(res.error);
+    else {
+      errorToast(res.error.messages);
+
     }
+    stopLoading();
   }
-  const updateLeave=async(data)=>{
-  
-    data.id=itemId;
-    let res=await updateLeavefromdata(data,oidcUser.access_token);
-    if(!res.error){
-    getLeave()
-    closeEdit()
+  const updateLeave = async (data) => {
+    startLoading();
+    data.id = itemId;
+    let res = await updateLeavefromdata(data, oidcUser.access_token);
+    if (!res.error) {
+      getLeave()
+      closeEdit()
+      successToast(messages.updateSuccess)
     }
-    else{
-      console.log(res.error);
+    else {
+      errorToast(res.error.messages);
     }
+    stopLoading();
   }
 
   useEffect(() => {
-    if (startDay && endDay ) {
+    if (startDay && endDay) {
       let b = moment(endDay).diff(moment(startDay), "days") + 1;
       setValue("noofdays", b);
     } else setValue("noofdays", 0);
@@ -190,8 +216,8 @@ const Leaves = (props) => {
                 text.toLowerCase() == "pending"
                   ? "fa fa-dot-circle-o text-info"
                   : text.toLowerCase() == "approved"
-                  ? "fa fa-dot-circle-o text-success"
-                  : "fa fa-dot-circle-o text-danger"
+                    ? "fa fa-dot-circle-o text-success"
+                    : "fa fa-dot-circle-o text-danger"
               }
             />{" "}
             {text}
@@ -337,7 +363,7 @@ const Leaves = (props) => {
                 data_dismiss="modal"
                 aria-label="Close"
                 onClick={() => closeEdit()}
-              
+
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -485,7 +511,7 @@ const Leaves = (props) => {
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <a  onClick={()=>deleteLeave()} className="btn btn-primary continue-btn">Delete</a>
+                    <a onClick={() => deleteLeave()} className="btn btn-primary continue-btn">Delete</a>
                   </div>
                   <div className="col-6">
                     <a

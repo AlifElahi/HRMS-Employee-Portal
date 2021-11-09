@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Table } from "antd";
 import "antd/dist/antd.css";
@@ -10,6 +10,7 @@ import { AddShift } from "./modals/AddShift";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import $ from "jquery";
 import messages from "../../message"
+import { useToastify } from "../../Contexts/ToastContext";
 
 import {
   addShiftData,
@@ -17,7 +18,6 @@ import {
   getShiftData,
   updateShiftData,
 } from "../../Services/setupServices";
-import { useToastify } from "../../Contexts/ToastContext";
 
 // class ShiftList extends Component {
 const ShiftList = () => {
@@ -122,17 +122,18 @@ const ShiftList = () => {
     return;
   };
   const deleteShiftFunction = async () => {
+    startLoading();
     data.id = itemId;
     let res = await deleteShiftData(oidcUser.access_token, data);
 
     if (!!!res.error) {
-      successToast(messages.deleteSuccess);
+      successToast(messages.deleteSucceess);
       getData();
       closeDelete();
     } else {
       showToast('error', res.error.message)
     }
-
+    stopLoading();
     return;
   };
 
@@ -255,7 +256,7 @@ const ShiftList = () => {
                   // bordered
                   dataSource={data}
                   rowKey={(record) => record.id}
-                  // onChange={this.handleTableChange}
+                // onChange={this.handleTableChange}
                 />
               </div>
             </div>
