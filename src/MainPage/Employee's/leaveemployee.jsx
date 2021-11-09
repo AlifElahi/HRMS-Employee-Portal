@@ -6,7 +6,6 @@ import { Table } from "antd";
 import "antd/dist/antd.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import { Tooltip } from "antd";
-import { DatePicker } from "antd";
 import "../antdstyle.css";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
