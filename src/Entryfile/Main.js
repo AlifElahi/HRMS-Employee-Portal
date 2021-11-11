@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch, HashRouter } from 'react-router
 import App from '../initialpage/App';
 import config from 'config';
 
+
 // import "@fortawesome/fontawesome-free/css/all.min.css";
 // import 'font-awesome/css/font-awesome.min.css';
 // import '../../node_modules/font-awesome/css/font-awesome.min.css';
@@ -14,25 +15,35 @@ import '../assets/css/line-awesome.min.css';
 
 // import "../assets/plugins/fontawesome/css/fontawesome.min.css"
 // import "../assets/plugins/fontawesome/css/all.min.css"
+import '../assets/js/jquery-3.2.1.min.js';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Custom Style File
-import '../assets/js/bootstrap.min.js';
+
 import '../assets/css/select2.min.css';
 
 import '../assets/css/style.css';
-import '../assets/js/popper.min.js';
-import '../assets/js/app.js';
+
+
 import '../assets/js/select2.min.js';
-import '../assets/js/jquery-3.2.1.min.js';
+
 
 import '../assets/js/jquery.slimscroll.min.js';
 
-import "../assets/js/bootstrap-datetimepicker.min.js"
+
 import "../assets/js/jquery-ui.min.js"
 import "../assets/js/task.js"
 import "../assets/js/multiselect.min.js"
 import "../assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css"
+
+
+
+import '../assets/js/bootstrap.min.js';
+// import '../assets/js/popper.min.js';
+import '../assets/js/app.js';
+// import "../assets/js/bootstrap-datetimepicker.min.js"
+
 import { AuthenticationProvider, oidcLog } from '@axa-fr/react-oidc-context';
 import oidcConfiguration from '../auth/configuration';
 import { LocalWebStorage } from '../auth/clasess/Store';

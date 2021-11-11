@@ -24,6 +24,7 @@
   "dependencies": {
     "@axa-fr/react-oidc-context": "^3.0.8",
     "@axa-fr/react-oidc-context-fetch": "^3.0.8",
+    "@babel/runtime": "^7.16.3",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
@@ -81,6 +82,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.16.0",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
