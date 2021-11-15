@@ -24,6 +24,7 @@
   "dependencies": {
     "@axa-fr/react-oidc-context": "^3.0.8",
     "@axa-fr/react-oidc-context-fetch": "^3.0.8",
+    "@babel/runtime": "^7.16.3",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
@@ -36,6 +37,7 @@
     "@fullcalendar/react": "^5.2.0",
     "@fullcalendar/timegrid": "^5.2.0",
     "@mui/material": "^5.0.4",
+    "@popperjs/core": "^2.10.2",
     "antd": "^4.16.2",
     "axios": "^0.22.0",
     "bootstrap": "^4.5.0",
@@ -49,7 +51,6 @@
     "maskedinput": "^3.3.11",
     "moment": "^2.27.0",
     "oidc-client": "^1.11.5",
-    "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.3.0",
@@ -82,6 +83,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.16.0",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
