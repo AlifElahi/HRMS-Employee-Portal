@@ -4,5 +4,7 @@
       "useBuiltIns": "entry"
     }],
     "@babel/preset-react"],
-  "plugins": ["@babel/plugin-proposal-class-properties","@babel/transform-runtime"]
+  "plugins": [
+    "@babel/transform-runtime",
+    "@babel/plugin-proposal-class-properties"]
 }

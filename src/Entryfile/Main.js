@@ -39,8 +39,8 @@ import "../assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css"
 
 
 
-import '../assets/js/bootstrap.min.js';
-// import '../assets/js/popper.min.js';
+// import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 import '../assets/js/app.js';
 // import "../assets/js/bootstrap-datetimepicker.min.js"
 
