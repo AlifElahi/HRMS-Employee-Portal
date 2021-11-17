@@ -149,3 +149,45 @@ export const leaveDataShaper = async (data) => {
   return new Array(data.length).fill(null).map((y, idx) => objmaker(data[idx]))
 
 }
+
+export const faltObject = (arr) => {
+  const newArr = [];
+  arr.map((x) => {
+    
+    newArr.push(Object.assign(
+      {},
+      ...function _flatten(o,prevKey) {
+        return [].concat(...Object.keys(o)
+          .map(k =>
+            typeof o[k] === 'object' ?
+              _flatten(o[k],k) :typeof prevKey !== 'undefined'?
+              ({ [`${prevKey}-${k}`]: o[k] }):({ [k]: o[k] })
+          )
+        );
+      }(x)
+    ))
+
+    
+
+  })
+  return newArr
+
+}
+
+
+
+
+
+export const arrSorter = (arr, key, order) => {
+  return arr.sort((a, b) => {
+    var A = typeof a === 'string' ?a[key].toUpperCase():a[key]; // ignore upper and lowercase
+    var B = typeof b === 'string' ?b[key].toUpperCase():b[key]; // ignore upper and lowercase
+    // ignore upper and lowercase
+    if (A < B) {
+      return order;
+    }
+    if (A > B) {
+      return order * -1;
+    }
+    return 0
+})}

@@ -8,6 +8,8 @@ const LazyLeaveEmployee = lazy(() => import('./leaveemployee'))
 const LazyAttendanceEmployee = lazy(() => import('./attendanceemployee'))
 const LazyEmployeeDashboard = lazy(() => import('./employeedashboard'))
 const LazyEmployeeProfile = lazy(() => import('./employeeprofile'))
+const LazyApproval = lazy(() => import('./leave_req'))
+
 
 const EmployeesRoute1 = ({ match }) => (
    <Suspense fallback={<LoaderPage/>}>
@@ -41,6 +43,11 @@ const EmployeesRoute1 = ({ match }) => (
          <Route path={`${match.url}/my-profile`} >
             <OidcSecure>
                <LazyEmployeeProfile />
+            </OidcSecure>
+         </Route>
+         <Route path={`${match.url}/leaves-approval`} >
+            <OidcSecure>
+               <LazyApproval />
             </OidcSecure>
          </Route>
          {/* <Route path={`${match.url}/leaves-employee`} component={withOidcSecure(LazyLeaveEmployee)} />

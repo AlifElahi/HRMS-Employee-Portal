@@ -23,8 +23,9 @@ class Sidebar extends Component {
 
                   <li><a className={pathname.includes('allemployees') ? "active" : pathname.includes('employees-list') ? "active" : ""}
                     href="/hive_hrm/app/employees/allemployees">All Employees</a></li>
-                  <li><a className={pathname.includes('ves-employee') ? "active" : ""} href="/hive_hrm/app/employees/leaves-employee">Leaves</a></li>
                   <li><a className={pathname.includes('ce-employee') ? "active" : ""} href="/hive_hrm/app/employees/attendance-employee">Attendance</a></li>
+                  <li><a className={pathname.includes('ves-employee') ? "active" : ""} href="/hive_hrm/app/employees/leaves-employee">Leaves</a></li>
+                  <li><a className={pathname.includes('ves-approval') ? "active" : ""} href="/hive_hrm/app/employees/leaves-approval">Leaves approval</a></li>
                 </ul>
               </li>
             </ul>

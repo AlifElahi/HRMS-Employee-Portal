@@ -13,7 +13,7 @@ const EmployeeDashboard = () => {
   let day = dateFormat(date, "dddd, mmmm dS, yyyy, h:MM TT");
 
   const [dt, setDt] = useState(day);
-  const [leavesToApprove, setleavesToApprove] = useState(true);
+  const [leavesToApprove, setleavesToApprove] = useState(false);
   const { oidcUser } = useReactOidc();
   const { profile } = oidcUser
 
@@ -109,7 +109,7 @@ const EmployeeDashboard = () => {
                           </div>
                         </div>
                         <div className="request-btn">
-                          <a className="btn btn-primary" href="#">Apply Leave</a>
+                          <a className="btn btn-primary" href="/hive_hrm/app/employees/leaves-employee">Apply Leave</a>
                         </div>
                       </div>
                     </div>
@@ -121,11 +121,11 @@ const EmployeeDashboard = () => {
                         <div className="time-list">
                           <div className="dash-stats-list">
                             <h4>12</h4>
-                            <p>To Responde</p>
+                            <p>To Respond</p>
                           </div>
                         </div>
                         <div className="request-btn">
-                          <a className="btn btn-primary" href="#">Leave approve</a>
+                          <a className="btn btn-primary" href="/hive_hrm/app/employees/leaves-approval">Leave approve</a>
                         </div>
                       </div>
                     </div>
