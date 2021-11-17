@@ -280,6 +280,7 @@ const ShiftList = () => {
                 className="close"
                 data_dismiss="modal"
                 aria-label="Close"
+                onClick={()=>closeEdit()}
               >
                 <span aria-hidden="true">×</span>
               </button>
