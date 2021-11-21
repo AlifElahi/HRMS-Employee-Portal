@@ -12,13 +12,14 @@ const AddLeaveEmployee = ({ submitFunction, leaveTypes }) => {
     control,
     formState: { errors },
     setValue,
+    getValues
   } = useForm();
 
 
   const onSubmit = (data) => {
     const startTime = getValues("from_time");
     const endTime = getValues("to_time");
-    if (startTime > endTime) {
+    if (startTime >= endTime) {
       alert("Start Time can not be larger than End Time")
 
     } else {

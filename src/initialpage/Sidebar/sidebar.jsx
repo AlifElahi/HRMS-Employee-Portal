@@ -28,6 +28,12 @@ class Sidebar extends Component {
                   <li><a className={pathname.includes('ves-approval') ? "active" : ""} href="/hive_hrm/app/employees/leaves-approval">Leaves approval</a></li>
                 </ul>
               </li>
+            <li className="active menue">
+              <a className="active subdrop"><i className="la la-rocket" /> <span> HR Portal</span> <span className="menu-arrow" /></a>
+              <ul style={{ display: 'block' }}>
+                <li><a className={pathname.includes('admin/attendance') ? "active" : ""} href="/hive_hrm/app/hr/attendance">Attendance</a></li>
+              </ul>
+            </li>
             </ul>
           </div>
         </div>
