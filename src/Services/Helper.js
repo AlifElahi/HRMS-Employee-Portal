@@ -120,17 +120,20 @@ export const holidayCsvToJSON = (csv) => {
 
 export const leaveTypeOptionShaper = async (data) => {
   const objmaker = (x) => {
+    
     let obj = {
       value: x.id,
       label: x.name
     }
     return obj
   }
-  return new Array(data.length).fill(null).map((y, idx) => objmaker(data[idx]))
+  let arr=data.filter(x=>x.used<x.count);
+  return new Array(data.length).fill(null).map((y, idx) => objmaker(arr[idx]))
 
 }
 export const leaveDataShaper = async (data) => {
   const objmaker = (x) => {
+    console.log(x);
     let obj = {
       id: x.id,
       leave_type: x.leave_type.name,
@@ -161,7 +164,7 @@ export const faltObject = (arr) => {
           .map(k =>
             typeof o[k] === 'object' ?
               _flatten(o[k],k) :typeof prevKey !== 'undefined'?
-              ({ [`${prevKey}-${k}`]: o[k] }):({ [k]: o[k] })
+              ({ [`${prevKey}_${k}`]: o[k] }):({ [k]: o[k] })
           )
         );
       }(x)

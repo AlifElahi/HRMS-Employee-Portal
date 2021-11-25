@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Avatar_09 } from "../../Entryfile/imagepath";
 import $ from "jquery";
 import messages from "../../message"
 import { useToastify } from "../../Contexts/ToastContext";
@@ -16,6 +15,8 @@ import moment from "moment";
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import { getLeaveTypeCount, postLeavefromEmployeeEnd, getLeaveforEmployeeEnd, updateLeavefromdata, deleteLeaveforEmployeeEnd } from '../../Services/dashBoardServices'
 import { leaveDataShaper, leaveTypeOptionShaper } from "../../Services/Helper";
+import Skeleton from "react-loading-skeleton";
+
 
 const Leaves = (props) => {
   const { startLoading, stopLoading, successToast, errorToast } =
@@ -28,7 +29,8 @@ const Leaves = (props) => {
     handleSubmit,
     control,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm();
 
   const onSubmit = (data) => {
@@ -36,16 +38,13 @@ const Leaves = (props) => {
     const endTime = getValues("to_time");
     if (startTime > endTime) {
       errorToast("Start Time can not be larger than End Time");
-
     } else {
       updateLeave(data);
     }
-
-
   }
 
-
   const [leaveTypes, setLeaveTypes] = useState([]);
+  const [leaveTypesDisplay, setLeaveTypesDisplay] = useState([]);
   const [startDay, setStart] = useState(moment());
   const [endDay, setEnd] = useState(moment());
   const [itemId, setItemId] = useState("");
@@ -53,7 +52,6 @@ const Leaves = (props) => {
   // const [leaveTypes,setLeaveTypes]=useState(leavetypeOption)
 
   const openEdit = (x) => {
-
     setStart(moment(x.date_from));
     setEnd(moment(x.date_to));
     setValue("no_of_days", x.no_of_days);
@@ -93,9 +91,27 @@ const Leaves = (props) => {
     getLeave()
   }, [])
 
+  const leaveTypeListMaker = (arr) => {
+    let feturedList = arr.filter(x => x.is_featured);
+    let othersCount = arr.reduce(function (acc, obj) { return acc + obj.count; }, 0) - feturedList.reduce(function (acc, obj) { return acc + obj.count; }, 0);
+    let remains = arr.reduce(function (acc, obj) { return acc + obj.count; }, 0) - arr.reduce(function (acc, obj) { return acc + obj.used; }, 0);
+    let obj = {
+      name: 'Other Leave',
+      count: othersCount
+    }
+    feturedList.push(obj)
+    let obj1 = {
+      name: 'Remaining Leave',
+      count: remains
+    }
+    feturedList.push(obj1)
+    setLeaveTypesDisplay(feturedList)
+  }
+
   const getLeaveCount = async () => {
     let res = await getLeaveTypeCount(oidcUser.access_token);
     if (!res.error) {
+      leaveTypeListMaker(res);
       let options = await leaveTypeOptionShaper(res)
       setLeaveTypes(options)
     }
@@ -209,11 +225,11 @@ const Leaves = (props) => {
       dataIndex: "approval_type",
       render: (text, record) => (
         <div className="action-label text-center">
-          <a className="btn btn-white btn-sm btn-rounded">
+          <a className="btn btn-white btn-sm btn-rounded text-capitalize">
             <i
-              className={
-                text.toLowerCase() == "pending"
-                  ? "fa fa-dot-circle-o text-info"
+               className={
+                text.toLowerCase() == "pending" 
+                  ? "fa fa-dot-circle-o text-info":text.toLowerCase() == "new"?"fa fa-dot-circle-o text-purple"
                   : text.toLowerCase() == "approved"
                     ? "fa fa-dot-circle-o text-success"
                     : "fa fa-dot-circle-o text-danger"
@@ -241,8 +257,8 @@ const Leaves = (props) => {
     {
       title: "Action",
       render: (text, record) => (
-        <div className="dropdown dropdown-action text-right">
-          <a
+         <div className="dropdown dropdown-action text-right">
+          {record.approval_type.toLowerCase()==='new'||record.approval_type.toLowerCase()==='pending'?<><a
             className="action-icon dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false"
@@ -264,7 +280,7 @@ const Leaves = (props) => {
             >
               <i className="fa fa-trash-o m-r-5" /> Delete
             </a>
-          </div>
+          </div></>:<></>}
         </div>
       ),
     },
@@ -298,33 +314,26 @@ const Leaves = (props) => {
         {/* Leave Statistics */}
 
         <div className="row">
-          <div className="col-md-3">
-            <div className="stats-info">
-              <h6>Annual Leave</h6>
-              <h4>{data.length}</h4>
-            </div>
-          </div>
 
-          <div className="col-md-3">
-            <div className="stats-info">
-              <h6>Medical Leave</h6>
-              <h4>3</h4>
-            </div>
-          </div>
+          {leaveTypesDisplay.length ?
+            leaveTypesDisplay.map((x,id) => {
+              return <div className="col-md-3" key={id}>
+                <div className="stats-info">
+                  <h6>{x.name}</h6>
+                  <h4>{x.used>=0?`${x.used}/${x.count}`:`${x.count}`}</h4>
+                </div>
+              </div>
+            })
+            :  [1,2,3,4].map((x,id) => {
+              return <div className="col-md-3" key={id}>
+                <div className="stats-info">
+                  <h6><Skeleton  /></h6>
+                  <h4><Skeleton /></h4>
+                </div>
+              </div>
+            })}
 
-          <div className="col-md-3">
-            <div className="stats-info">
-              <h6>Other Leave</h6>
-              <h4>4</h4>
-            </div>
-          </div>
 
-          <div className="col-md-3">
-            <div className="stats-info">
-              <h6>Remaining Leave</h6>
-              <h4>5</h4>
-            </div>
-          </div>
         </div>
         {/* /Leave Statistics */}
         <div className="row">

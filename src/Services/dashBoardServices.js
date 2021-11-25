@@ -163,6 +163,20 @@ export const getLeaveTypeCount= async (token) =>{
         
     }
 }
+export const getLeavesToApproveCountforEmp= async (token) =>{
+    try {
+        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/pendingleaves/',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res.data
+        
+    } catch (error) {
+        return {error}
+        
+    }
+}
 
 export const postLeavefromEmployeeEnd= async(body,token)=>{
    
@@ -194,10 +208,39 @@ export const updateLeavefromdata= async(body,token)=>{
         
     }
 }
+export const updateLeavefromdecision= async(body,token)=>{
+   
+    try {
+        
+        let res= axios.put(`https://timesheet.hivecorelimited.com/leave/leaveapproval/${body.id}/`,body,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        return {error}
+        
+    }
+}
 export const getLeaveforEmployeeEnd= async(token)=>{
     try {
         
         let res= axios.get('https://timesheet.hivecorelimited.com/leave/leaveforms/',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        return {error}
+        
+    }
+}
+export const getLeaveforApprovalEnd= async(token)=>{
+    try {
+        
+        let res= axios.get('https://timesheet.hivecorelimited.com/leave/leaveapproval/',{
             headers: {
                 'Authorization': `Bearer ${token}`
             }

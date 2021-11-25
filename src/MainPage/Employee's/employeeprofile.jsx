@@ -34,11 +34,10 @@ const EmployeeProfile = () => {
           }
 
         })
-      console.log(res.data);
+     
       return res.data
 
     } catch (error) {
-      console.log(error);
       history.push('/app/employees/allemployees')
     }
 

@@ -1,130 +1,200 @@
 
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import { Avatar_09, Avatar_02,Avatar_03, Avatar_05, Avatar_08, Avatar_10,Avatar_15,Avatar_20, Avatar_24,Avatar_25  } from "../../Entryfile/imagepath"
-
+import { Avatar_09, Avatar_02, Avatar_03, Avatar_05, Avatar_08, Avatar_10, Avatar_15, Avatar_20, Avatar_24, Avatar_25 } from "../../Entryfile/imagepath"
+import { Tooltip } from "antd";
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
-import {itemRender,onShowSizeChange} from "../paginationfunction"
+import Select from "react-select";
+import $ from "jquery";
+import messages from "../../message"
+import { useToastify } from "../../Contexts/ToastContext";
+import { itemRender, onShowSizeChange } from "../paginationfunction"
 import "../antdstyle.css"
+import { getLeaveforApprovalEnd, updateLeavefromdecision } from '../../Services/dashBoardServices';
+import { faltObject } from '../../Services/Helper';
+import { useReactOidc } from '@axa-fr/react-oidc-context';
+import { useForm, Controller } from "react-hook-form";
 
-class Leavesapproval extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-       data : [
-         {id:1,image:Avatar_02,name:"John Doe",role:"Web Designer",leavetype:"Medical Leave",from:"27 Feb 2019",to:'27 Feb 2019'
-         ,noofdays:"1 day",reason:"Going to Hospital",status:"Approved" },
-         {id:2,image:Avatar_09,name:"Buster Wigton",role:"Web Developer",leavetype:"Hospitalisation",from:"15 Jan 2019",to:'25 Jan 2019'
-         ,noofdays:"10 days",reason:"Going to Hospital",status:"Approved" },
-         {id:3,image:Avatar_03,name:"Catherine Manseau",role:"Web Developer",leavetype:"Maternity Leave",from:"5 Jan 2019",to:'15 Jan 2019'
-         ,noofdays:"10 days",reason:"Going to Hospital",status:"Approved" },
-         {id:4,image:Avatar_05,name:"Domenic Houston",role:"Web Developer",leavetype:"Casual Leave",from:"10 Jan 2019",to:'11 Jan 2019'
-         ,noofdays:"2 days",reason:"Going to Hospital",status:"Approved" },
-         {id:5,image:Avatar_02,name:"John Doe",role:"Web Designer",leavetype:"Casual Leave",from:"9 Jan 2019",to:'10 Jan 2019'
-         ,noofdays:"2 days",reason:"Going to Hospital",status:"Approved" },
-         {id:6,image:Avatar_08,name:"John Smith",role:"Android Developer",leavetype:"LOP",from:"24 Feb 2019",to:'25 Feb 2019'
-         ,noofdays:"2 days",reason:"Personnal",status:"Approved" },
-         {id:7,image:Avatar_10,name:"Melita Faucher",role:"Web Developer",leavetype:"Casual Leave",from:"13 Jan 2019",to:'14 Jan 2019'
-         ,noofdays:"2 days",reason:"Going to Hospital",status:"Declined" },
-         {id:8,image:Avatar_15,name:"Mike Litorus",role:"IOS Developer",leavetype:"Paternity Leave",from:"13 Feb 2019",to:'17 Feb 2019'
-         ,noofdays:"5 days",reason:"Going to Hospital",status:"Declined" },
-         {id:9,image:Avatar_20,name:"Richard Miles",role:"Web Designer",leavetype:"Casual Leave",from:"8 Mar 2019",to:'9 Mar 2019'
-         ,noofdays:"2 days",reason:"Going to Hospital",status:"New" },
-         {id:10,image:Avatar_25,name:"Richard Parker",role:"Web Developer",leavetype:"Casual Leave",from:"30 Jan 2019",to:'31 Jan 2019'
-         ,noofdays:"2 days",reason:"Personnal",status:"New" },
-         {id:11,image:Avatar_10,name:"Rolland Webber",role:"Web Developer",leavetype:"Casual Leave",from:"7 Jan 2019",to:'8 Jan 2019'
-         ,noofdays:"2 days",reason:"Going to Hospital",status:"Declined" },
-         {id:12,image:Avatar_24,name:"Tarah Shropshire",role:"Web Developer",leavetype:"Paternity Leave",from:"10 Jan 2019",to:'10 Jan 2019'
-         ,noofdays:"1 day",reason:"Going to Hospital",status:"New" },
-        ],          
-    };
+
+const Leavesapproval = (props) => {
+  const { startLoading, stopLoading, successToast, errorToast } =
+    useToastify();
+  const { oidcUser } = useReactOidc();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    getValues
+  } = useForm();
+  const [data, setData] = useState([])
+  const [itemId, setItemId] = useState("");
+
+  const approvalTypes = [
+    { value: "new", label: 'New' },
+    { value: "pending", label: 'Pending' },
+    { value: "approved", label: 'Approved' },
+    { value: "rejected", label: 'Rejected' }
+  ]
+
+  useEffect(() => {
+    getLeave()
+  }, [])
+  const closeEdit = () => {
+    $("#edit_leave").modal("hide");
+
+    setValue("no_of_days", 0);
+    setValue("leave_type", "");
+    setValue("date_from", "");
+    setValue("date_to", "");
+    setValue("approval_type", "");
+    setValue("reason", "");
+    setItemId("");
+  };
+  const openEdit = (x) => {
+    setValue("date_from", x.leave_form_date_from);
+    setValue("date_to", x.leave_form_date_to);
+    setValue("no_of_days", x.leave_form_no_of_days);
+    setValue("leave_type", x.leave_type_name);
+    setValue("approval_type", x.approval_type);
+    setValue("reason", x.leave_form_reason);
+    setItemId(x.id);
+    $("#edit_leave").modal("show");
+  };
+  const onSubmit = (data) => {
+    let obj = { approval_type: data.approval_type }
+    updateLeave(obj);
   }
-  			
-render() {
- const{data} = this.state
-      const columns = [
-        
-        {
-          title: 'Employee',
-          dataIndex: 'name',
-          render: (text, record) => (            
-              <h2 className="table-avatar">
-                <a href="/hive_hrm/app/profile/employee-profile" className="avatar"><img alt="" src={record.image} /></a>
-                <a href="/hive_hrm/app/profile/employee-profile">{text} <span>{record.role}</span></a>
-              </h2>
-            ), 
-            sorter: (a, b) => a.name.length - b.name.length,
-        },
-        {
-          title: 'Leave Type',
-          dataIndex: 'leavetype',
-          sorter: (a, b) => a.leavetype.length - b.leavetype.length,
-        },
 
-        {
-          title: 'From',
-          dataIndex: 'from',
-          sorter: (a, b) => a.from.length - b.from.length,
-        },
-        {
-          title: 'To',
-          dataIndex: 'to',
-          sorter: (a, b) => a.to.length - b.to.length,
-        },
+  const updateLeave = async (data) => {
+    startLoading();
+    data.id = itemId;
+    let res = await updateLeavefromdecision(data, oidcUser.access_token);
+    if (!res.error) {
+      getLeave()
+      closeEdit()
+      successToast(messages.updateSuccess)
+    }
+    else {
+      errorToast(res.error.messages);
+    }
+    stopLoading();
+  }
+  const getLeave = async () => {
 
-        {
-          title: 'No Of Days',
-          dataIndex: 'noofdays', 
-          sorter: (a, b) => a.noofdays.length - b.noofdays.length,
-        },
-      
-        {
-          title: 'Reason',
-          dataIndex: 'reason',
-          sorter: (a, b) => a.reason.length - b.reason.length,
-        },
-        {
-          title: 'Status',
-          dataIndex: 'status',
-          render: (text, record) => (
-            <div className="dropdown action-label text-center">
-            <a className="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-              <i className={text==="New" ? "fa fa-dot-circle-o text-purple" : text === "Pending" ?
-              "fa fa-dot-circle-o text-info" : text === "Approved" ? "fa fa-dot-circle-o text-success" :"fa fa-dot-circle-o text-danger" } /> {text}
-            </a>
-            <div className="dropdown-menu dropdown-menu-right">
-              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-purple" /> New</a>
-              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-info" /> Pending</a>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#approve_leave"><i className="fa fa-dot-circle-o text-success" /> Approved</a>
-              <a className="dropdown-item" href="#"><i className="fa fa-dot-circle-o text-danger" /> Declined</a>
-            </div>
+    let res = await getLeaveforApprovalEnd(oidcUser.access_token);
+    if (!!!res.error) {
+      let data = await faltObject(res.data)
+      console.log("data", data);
+      setData(data)
+    }
+    else {
+      errorToast(res.error.messages);
+    }
+
+  }
+
+  const columns = [
+    {
+      title: "Leave Type",
+      dataIndex: "leave_type_name",
+    },
+
+    {
+      title: "From",
+      dataIndex: "leave_form_date_from",
+    },
+    {
+      title: "To",
+      dataIndex: "leave_form_date_to",
+    },
+
+    {
+      title: "No Of Days",
+      dataIndex: "leave_form_no_of_days",
+    },
+
+    {
+      title: "Reason",
+      dataIndex: "leave_form_reason",
+      render: (text, record) => (
+        <Tooltip title={text}>
+          <div
+            style={{
+              maxWidth: "150px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {text}
           </div>
-            ),
-            sorter: (a, b) => a.status.length - b.status.length,
-        },
-        {
-          title: 'Action',
-          render: (text, record) => (
-              <div className="dropdown dropdown-action text-right">
-                <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                        <div className="dropdown-menu dropdown-menu-right">
-                          <a className="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                          <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i className="fa fa-trash-o m-r-5" /> Delete</a>
-                        </div>
-              </div>
-            ),
-      
-        
-        },
-        
-    
-      ]
-      return (         
-      <div className="page-wrapper">
+        </Tooltip>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "approval_type",
+      render: (text, record) => (
+        <div className="action-label text-center">
+          <a className="btn btn-white btn-sm btn-rounded text-capitalize">
+            <i
+              className={
+                text.toLowerCase() == "pending"
+                  ? "fa fa-dot-circle-o text-info" : text.toLowerCase() == "new" ? "fa fa-dot-circle-o text-purple"
+                    : text.toLowerCase() == "approved"
+                      ? "fa fa-dot-circle-o text-success"
+                      : "fa fa-dot-circle-o text-danger"
+              }
+            />{" "}
+            {text}
+          </a>
+        </div>
+      )
+    },
+    {
+      title: "Authority Body",
+      dataIndex: "authority_name",
+      render: (text, record) => (
+        <h2 className="table-avatar">
+          <a className="avatar">
+            <img alt="" src={record.authority_image} />
+          </a>
+          <a>{text} </a>
+        </h2>
+      ),
+      sorter: (a, b) => a.authority_name.length - b.authority_name.length,
+    },
+    {
+      title: "Action",
+      render: (text, record) => (
+        <div className="dropdown dropdown-action text-right">
+          <a
+            className="action-icon dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i className="material-icons">more_vert</i>
+          </a>
+          <div className="dropdown-menu dropdown-menu-right">
+            <a
+              className="dropdown-item"
+              onClick={() => openEdit(record)}
+            >
+              <i className="fa fa-pencil m-r-5" /> Review
+            </a>
+          </div>
+        </div>
+      ),
+    },
+  ];
+  return (
+    <div className="page-wrapper">
       <Helmet>
-          <title>Leaves - HRMS Admin Template</title>
-          <meta name="description" content="Login page"/>					
+        <title>Leaves - HRMS Admin Template</title>
+        <meta name="description" content="Login page" />
       </Helmet>
       {/* Page Content */}
       <div className="content container-fluid">
@@ -133,13 +203,6 @@ render() {
           <div className="row align-items-center">
             <div className="col">
               <h3 className="page-title">Leaves</h3>
-              <ul className="breadcrumb">
-                <li className="breadcrumb-item"><a href="/hive_hrm/app/main/dashboard">Dashboard</a></li>
-                <li className="breadcrumb-item active">Leaves</li>
-              </ul>
-            </div>
-            <div className="col-auto float-right ml-auto">
-              <a href="#" className="btn add-btn" data-toggle="modal" data-target="#add_leave"><i className="fa fa-plus" /> Add Leave</a>
             </div>
           </div>
         </div>
@@ -174,15 +237,15 @@ render() {
         {/* /Leave Statistics */}
         {/* Search Filter */}
         <div className="row filter-row">
-          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div className="form-group form-focus">
               <input type="text" className="form-control floating" />
               <label className="focus-label">Employee Name</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div className="form-group form-focus select-focus">
-              <select className="select floating"> 
+              <select className="select floating">
                 <option> -- Select -- </option>
                 <option>Casual Leave</option>
                 <option>Medical Leave</option>
@@ -191,9 +254,9 @@ render() {
               <label className="focus-label">Leave Type</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"> 
+          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div className="form-group form-focus select-focus">
-              <select className="select floating"> 
+              <select className="select floating">
                 <option> -- Select -- </option>
                 <option> Pending </option>
                 <option> Approved </option>
@@ -202,7 +265,7 @@ render() {
               <label className="focus-label">Leave Status</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div className="form-group form-focus">
               <div className="cal-icon">
                 <input className="form-control floating datetimepicker" type="text" />
@@ -210,7 +273,7 @@ render() {
               <label className="focus-label">From</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div className="form-group form-focus">
               <div className="cal-icon">
                 <input className="form-control floating datetimepicker" type="text" />
@@ -218,27 +281,28 @@ render() {
               <label className="focus-label">To</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-            <a href="#" className="btn btn-success btn-block"> Search </a>  
-          </div>     
+          <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            <a href="#" className="btn btn-success btn-block"> Search </a>
+          </div>
         </div>
         {/* /Search Filter */}
         <div className="row">
           <div className="col-md-12">
             <div className="table-responsive">
-              
-            <Table className="table-striped"
-                  pagination= { {total : data.length,
-                    showTotal : (total, range) => `Showing ${range[0]} to ${range[1]} of ${total} entries`,
-                    showSizeChanger : true,onShowSizeChange: onShowSizeChange ,itemRender : itemRender } }
-                  style = {{overflowX : 'auto'}}
-                  columns={columns}                 
-                  // bordered
-                  dataSource={data}
-                  rowKey={record => record.id}
-                  onChange={this.handleTableChange}
-                />
-             
+
+              <Table className="table-striped"
+                pagination={{
+                  total: data.length,
+                  showTotal: (total, range) => `Showing ${range[0]} to ${range[1]} of ${total} entries`,
+                  showSizeChanger: true, onShowSizeChange: onShowSizeChange, itemRender: itemRender
+                }}
+                style={{ overflowX: 'auto' }}
+                columns={columns}
+                // bordered
+                dataSource={data}
+                rowKey={record => record.id + Math.random()}
+              />
+
             </div>
           </div>
         </div>
@@ -304,45 +368,105 @@ render() {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Edit Leave</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button
+                type="button"
+                className="close"
+                data_dismiss="modal"
+                aria-label="Close"
+                onClick={() => closeEdit()}
+              >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-              <form>
+              {/* working  */}
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
-                  <label>Leave Type <span className="text-danger">*</span></label>
-                  <select className="select">
-                    <option>Select Leave Type</option>
-                    <option>Casual Leave 12 Days</option>
-                  </select>
+                  <label>
+                    Leave Type <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    className="form-control"
+                    readOnly
+                    type="text"
+                    disabled={true}
+                    {...register("leave_type", { required: true })}
+                  />
                 </div>
                 <div className="form-group">
-                  <label>From <span className="text-danger">*</span></label>
-                  <div className="cal-icon">
-                    <input className="form-control datetimepicker" defaultValue="01-01-2019" type="text" />
-                  </div>
+                  <label>
+                    From <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    className="form-control datetimepicker"
+                    type="date"
+                    disabled={true}
+                    {...register("date_from", {
+                      required: true
+                    })}
+                  />
                 </div>
                 <div className="form-group">
-                  <label>To <span className="text-danger">*</span></label>
-                  <div className="cal-icon">
-                    <input className="form-control datetimepicker" defaultValue="01-01-2019" type="text" />
-                  </div>
+                  <label>
+                    To <span className="text-danger">*</span>
+                  </label>
+
+                  <input
+                    disabled={true}
+                    className="form-control datetimepicker"
+                    type="date"
+                    {...register("date_to", {
+                      required: true
+                    })}
+                  />
                 </div>
                 <div className="form-group">
-                  <label>Number of days <span className="text-danger">*</span></label>
-                  <input className="form-control" readOnly type="text" defaultValue={2} />
+                  <label>
+                    Number of days <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    className="form-control"
+                    readOnly
+                    type="text"
+                    disabled={true}
+                    {...register("no_of_days", { required: true })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    Leave Reason <span className="text-danger">*</span>
+                  </label>
+                  <textarea
+                    rows={4}
+                    disabled={true}
+                    className="form-control"
+                    defaultValue={""}
+                    {...register("reason", { required: true })}
+                  />
                 </div>
                 <div className="form-group">
-                  <label>Remaining Leaves <span className="text-danger">*</span></label>
-                  <input className="form-control" readOnly defaultValue={12} type="text" />
-                </div>
-                <div className="form-group">
-                  <label>Leave Reason <span className="text-danger">*</span></label>
-                  <textarea rows={4} className="form-control" defaultValue={"Going to hospital"} />
+                  <label>
+                    Decision <span className="text-danger">*</span>
+                  </label>
+                  <Controller
+                    control={control}
+                    name="approval_type"
+                    rules={{ required: true }}
+                    render={({ field: { onChange, value, name, ref } }) => {
+                      return (
+                        <Select
+                          classNamePrefix="select"
+                          options={approvalTypes}
+                          value={approvalTypes.find((c) => c.value === value)}
+                          onChange={(val) => onChange(val.value)}
+                        />
+                      );
+                    }}
+                  />
                 </div>
                 <div className="submit-section">
-                  <button className="btn btn-primary submit-btn">Save</button>
+                  <button className="btn btn-primary submit-btn">Submit</button>
                 </div>
               </form>
             </div>
@@ -399,8 +523,8 @@ render() {
       </div>
       {/* /Delete Leave Modal */}
     </div>
-        );
-   }
+  );
 }
+
 
 export default Leavesapproval;

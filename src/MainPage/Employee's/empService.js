@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const searchEmployee = async (seacrOptions, token) => {
-    console.log(seacrOptions);
+   
     try {
         let res = await axios.get('',
 

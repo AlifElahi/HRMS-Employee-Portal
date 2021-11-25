@@ -1,13 +1,18 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import dateFormat from "dateformat";
 import { Avatar_02, Avatar_04, Avatar_05, Avatar_07, Avatar_08, Avatar_09 } from '../../Entryfile/imagepath.jsx'
 import { useReactOidc } from '@axa-fr/react-oidc-context';
 import Punchcard from './components/Punchcard.jsx';
 import { Link } from 'react-router-dom';
+import messages from "../../message"
+import { useToastify } from "../../Contexts/ToastContext";
+import { getLeavesToApproveCountforEmp } from '../../Services/dashBoardServices.js';
 
 const EmployeeDashboard = () => {
+  const { startLoading, stopLoading, successToast, errorToast } =
+  useToastify();
 
   let date = new Date()
   let day = dateFormat(date, "dddd, mmmm dS, yyyy, h:MM TT");
@@ -16,6 +21,22 @@ const EmployeeDashboard = () => {
   const [leavesToApprove, setleavesToApprove] = useState(false);
   const { oidcUser } = useReactOidc();
   const { profile } = oidcUser
+
+  useEffect(() => {
+    getLeavesToApproveCount();
+  }, [])
+
+  const getLeavesToApproveCount = async () => {
+
+    let res = await getLeavesToApproveCountforEmp(oidcUser.access_token);
+    if (!!!res.error) {
+      setleavesToApprove(res.count)
+    }
+    else {
+      errorToast(res.error.messages);
+    }
+
+  }
 
   let arr = [1, 2, 3, 5, 6, 7];
   return (
@@ -71,7 +92,7 @@ const EmployeeDashboard = () => {
                   </div>
                 </div>
               </section>
-              {leavesToApprove?
+              {!(leavesToApprove>0)?
               <section>
                 <div className="card">
                   <div className="card-body">
@@ -87,7 +108,7 @@ const EmployeeDashboard = () => {
                       </div>
                     </div>
                     <div className="request-btn">
-                      <a className="btn btn-primary" href="#">Apply Leave</a>
+                      <a className="btn btn-primary" href='/hive_hrm/app/employees/leaves-employee'>Apply Leave</a>
                     </div>
                   </div>
                 </div>
@@ -120,7 +141,7 @@ const EmployeeDashboard = () => {
                         <h5 className="card-title">Leaves to approve</h5>
                         <div className="time-list">
                           <div className="dash-stats-list">
-                            <h4>12</h4>
+                            <h4>{leavesToApprove}</h4>
                             <p>To Respond</p>
                           </div>
                         </div>

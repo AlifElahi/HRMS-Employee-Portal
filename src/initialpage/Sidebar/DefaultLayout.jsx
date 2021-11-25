@@ -18,7 +18,7 @@ class DefaultLayout extends Component {
 				<Header/>
 				<div>
 					{routerService && routerService.map((route,key)=>{
-						console.log("rrrr",route);
+						
 						return <Route key={key} path={`${match.url}/${route.path}`} component={route.component} />}
 					)}
 				</div>				
