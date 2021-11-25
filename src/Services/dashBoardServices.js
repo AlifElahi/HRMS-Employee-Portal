@@ -181,8 +181,7 @@ export const getLeavesToApproveCountforEmp= async (token) =>{
 export const postLeavefromEmployeeEnd= async(body,token)=>{
    
     try {
-        
-        let res= axios.post('https://timesheet.hivecorelimited.com/leave/leaveforms/',body,{
+        let res= await axios.post('https://timesheet.hivecorelimited.com/leave/leaveforms/',body,{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -197,7 +196,7 @@ export const updateLeavefromdata= async(body,token)=>{
    
     try {
         
-        let res= axios.put(`https://timesheet.hivecorelimited.com/leave/leaveforms/${body.id}/`,body,{
+        let res= await axios.put(`https://timesheet.hivecorelimited.com/leave/leaveforms/${body.id}/`,body,{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -212,7 +211,7 @@ export const updateLeavefromdecision= async(body,token)=>{
    
     try {
         
-        let res= axios.put(`https://timesheet.hivecorelimited.com/leave/leaveapproval/${body.id}/`,body,{
+        let res= await axios.put(`https://timesheet.hivecorelimited.com/leave/leaveapproval/${body.id}/`,body,{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -226,7 +225,7 @@ export const updateLeavefromdecision= async(body,token)=>{
 export const getLeaveforEmployeeEnd= async(token)=>{
     try {
         
-        let res= axios.get('https://timesheet.hivecorelimited.com/leave/leaveforms/',{
+        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/leaveforms/',{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -240,7 +239,7 @@ export const getLeaveforEmployeeEnd= async(token)=>{
 export const getLeaveforApprovalEnd= async(token)=>{
     try {
         
-        let res= axios.get('https://timesheet.hivecorelimited.com/leave/leaveapproval/',{
+        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/leaveapproval/',{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -254,7 +253,7 @@ export const getLeaveforApprovalEnd= async(token)=>{
 export const deleteLeaveforEmployeeEnd= async(id,token)=>{
     try {
         
-        let res= axios.delete(`https://timesheet.hivecorelimited.com/leave/leaveforms/${id}/`,{
+        let res= await axios.delete(`https://timesheet.hivecorelimited.com/leave/leaveforms/${id}/`,{
             headers: {
                 'Authorization': `Bearer ${token}`
             }

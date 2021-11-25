@@ -133,7 +133,6 @@ export const leaveTypeOptionShaper = async (data) => {
 }
 export const leaveDataShaper = async (data) => {
   const objmaker = (x) => {
-    console.log(x);
     let obj = {
       id: x.id,
       leave_type: x.leave_type.name,

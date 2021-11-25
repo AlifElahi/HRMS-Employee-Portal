@@ -46,6 +46,7 @@ const Leavesapproval = (props) => {
     $("#edit_leave").modal("hide");
 
     setValue("no_of_days", 0);
+    setValue("emplyee", "");
     setValue("leave_type", "");
     setValue("date_from", "");
     setValue("date_to", "");
@@ -55,6 +56,7 @@ const Leavesapproval = (props) => {
   };
   const openEdit = (x) => {
     setValue("date_from", x.leave_form_date_from);
+    setValue("emplyee", x.leave_form_applicant);
     setValue("date_to", x.leave_form_date_to);
     setValue("no_of_days", x.leave_form_no_of_days);
     setValue("leave_type", x.leave_type_name);
@@ -87,7 +89,6 @@ const Leavesapproval = (props) => {
     let res = await getLeaveforApprovalEnd(oidcUser.access_token);
     if (!!!res.error) {
       let data = await faltObject(res.data)
-      console.log("data", data);
       setData(data)
     }
     else {
@@ -97,6 +98,10 @@ const Leavesapproval = (props) => {
   }
 
   const columns = [
+    {
+      title: "Employee",
+      dataIndex: "leave_form_applicant",
+    },
     {
       title: "Leave Type",
       dataIndex: "leave_type_name",
@@ -381,6 +386,18 @@ const Leavesapproval = (props) => {
             <div className="modal-body">
               {/* working  */}
               <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-group">
+                  <label>
+                    Emplyee <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    className="form-control"
+                    readOnly
+                    type="text"
+                    disabled={true}
+                    {...register("emplyee", { required: true })}
+                  />
+                </div>
                 <div className="form-group">
                   <label>
                     Leave Type <span className="text-danger">*</span>
@@ -393,6 +410,7 @@ const Leavesapproval = (props) => {
                     {...register("leave_type", { required: true })}
                   />
                 </div>
+               
                 <div className="form-group">
                   <label>
                     From <span className="text-danger">*</span>
