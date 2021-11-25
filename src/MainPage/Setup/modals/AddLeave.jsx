@@ -17,20 +17,7 @@ export const AddLeave = ({ submitFunction }) => {
     submitFunction(data);
   };
   return (
-    <div className="modal-dialog modal-dialog-centered" role="document">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title">Add Leave Type</h5>
-          <button
-            type="button"
-            className="close"
-            data_dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div className="modal-body">
+   
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
               <label>
@@ -69,8 +56,6 @@ export const AddLeave = ({ submitFunction }) => {
               </button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
+     
   );
 };

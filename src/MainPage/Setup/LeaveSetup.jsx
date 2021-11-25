@@ -238,7 +238,27 @@ const LeaveSetup = () => {
       {/* /Page Content */}
       {/* Add Leavetype Modal */}
       <div id="add_leavetype" className="modal custom-modal fade" role="dialog">
+      <div className="modal-dialog modal-dialog-centered" role="document">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Add Leave Type</h5>
+          <button
+            type="button"
+            className="close"
+            data_dismiss="modal"
+            aria-label="Close"
+            onClick={() => {closeEdit();
+              window.location.reload()}}
+
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div className="modal-body">
         <AddLeave submitFunction={(x) => addLeaveFunction(x)} />
+        </div>
+      </div>
+    </div>
       </div>
       {/* /Add Leavetype Modal */}
       {/* Edit Leavetype Modal */}
