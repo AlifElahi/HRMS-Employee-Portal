@@ -8,7 +8,7 @@ import Punchcard from './components/Punchcard.jsx';
 import { Link } from 'react-router-dom';
 import messages from "../../message"
 import { useToastify } from "../../Contexts/ToastContext";
-import { getLeavesToApproveCountforEmp } from '../../Services/dashBoardServices.js';
+import { getLeavesToApproveCountforEmp, getLeaveTypeCount } from '../../Services/dashBoardServices.js';
 
 const EmployeeDashboard = () => {
   const { startLoading, stopLoading, successToast, errorToast } =
@@ -19,12 +19,33 @@ const EmployeeDashboard = () => {
 
   const [dt, setDt] = useState(day);
   const [leavesToApprove, setleavesToApprove] = useState(false);
+  const [remainLeaves, setremainLeaves] = useState(0);
+  const [usedLeaves, setusedLeaves] = useState(0);
   const { oidcUser } = useReactOidc();
   const { profile } = oidcUser
 
   useEffect(() => {
     getLeavesToApproveCount();
+    getLeaveCount();
   }, [])
+  
+  const leaveTypeListMaker = (arr) => {
+    let remains = arr.reduce(function (acc, obj) { return acc + obj.count; }, 0) - arr.reduce(function (acc, obj) { return acc + obj.used; }, 0);
+    let used = arr.reduce(function (acc, obj) { return acc + obj.used; }, 0);
+   
+    setusedLeaves(used)
+    setremainLeaves(remains)
+  }
+
+  const getLeaveCount = async () => {
+    let res = await getLeaveTypeCount(oidcUser.access_token);
+    if (!res.error) {
+      leaveTypeListMaker(res);
+    }
+    else {
+      console.log(res.error);
+    }
+  }
 
   const getLeavesToApproveCount = async () => {
 
@@ -99,11 +120,11 @@ const EmployeeDashboard = () => {
                     <h5 className="card-title">Your Leave</h5>
                     <div className="time-list">
                       <div className="dash-stats-list">
-                        <h4>4.5</h4>
+                        <h4>{usedLeaves}</h4>
                         <p>Leave Taken</p>
                       </div>
                       <div className="dash-stats-list">
-                        <h4>12</h4>
+                        <h4>{remainLeaves}</h4>
                         <p>Remaining</p>
                       </div>
                     </div>
@@ -121,11 +142,11 @@ const EmployeeDashboard = () => {
                         <h5 className="card-title">Your Leave</h5>
                         <div className="time-list">
                           <div className="dash-stats-list">
-                            <h4>4.5</h4>
+                            <h4>{usedLeaves}</h4>
                             <p>Leave Taken</p>
                           </div>
                           <div className="dash-stats-list">
-                            <h4>12</h4>
+                            <h4>{remainLeaves}</h4>
                             <p>Remaining</p>
                           </div>
                         </div>
