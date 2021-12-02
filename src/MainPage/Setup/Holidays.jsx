@@ -41,7 +41,7 @@ const Holidays = () => {
     setValue("name", x.name);
     let r = x.date.split('-')
     let dateStr = `${r[2]}/${r[1]}/${r[0]}`
-    console.log(dateStr);
+    // console.log(dateStr);
     setValue("date", dateStr);
     setValue("day", x.day);
     setValue("is_active", x.is_active);

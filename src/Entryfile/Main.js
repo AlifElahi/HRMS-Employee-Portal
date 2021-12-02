@@ -49,7 +49,18 @@ import oidcConfiguration from '../auth/configuration';
 import { LocalWebStorage } from '../auth/clasess/Store';
 import LoaderPage from '../MainPage/loader';
 import { ToastProvider } from '../Contexts/ToastContext';
-
+import {
+   ApolloClient,
+   InMemoryCache,
+   ApolloProvider,
+   useQuery,
+   gql
+ } from "@apollo/client";
+ 
+ const client = new ApolloClient({
+   uri: 'https://48p1r2roz4.sse.codesandbox.io',
+   cache: new InMemoryCache()
+ });
 
 
 
@@ -64,6 +75,7 @@ const MainApp = () => (
       callbackComponentOverride={LoaderPage}
       UserStore={LocalWebStorage}
    >
+      <ApolloProvider client={client}>
       <ToastProvider>
          <Router basename={`${config.publicPath}`}>
             <Switch>
@@ -71,6 +83,7 @@ const MainApp = () => (
             </Switch>
          </Router>
       </ToastProvider>
+      </ApolloProvider>
    </AuthenticationProvider>
 );
 

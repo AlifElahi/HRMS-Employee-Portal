@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import messages from "../../message"
 import { useToastify } from "../../Contexts/ToastContext";
 import { getLeavesToApproveCountforEmp, getLeaveTypeCount } from '../../Services/dashBoardServices.js';
+import Notifications from './components/notifications.jsx';
 
 const EmployeeDashboard = () => {
   const { startLoading, stopLoading, successToast, errorToast } =
@@ -98,7 +99,7 @@ const EmployeeDashboard = () => {
               </Link>
                 </section> */}
               <section>
-                <div className="card" style={{ height: 270 }}>
+                {/* <div className="card" style={{ height: 270 }}>
                   <div className="card-body">
                     <h5 className="card-title">Notice</h5>
                     <div style={{ overflow: 'auto', height: 200, paddingBottom: '20px', paddingTop: '20px' }}>
@@ -111,7 +112,9 @@ const EmployeeDashboard = () => {
                       </div>)}
                     </div>
                   </div>
-                </div>
+                </div> */}
+                <Notifications token={oidcUser.access_token}/>
+          
               </section>
               {!(leavesToApprove>0)?
               <section>

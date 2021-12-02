@@ -1,4 +1,7 @@
+import { constrainPoint } from "@fullcalendar/react";
 import dateFormat from "dateformat";
+import moment from "moment";
+import { format, render, cancel, register } from 'timeago.js';
 
 
 export const monthSpecifictiemSheetdataFormater = async (data) => {
@@ -120,14 +123,14 @@ export const holidayCsvToJSON = (csv) => {
 
 export const leaveTypeOptionShaper = async (data) => {
   const objmaker = (x) => {
-    
+
     let obj = {
       value: x.id,
       label: x.name
     }
     return obj
   }
-  let arr=data.filter(x=>x.used<x.count);
+  let arr = data.filter(x => x.used < x.count);
   return new Array(data.length).fill(null).map((y, idx) => objmaker(arr[idx]))
 
 }
@@ -155,21 +158,21 @@ export const leaveDataShaper = async (data) => {
 export const faltObject = (arr) => {
   const newArr = [];
   arr.map((x) => {
-    
+
     newArr.push(Object.assign(
       {},
-      ...function _flatten(o,prevKey) {
+      ...function _flatten(o, prevKey) {
         return [].concat(...Object.keys(o)
           .map(k =>
             typeof o[k] === 'object' ?
-              _flatten(o[k],k) :typeof prevKey !== 'undefined'?
-              ({ [`${prevKey}_${k}`]: o[k] }):({ [k]: o[k] })
+              _flatten(o[k], k) : typeof prevKey !== 'undefined' ?
+                ({ [`${prevKey}_${k}`]: o[k] }) : ({ [k]: o[k] })
           )
         );
       }(x)
     ))
 
-    
+
 
   })
   return newArr
@@ -182,8 +185,8 @@ export const faltObject = (arr) => {
 
 export const arrSorter = (arr, key, order) => {
   return arr.sort((a, b) => {
-    var A = typeof a === 'string' ?a[key].toUpperCase():a[key]; // ignore upper and lowercase
-    var B = typeof b === 'string' ?b[key].toUpperCase():b[key]; // ignore upper and lowercase
+    var A = typeof a === 'string' ? a[key].toUpperCase() : a[key]; // ignore upper and lowercase
+    var B = typeof b === 'string' ? b[key].toUpperCase() : b[key]; // ignore upper and lowercase
     // ignore upper and lowercase
     if (A < B) {
       return order;
@@ -192,4 +195,53 @@ export const arrSorter = (arr, key, order) => {
       return order * -1;
     }
     return 0
-})}
+  })
+}
+
+
+export const notification_Mapper = (data) => {
+
+  const time = format(data.created, 'en_US');
+  switch (data.type) {
+    case 'LEAVE_APPROVED':
+      return {
+        msg: `Your requested leave hasbeen approved`,
+        link: `/hive_hrm/app/employees/leaves-employee`,
+        time: time
+      }
+
+      break;
+    case 'LEAVE_CREATED':
+      return {
+        msg: `Someone has requested a leave`,
+        link: `/hive_hrm/app/employees/leaves-approval`,
+        time: time
+      }
+
+      break;
+    case 'LEAVE_REJECTED':
+      return {
+        msg: `Your requested leave hasbeen rejected`,
+        link: `/hive_hrm/app/employees/leaves-employee`,
+        time: time
+      }
+
+      break;
+    case 'LEAVE_PENDING':
+      return {
+        msg: `Your requested leave hasbeen set on hold`,
+        link: `/hive_hrm/app/employees/leaves-employee`,
+        time: time
+      }
+      break;
+    default:
+      return {
+        msg: ``,
+        link: `/hive_hrm/app/general/notifications`,
+        time: time
+      }
+      break;
+  }
+
+}
+

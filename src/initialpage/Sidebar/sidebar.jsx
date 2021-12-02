@@ -14,6 +14,9 @@ class Sidebar extends Component {
         <div className="sidebar-inner slimscroll">
           <div id="sidebar-menu" className="sidebar-menu">
             <ul>
+            <li className="active menue">
+                <a className={pathname.includes('admin/attendance') ? "active" : ""} href="/hive_hrm/app/general/notifications"><i className="fa fa-bell-o" /><span>Notificationas</span></a>
+              </li>
               <li className="menue">
                 <a className="active subdrop"><i className="la la-user" /> <span> Employee Portal</span> <span className="menu-arrow" /></a>
                 <ul style={{ display: 'block' }}>
@@ -28,12 +31,13 @@ class Sidebar extends Component {
                   <li><a className={pathname.includes('ves-approval') ? "active" : ""} href="/hive_hrm/app/employees/leaves-approval">Leaves approval</a></li>
                 </ul>
               </li>
-            <li className="active menue">
-              <a className="active subdrop"><i className="la la-rocket" /> <span> HR Portal</span> <span className="menu-arrow" /></a>
-              <ul style={{ display: 'block' }}>
-                <li><a className={pathname.includes('admin/attendance') ? "active" : ""} href="/hive_hrm/app/hr/attendance">Attendance</a></li>
-              </ul>
-            </li>
+              <li className="active menue">
+                <a className="active subdrop"><i className="la la-rocket" /> <span> HR Portal</span> <span className="menu-arrow" /></a>
+                <ul style={{ display: 'block' }}>
+                  <li><a className={pathname.includes('admin/attendance') ? "active" : ""} href="/hive_hrm/app/hr/attendance">Attendance</a></li>
+                </ul>
+              </li>
+              
             </ul>
           </div>
         </div>
