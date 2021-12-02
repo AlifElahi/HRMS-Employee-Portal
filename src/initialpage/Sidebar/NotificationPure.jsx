@@ -28,7 +28,6 @@ const renderNotificationList = (list,token) => {
                                 <div className="media-body">
                                     <p className="noti-details"><span className="noti-title">{data.msg}</span></p>
                                     <p className="noti-time"><span className="notification-time">{data.time}</span></p>
-                                    <p>{x.isRead?"t":"f"}</p>
                                 </div>
                             </div>
                         </a>

@@ -36,7 +36,6 @@ const Holidays = () => {
   const fileRef = useRef();
 
 
-
   const openEdit = (x) => {
     setValue("name", x.name);
     let r = x.date.split('-')
