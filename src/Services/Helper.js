@@ -281,7 +281,7 @@ const ObjShaper = (obj) => {
   }]
   obj.attendance.forEach(x => {
     p.push({
-      value: x.isPresent ? `P` : `x`,
+      value: x.isPresent ? `P` : `X`,
       style: { font: { sz: "24", bold: true, color: x.isPresent ? { rgb: "FFF86B00" } : { rgb: "FFFFFF00" } } }
     })
   })
