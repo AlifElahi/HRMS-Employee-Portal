@@ -1,4 +1,4 @@
-
+//Importing all the necessary libraries
 import React, { useState } from 'react';
 import { Helmet } from "react-helmet";
 import dateFormat from "dateformat";
@@ -7,19 +7,27 @@ import { useReactOidc } from '@axa-fr/react-oidc-context';
 import Punchcard from './components/Punchcard.jsx';
 import { Link } from 'react-router-dom';
 
+//functional component
 const EmployeeDashboard = () => {
 
+  //Date class initialized
   let date = new Date()
+
+  //date is formatted and stored
   let day = dateFormat(date, "dddd, mmmm dS, yyyy, h:MM TT");
 
+  //hooks//
+  //Day varible is set
   const [dt, setDt] = useState(day);
+  //on leavesToApprove varible boolean true is set
   const [leavesToApprove, setleavesToApprove] = useState(true);
+  //Oidcuser and profile destructred from reactoidc
   const { oidcUser } = useReactOidc();
   const { profile } = oidcUser
 
-  let arr = [1, 2, 3, 5, 6, 7];
-  return (
+  let arr = [1, 2, 3, 5, 6, 7]; // Inside notice card how may notices will there in the card
 
+  return (
     <div className="page-wrapper">
       <Helmet>
         <title>Dashboard - HiveHrm</title>

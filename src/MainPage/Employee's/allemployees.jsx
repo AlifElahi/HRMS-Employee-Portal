@@ -1,3 +1,4 @@
+//Importing all the necessary libraries
 import { useReactOidc } from "@axa-fr/react-oidc-context";
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
@@ -26,23 +27,37 @@ import {
 import AddEmployeemodal from "./modals/addEmployeemodal";
 import { useToastify } from "../../Contexts/ToastContext";
 
-const Employee = () => {
-  const { showToast, startLoading, stopLoading, successToast, errorToast } =
-    useToastify();
 
+//Employee functional component
+const Employee = () => {
+
+  //useToastify hook is a custom hook for the react-bootstrap toast component
+  const { showToast, startLoading, stopLoading, successToast, errorToast } =
+    useToastify(); //destructure to use the functionalities of Toastify
+
+    //react useHistiry to navigate among the id varibles of the employees
   let history = useHistory();
+  //Oidc used for authencation 
   const { oidcUser } = useReactOidc();
-  const [rendemplist, setrendempList] = useState(new Array(8).fill({}));
+  //array with length 6 is declared to show the employee list
+  const [rendemplist, setrendempList] = useState(new Array(6).fill({}));
+  //for setting the designation in an array
   const [Desigs, setDesigs] = useState([]);
+
+  //showing the current statues in the dropdown menue
   const [DesigOption, SetDesigoption] = useState({
     value: "",
     label: "Select Designation",
   });
+
+  //search filter state managment
   const [searchFilter, setSearch] = useState({
     id: "",
     name: "",
     designation: "",
   });
+
+  //customstyle is an object for styling component
   const customStyles = {
     control: (base) => ({
       ...base,
@@ -51,11 +66,14 @@ const Employee = () => {
     }),
   };
 
+  //the app will re-render if getemplist() and getDesignation() is changed
   useEffect(() => {
     getEmpList(oidcUser.access_token);
     getDesignations();
   }, []);
 
+
+  //authencation- getting user token
   const getDesignations = async () => {
     let res = await getAllDesignations(oidcUser.access_token);
     if (!res.length) return;
@@ -67,47 +85,56 @@ const Employee = () => {
     setDesigs(arr);
   };
 
+  //getting authencation and showing the users
   const getEmpList = async () => {
     let res = await getEmployeeList(oidcUser.access_token);
     setrendempList(res);
   };
 
+  //useHistory will push using the id variable
   const navigateToProfile = (id) => {
     if (!id) return;
     history.push(`/app/employees/employee-profile/${id}`);
   };
 
+
+  //event handler for searchFilter
   function handleChangeDesig(event) {
-    let o = searchFilter;
-    o.designation = event.value;
-    setSearch(o);
-    SetDesigoption(event);
-  }
-  function handleChangeName(event) {
-    event.persist();
-    let o = searchFilter;
-    o.name = event.target.value;
-    setSearch(o);
-  }
-  function handleChangeId(event) {
-    event.persist();
-    let o = searchFilter;
-    o.id = event.target.value;
-    setSearch(o);
+    let o = searchFilter; // search filter var is set on o varible
+    o.designation = event.value; //value is getting from event
+    setSearch(o); // usestate- setSearch method is set using o varible
+    SetDesigoption(event); // usestate- SetDesigoption method is set using event varible
   }
 
+   //event handler for changeName 
+  function handleChangeName(event) {
+    event.persist(); //for removing the current event from the pool
+    let o = searchFilter;
+    o.name = event.target.value; 
+    setSearch(o); // usestate- setSearch method is set using o varible
+  }
+
+   //event handler for change employee id 
+  function handleChangeId(event) {
+    event.persist();//for removing the current event from the pool
+    let o = searchFilter; 
+    o.id = event.target.value;
+    setSearch(o);// usestate- setSearch method is set using o varible
+  }
+
+  //for searching the employee
   const SearchFunc = async () => {
-    startLoading();
+    startLoading();  //for start Loader when the function is called
     let obj = Object.fromEntries(
       Object.entries(searchFilter).filter(([_, v]) => v != "")
     );
-    let res = await searchEmployee(obj, oidcUser.access_token);
-    if (!!!res.error) {
+    let res = await searchEmployee(obj, oidcUser.access_token);  //
+    if (!!!res.error) { //if thestatement is true--then the if scope will start
       setrendempList(res);
     } else {
-      showToast("error", res.error.message);
+      showToast("error", res.error.message);  //inside toast error will be shown
     }
-    stopLoading();
+    stopLoading();  //stopping the loader when the function is stopped
   };
 
   return (

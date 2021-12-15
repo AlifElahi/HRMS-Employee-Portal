@@ -1,3 +1,4 @@
+// used to make configaratuion for the backend authencation
 const configuration = {
   client_id: '6vnP0utSSzj7NAp1eNp8glR4HYePMeHz2JDsbbuL',
   redirect_uri: window.location.origin+'/authentication/callback',

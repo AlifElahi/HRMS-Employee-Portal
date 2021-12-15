@@ -1,13 +1,15 @@
 import axios from "axios";
 
+
+//to fetch the UR from backend this file is made
+
+//to get the punchCard info
 export const getPunchcardInfo1 = async (token) => {
-
-
     try {
         let res = await axios.get('https://timesheet.hivecorelimited.com/attendance/timesheetstatus/',
             {
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`  // headers is set for authorization
                 }
 
             })
@@ -18,15 +20,16 @@ export const getPunchcardInfo1 = async (token) => {
 
 }
 
+// to get the holidays data
 export const getHolidayData = async (token, year) => {
     try {
         let res = await axios.get(`https://timesheet.hivecorelimited.com/holiday/`, {
             params: {
-                year: year
+                year: year      // param for get years
             }
             ,
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`    // headers is set for authorization
             }
 
         });
@@ -37,6 +40,7 @@ export const getHolidayData = async (token, year) => {
     }
 }
 
+// to post data for holidays
 export const addHolidayData = async (token, data) => {
     let body = {
         items: data
@@ -44,7 +48,7 @@ export const addHolidayData = async (token, data) => {
     try {
         let res = await axios.post(`https://timesheet.hivecorelimited.com/holiday/`, body, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`  // headers is set for authorization
             }
 
         });
@@ -55,12 +59,13 @@ export const addHolidayData = async (token, data) => {
     }
 }
 
+// for put(update) the existing holidays using data id
 export const updateHolidayData = async (token, data) => {
     try {
 
         let res = await axios.put(`https://timesheet.hivecorelimited.com/holiday/${data.id}/`, data, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`  // headers is set for authorization
             }
 
         });
@@ -71,6 +76,8 @@ export const updateHolidayData = async (token, data) => {
     }
 }
 
+
+// to delete the holidays using data id
 export const deleteHolidayData = async (token, data) => {
     try {
 
@@ -86,7 +93,7 @@ export const deleteHolidayData = async (token, data) => {
     }
 }
 
-
+// to get the leaves data
 export const getLeaveData = async (token) => {
     try {
       let res = await axios.get(`https://timesheet.hivecorelimited.com/leave/leavetypes/`, {
@@ -102,6 +109,8 @@ export const getLeaveData = async (token) => {
       return {error}
     }
   }
+
+  // to post the leave Type
   export const addLeaveTypeData = async (token, data) => {
     try {
       let res = await axios.post(`https://timesheet.hivecorelimited.com/leave/leavetypes/`, data, {
@@ -116,6 +125,8 @@ export const getLeaveData = async (token) => {
       return {error}
     }
   }
+
+  //to put (update) the leave type data
   export const updateLeaveTypeData = async (token, data) => {
     try {
 
@@ -131,6 +142,8 @@ export const getLeaveData = async (token) => {
       return {error}
     }
   }
+
+  // delete the leave type data
   export const deleteLeaveTypeData = async (token, data) => {
     try {
 
@@ -146,7 +159,7 @@ export const getLeaveData = async (token) => {
     }
   }
 
-
+// get shift data
   export const getShiftData = async (token) => {
     try {
       let res = await axios.get(`https://timesheet.hivecorelimited.com/attendance/admin/shifts/`, {
@@ -162,6 +175,8 @@ export const getLeaveData = async (token) => {
       return {error}
     }
   }
+
+  // post shift data
   export const addShiftData = async (token, data) => {
     try {
       let res = await axios.post(`https://timesheet.hivecorelimited.com/attendance/admin/shifts/`, data, {
@@ -176,6 +191,8 @@ export const getLeaveData = async (token) => {
       return {error}
     }
   }
+
+  // put shift data
   export const updateShiftData = async (token, data) => {
     try {
 
@@ -191,6 +208,8 @@ export const getLeaveData = async (token) => {
       return {error}
     }
   }
+
+  //delete shift data
   export const deleteShiftData = async (token, data) => {
     try {
 

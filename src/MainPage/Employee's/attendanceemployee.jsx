@@ -1,4 +1,4 @@
-
+//Importing all the necessary libraries
 import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { getCurrentMonthtats, getMothSpecificUserTimeSheet } from '../../Services/dashBoardServices';
@@ -12,7 +12,9 @@ import { makeMonthStats, makeMonthStatsDataFormater } from '../../Services/Helpe
 import { useToastify } from '../../Contexts/ToastContext';
 
 
+//Attendance functional component
 const Attendance = () => {
+//useToastify hook is a custom hook for the react-bootstrap toast component
   const { startLoading, stopLoading, successToast, errorToast } = useToastify();
   const monthOptions = [
     { value: 1, label: 'Jan' },
@@ -27,14 +29,17 @@ const Attendance = () => {
     { value: 10, label: 'Oct' },
     { value: 11, label: 'Nov' },
     { value: 12, label: 'Dec' }
-  ]
-  const yearlength = new Date().getFullYear() - 2020 + 1
+  ] //in monthOption array value and label is set
+  const yearlength = new Date().getFullYear() - 2020 + 1  // from Date class yearLength is set
   const yearOptions = new Array(yearlength).fill(null).map((x, idx) => {
-    let year = new Date().getFullYear() - idx
+    let year = new Date().getFullYear() - idx   //year is set
     return { value: year, label: year }
   })
-  const { oidcUser } = useReactOidc();
+  const { oidcUser } = useReactOidc();   
   const toDay = new Date();
+  
+  
+  // use state hook is used 
   const [selectedMonth, setMonth] = useState(toDay.getMonth() + 1);
   const [selectedMonthoption, setMonthoption] = useState(monthOptions[toDay.getMonth()]);
   const [selectedYearoption, setYearoption] = useState({ value: toDay.getFullYear(), label: toDay.getFullYear() });
@@ -84,6 +89,8 @@ const Attendance = () => {
     }
   ];
 
+
+  //the app will re-render when onFirstSearch() and getStatData() will be changed 
   useEffect(() => {
     // onSearch();
     onFirstSearch();
@@ -91,7 +98,7 @@ const Attendance = () => {
 
   }, [])
 
-
+//to get the access token
   const getStatData = async () => {
     let res = await getCurrentMonthtats(oidcUser.access_token)
     let o = await makeMonthStatsDataFormater(res)
@@ -99,29 +106,37 @@ const Attendance = () => {
 
   }
 
+
+  //event handler to change month
   function handleChangeMonth(event) {
     setMonth(event.value)
     setMonthoption(event)
   }
+
+  //event handler to chnage the year
   function handleChangeYear(event) {
     setYear(event.value)
     setYearoption(event)
   }
 
+
+  //onSearch to find the specific empolyee's punchin pundh out time using month and years
   const onSearch = async () => {
     if (!(selectedMonth && selectedYear)) return
-    startLoading();
+    startLoading(); //the start Loading will start
     let month = selectedMonth;
     let year = selectedYear;
-    let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token)
-    if (!!!response.error) {
-      setData([])
+    let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token) 
+    if (!!!response.error) {  //it will return in boolean
+      setData([]) 
       setData(response)
     } else {
       errorToast(response.error.message)
     }
-    stopLoading();
+    stopLoading();  //stop loader 
   }
+
+  //onSearch to find the specific empolyee's punchin pundh out time using month and years
   const onFirstSearch = async () => {
     if (!(selectedMonth && selectedYear)) return
     

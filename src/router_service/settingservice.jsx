@@ -9,9 +9,6 @@ import Designation from '../MainPage/Setup/Designation';
 
 
 export default [  
-  
-  
-  
    {
       path: 'holiday-setup',
       component: Holidays
