@@ -245,3 +245,46 @@ export const notification_Mapper = (data) => {
 
 }
 
+export const DataShaperforExcele = async (dataSet) => {
+  let columns = [
+
+    {
+      value: "Employee",
+      widthPx: 100,
+      style: { font: { sz: "24", bold: true } },
+    }
+  ]
+
+
+  let data = []
+  dataSet[0].attendance.forEach((x, id) => {
+    let ii = id + 1
+    columns.push({
+      value: `${ii}`,
+      widthPx: 20,
+      style: { font: { sz: "24", bold: true } },
+    })
+  })
+  dataSet.forEach(x => {
+    data.push(ObjShaper(x))
+  })
+  return [{
+    columns, data
+  }]
+
+
+}
+
+const ObjShaper = (obj) => {
+  let p = [{
+    value: obj.employee.name
+  }]
+  obj.attendance.forEach(x => {
+    p.push({
+      value: x.isPresent ? `P` : `x`,
+      style: { font: { sz: "24", bold: true, color: x.isPresent ? { rgb: "FFF86B00" } : { rgb: "FFFFFF00" } } }
+    })
+  })
+  return p
+
+}
