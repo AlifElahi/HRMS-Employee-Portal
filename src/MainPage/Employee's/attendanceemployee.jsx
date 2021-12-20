@@ -10,9 +10,20 @@ import Select from 'react-select';
 import AttendancestatCard from './components/attendancestatCard';
 import { makeMonthStats, makeMonthStatsDataFormater } from '../../Services/Helper';
 import { useToastify } from '../../Contexts/ToastContext';
+import ReactExport from '@ibrahimrahmani/react-export-excel';
+import { useHistory, useParams } from 'react-router';
+// import { Avatar_02, Avatar_04, Avatar_05, Avatar_07, Avatar_08, Avatar_09 } from '../../Entryfile/imagepath.jsx'
+
+
+
 
 
 const Attendance = () => {
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+  const { id } = useParams()
+
   const { startLoading, stopLoading, successToast, errorToast } = useToastify();
   const monthOptions = [
     { value: 1, label: 'Jan' },
@@ -113,7 +124,7 @@ const Attendance = () => {
     startLoading();
     let month = selectedMonth;
     let year = selectedYear;
-    let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token)
+    let response = id ? await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token, id) : await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token, "")
     if (!!!response.error) {
       setData([])
       setData(response)
@@ -124,19 +135,20 @@ const Attendance = () => {
   }
   const onFirstSearch = async () => {
     if (!(selectedMonth && selectedYear)) return
-    
+
     let month = selectedMonth;
     let year = selectedYear;
     let response = await getMothSpecificUserTimeSheet(month, year, oidcUser.access_token)
     if (!!!response.error) {
-    setData(response)
-    let count = response.reduce((total, x) => {
-      if (x.remark === 'Late')
-        return total + 1;
-      return total
-    }, 0);
-    setLateCount(count)}
-    else{
+      setData(response)
+      let count = response.reduce((total, x) => {
+        if (x.remark === 'Late')
+          return total + 1;
+        return total
+      }, 0);
+      setLateCount(count)
+    }
+    else {
       errorToast(response.error.message)
     }
 
@@ -162,9 +174,9 @@ const Attendance = () => {
         {/* /Page Header */}
 
         <div className="row">
-          <div className="col-md-6">
+          {id ? <></>: <div className="col-md-6">
             <Punchcard />
-          </div>
+          </div>}
           <div className="col-md-6">
             <div className="dash-sidebar">
               <section>
@@ -192,7 +204,7 @@ const Attendance = () => {
         </div>
         {/* Search Filter */}
         <div className="row filter-row">
-          <div className="col-sm-4" >
+          <div className="col-sm-3" >
             <div className="form-group form-focus select-focus">
               <Select
                 classNamePrefix="select"
@@ -205,7 +217,7 @@ const Attendance = () => {
             </div>
           </div>
 
-          <div className="col-sm-4">
+          <div className="col-sm-3">
             <div className="form-group form-focus select-focus">
               <Select
                 classNamePrefix="select"
@@ -217,8 +229,23 @@ const Attendance = () => {
               />
             </div>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-3">
             <button className="btn btn-success btn-block" onClick={() => onSearch()}> Search </button>
+          </div>
+          <div className="col-sm-3">
+            <ExcelFile element={
+              <button className="btn btn-success btn-block" disabled={dataSource.length ? false : true}> Download </button>
+            } filename={"Employee's attendance "}>
+              <ExcelSheet data={dataSource} name="Employee's attendance ">
+                <ExcelColumn label="Date" value="date" />
+                <ExcelColumn label="Remark" value="remark" />
+                <ExcelColumn label="Punch in" value="punch_in" />
+                <ExcelColumn label="Punch out" value="punch_out" />
+                <ExcelColumn label="Production" value="production" />
+
+              </ExcelSheet>
+
+            </ExcelFile>
           </div>
         </div>
         {/* /Search Filter */}

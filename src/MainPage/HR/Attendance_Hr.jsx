@@ -6,6 +6,8 @@ import { Helmet } from "react-helmet";
 import { Avatar_01, Avatar_04, Avatar_05, Avatar_09, Avatar_10, Avatar_11, Avatar_12, Avatar_13, Avatar_16 } from "../../Entryfile/imagepath"
 import ReactExport from '@ibrahimrahmani/react-export-excel';
 import { DataShaperforExcele } from '../../Services/Helper';
+import Select from 'react-select';
+
 // import ReactExport from 'react-export-excel';
 
 
@@ -14,6 +16,40 @@ const Attendance_Hr = () => {
 
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+
+  const customStyles = {
+    control: base => ({
+      ...base,
+      height: 50,
+      minHeight: 50
+    })
+  };
+
+  const monthOptions = [
+    { value: 1, label: 'Jan' },
+    { value: 2, label: 'Feb' },
+    { value: 3, label: 'Mar' },
+    { value: 4, label: 'Apr' },
+    { value: 5, label: 'May' },
+    { value: 6, label: 'Jun' },
+    { value: 7, label: 'Jul' },
+    { value: 8, label: 'Aug' },
+    { value: 9, label: 'Sep' },
+    { value: 10, label: 'Oct' },
+    { value: 11, label: 'Nov' },
+    { value: 12, label: 'Dec' }
+  ]
+  const yearlength = new Date().getFullYear() - 2020 + 1
+  const yearOptions = new Array(yearlength).fill(null).map((x, idx) => {
+    let year = new Date().getFullYear() - idx
+    return { value: year, label: year }
+  })
+
+  const toDay = new Date();
+  const [selectedMonth, setMonth] = useState(toDay.getMonth() + 1);
+  const [selectedMonthoption, setMonthoption] = useState(monthOptions[toDay.getMonth()]);
+  const [selectedYearoption, setYearoption] = useState({ value: toDay.getFullYear(), label: toDay.getFullYear() });
+  const [selectedYear, setYear] = useState(toDay.getFullYear());
   ////dummy data structure =  dataset1
   const dataset1 = [
     {
@@ -535,19 +571,27 @@ const Attendance_Hr = () => {
   ]
   const [data, setData] = useState(dataset1)
   const [Exdata, setExData] = useState(null)
-  useEffect( () => {
+  useEffect(() => {
     excleDataMake()
   }, [])
 
 
-  const excleDataMake=async()=>{
+  const excleDataMake = async () => {
     let p = await DataShaperforExcele(dataset1)
     setExData(p)
   }
 
+  function handleChangeMonth(event) {
+    setMonth(event.value)
+    setMonthoption(event)
+  }
+  function handleChangeYear(event) {
+    setYear(event.value)
+    setYearoption(event)
+  }
 
 
-  
+
 
 
   return (
@@ -560,10 +604,16 @@ const Attendance_Hr = () => {
         {/* Page Header */}
         <div className="page-header">
           <div className="row">
-            <div className="col-sm-12">
+            <div className="col-sm-9">
               <h3 className="page-title">Attendance</h3>
 
             </div>
+            {Exdata ?
+            <div className="filter-row col-md-3">
+              <ExcelFile element={<button className="btn btn-success btn-block">Download </button>}>
+                <ExcelSheet dataSet={Exdata} name="Attendace report" />
+              </ExcelFile>
+            </div> : <></>}
           </div>
         </div>
         {/* /Page Header */}
@@ -575,46 +625,38 @@ const Attendance_Hr = () => {
               <label className="focus-label">Employee Name</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3">
+          <div className="col-sm-3" >
             <div className="form-group form-focus select-focus">
-              <select className="select floating">
-                <option>-</option>
-                <option>Jan</option>
-                <option>Feb</option>
-                <option>Mar</option>
-                <option>Apr</option>
-                <option>May</option>
-                <option>Jun</option>
-                <option>Jul</option>
-                <option>Aug</option>
-                <option>Sep</option>
-                <option>Oct</option>
-                <option>Nov</option>
-                <option>Dec</option>
-              </select>
-              <label className="focus-label">Select Month</label>
+              <Select
+                classNamePrefix="select"
+                styles={customStyles}
+                value={selectedMonthoption}
+                onChange={handleChangeMonth}
+                options={monthOptions}
+                placeholder='Month'
+              />
             </div>
           </div>
-          <div className="col-sm-6 col-md-3">
+          
+          <div className="col-sm-3">
             <div className="form-group form-focus select-focus">
-              <select className="select floating">
-                <option>-</option>
-                <option>2019</option>
-                <option>2018</option>
-                <option>2017</option>
-                <option>2016</option>
-                <option>2015</option>
-              </select>
-              <label className="focus-label">Select Year</label>
+              <Select
+                classNamePrefix="select"
+                styles={customStyles}
+                value={selectedYearoption}
+                onChange={handleChangeYear}
+                options={yearOptions}
+                placeholder='Year'
+              />
             </div>
           </div>
-          {Exdata ?
-            <div className="col-sm-6 col-md-3">
-              <ExcelFile element={<button className="btn btn-success btn-block">Download Excel</button>}>
-                <ExcelSheet dataSet={Exdata} name="Attendace report" />
-              </ExcelFile>
-            </div> : <></>}
+          <div className="col-sm-3">
+            <button className="btn btn-success btn-block" onClick={() => onSearch()}> Search </button>
+          </div>
+
+          
         </div>
+        
         {/* /Search Filter */}
         <div className="row">
           <div className="col-lg-12">
@@ -637,26 +679,49 @@ const Attendance_Hr = () => {
                         <tr>
                           <td>
                             <h2 className="table-avatar">
-                              <a className="avatar avatar-xs"><img alt="" src={x.employee.img||Avatar_09} /></a>
-                              <a href={`/hive_hrm/app/employees/employee-profile/${x.employee.id}`}>{x.employee.name}</a>
+                              <a className="avatar avatar-xs"><img alt="" src={x.employee.img || Avatar_09} /></a>
+                              <div className="dropdown dropdown-action text-right">
+                                <a
+                                  className="action-icon dropdown-toggle"
+                                  data-toggle="dropdown"
+                                  aria-expanded="false"
+                                >
+                                  {x.employee.name}
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <a
+                                    className="dropdown-item"
+                                    href={`/hive_hrm/app/employees/employee-profile/${x.employee.id}`}
+                                  >
+                                    <i className="fa fa-user-circle m-r-5" /> view profile
+                                  </a>
+                                  <a
+                                    className="dropdown-item"
+                                    href={`/hive_hrm/app/employees/attendance-employee/${x.employee.id}`}
+                                  >
+                                    <i className="fa fa-address-card m-r-5" /> attendance details
+                                  </a>
+                                </div>
+                              </div>
+                              {/* <a href={`/hive_hrm/app/employees/employee-profile/${x.employee.id}`}>{x.employee.name}</a> */}
                             </h2>
                           </td>
                           {
-                            x.attendance.map(y=>  <td><a  ><i className= {y.isPresent? "fa fa-check text-success":"fa fa-close text-danger"} /></a></td>)
+                            x.attendance.map(y => <td><a  ><i className={y.isPresent ? "fa fa-check text-success" : "fa fa-close text-danger"} /></a></td>)
                           }
-                          
+
                           {/* <td>
                             <div className="half-day">
                               <span className="first-off"><a href="" data-toggle="modal" data-target="#attendance_info"><i className="fa fa-check text-success" /></a></span>
                               <span className="first-off"><i className="fa fa-close text-danger" /></span>
                             </div>
                           </td> */}
-                         </tr>
+                        </tr>
                       )
                     })
                   }
 
-            
+
                 </tbody>
               </table>
             </div>

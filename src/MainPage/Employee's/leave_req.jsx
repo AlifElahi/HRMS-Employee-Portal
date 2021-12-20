@@ -198,7 +198,7 @@ const Leavesapproval = (props) => {
   return (
     <div className="page-wrapper">
       <Helmet>
-        <title>Leaves - HRMS Admin Template</title>
+        <title>Leaves to approve - Hive HRMS Admin Template</title>
         <meta name="description" content="Login page" />
       </Helmet>
       {/* Page Content */}
@@ -207,13 +207,13 @@ const Leavesapproval = (props) => {
         <div className="page-header">
           <div className="row align-items-center">
             <div className="col">
-              <h3 className="page-title">Leaves</h3>
+              <h3 className="page-title">Leaves to approve</h3>
             </div>
           </div>
         </div>
         {/* /Page Header */}
         {/* Leave Statistics */}
-        <div className="row">
+        {/* <div className="row">
           <div className="col-md-3">
             <div className="stats-info">
               <h6>Today Presents</h6>
@@ -238,10 +238,10 @@ const Leavesapproval = (props) => {
               <h4>12</h4>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* /Leave Statistics */}
         {/* Search Filter */}
-        <div className="row filter-row">
+        {/* <div className="row filter-row">
           <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div className="form-group form-focus">
               <input type="text" className="form-control floating" />
@@ -289,7 +289,7 @@ const Leavesapproval = (props) => {
           <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <a href="#" className="btn btn-success btn-block"> Search </a>
           </div>
-        </div>
+        </div> */}
         {/* /Search Filter */}
         <div className="row">
           <div className="col-md-12">

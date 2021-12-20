@@ -15,7 +15,7 @@ export const getPunchcardInfo = async (token) => {
             })
         return res.data
     } catch (error) {
-        return {error}
+        return { error }
     }
 
 }
@@ -33,7 +33,7 @@ export const punchTimeLog = async (type, token) => {
             })
         return res.data
     } catch (error) {
-        return {error}
+        return { error }
 
     }
 
@@ -56,26 +56,37 @@ export const getCurrentMonthtats = async (token) => {
 
 
 
-        return {error}
+        return { error }
 
     }
 
 }
 
-export const getMothSpecificUserTimeSheet = async (month, year, token) => {
+export const getMothSpecificUserTimeSheet = async (month, year, token, id) => {
 
     try {
-        let res = await axios.get(`https://timesheet.hivecorelimited.com/attendance/timesheets/`,
+        let res = id ? await axios.get(`https://timesheet.hivecorelimited.com/attendance/timesheets/`,
             {
                 params: {
                     month,
-                    year
+                    year,
+                    id
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
 
-            })
+            }) : await axios.get(`https://timesheet.hivecorelimited.com/attendance/timesheets/`,
+                {
+                    params: {
+                        month,
+                        year
+                    },
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+
+                })
         if (res.data.length === 0) return res.data
         let dataArr = await monthSpecifictiemSheetdataFormater(res.data)
         return dataArr
@@ -83,7 +94,7 @@ export const getMothSpecificUserTimeSheet = async (month, year, token) => {
 
 
 
-        return {error}
+        return { error }
 
     }
 
@@ -94,7 +105,7 @@ export const getEmployeeList = async (token) => {
     try {
         let res = await axios.get('https://sso.hivecorelimited.com/users',
             {
-                
+
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -103,7 +114,7 @@ export const getEmployeeList = async (token) => {
 
         return res.data
     } catch (error) {
-        return {error}
+        return { error }
 
     }
 
@@ -112,155 +123,155 @@ export const getEmployeeList = async (token) => {
 export const getAllDesignations = async (token) => {
 
     try {
-        let res=await axios.get('https://sso.hivecorelimited.com/designations',{
-    
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-    
-        })
-       return res.data
-      } catch (error) {
-        return {error}
+        let res = await axios.get('https://sso.hivecorelimited.com/designations', {
 
-        
-      }
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+
+        })
+        return res.data
+    } catch (error) {
+        return { error }
+
+
+    }
 
 }
 
-export const searchEmployee = async (params,token) => {
+export const searchEmployee = async (params, token) => {
 
     try {
         let res = await axios.get('https://sso.hivecorelimited.com/users',
 
-          {
-              params: params,
-              headers: {
-                  'Authorization': `Bearer ${token}`
-              }
+            {
+                params: params,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
 
-          }
-      )
-       return res.data
-      } catch (error) {
-        return {error}
-        
-      }
+            }
+        )
+        return res.data
+    } catch (error) {
+        return { error }
+
+    }
 
 }
 
-export const getLeaveTypeCount= async (token) =>{
+export const getLeaveTypeCount = async (token) => {
     try {
-        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/leavetypes/',{
+        let res = await axios.get('https://timesheet.hivecorelimited.com/leave/leavetypes/', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res.data
-        
+
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
-export const getLeavesToApproveCountforEmp= async (token) =>{
+export const getLeavesToApproveCountforEmp = async (token) => {
     try {
-        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/pendingleaves/',{
+        let res = await axios.get('https://timesheet.hivecorelimited.com/leave/pendingleaves/', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res.data
-        
+
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
 
-export const postLeavefromEmployeeEnd= async(body,token)=>{
-   
+export const postLeavefromEmployeeEnd = async (body, token) => {
+
     try {
-        let res= await axios.post('https://timesheet.hivecorelimited.com/leave/leaveforms/',body,{
+        let res = await axios.post('https://timesheet.hivecorelimited.com/leave/leaveforms/', body, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
-export const updateLeavefromdata= async(body,token)=>{
-   
+export const updateLeavefromdata = async (body, token) => {
+
     try {
-        
-        let res= await axios.put(`https://timesheet.hivecorelimited.com/leave/leaveforms/${body.id}/`,body,{
+
+        let res = await axios.put(`https://timesheet.hivecorelimited.com/leave/leaveforms/${body.id}/`, body, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
-export const updateLeavefromdecision= async(body,token)=>{
-   
+export const updateLeavefromdecision = async (body, token) => {
+
     try {
-        
-        let res= await axios.put(`https://timesheet.hivecorelimited.com/leave/leaveapproval/${body.id}/`,body,{
+
+        let res = await axios.put(`https://timesheet.hivecorelimited.com/leave/leaveapproval/${body.id}/`, body, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
-export const getLeaveforEmployeeEnd= async(token)=>{
+export const getLeaveforEmployeeEnd = async (token) => {
     try {
-        
-        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/leaveforms/',{
+
+        let res = await axios.get('https://timesheet.hivecorelimited.com/leave/leaveforms/', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
-export const getLeaveforApprovalEnd= async(token)=>{
+export const getLeaveforApprovalEnd = async (token) => {
     try {
-        
-        let res= await axios.get('https://timesheet.hivecorelimited.com/leave/leaveapproval/',{
+
+        let res = await axios.get('https://timesheet.hivecorelimited.com/leave/leaveapproval/', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }
-export const deleteLeaveforEmployeeEnd= async(id,token)=>{
+export const deleteLeaveforEmployeeEnd = async (id, token) => {
     try {
-        
-        let res= await axios.delete(`https://timesheet.hivecorelimited.com/leave/leaveforms/${id}/`,{
+
+        let res = await axios.delete(`https://timesheet.hivecorelimited.com/leave/leaveforms/${id}/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         return res
     } catch (error) {
-        return {error}
-        
+        return { error }
+
     }
 }

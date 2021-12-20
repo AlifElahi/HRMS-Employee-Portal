@@ -30,7 +30,7 @@ const EmployeesRoute1 = ({ match }) => (
                <LazyLeaveEmployee />
             </OidcSecure>
          </Route>
-         <Route path={`${match.url}/attendance-employee`} >
+         <Route path={`${match.url}/attendance-employee/:id?`} >
             <OidcSecure>
                <LazyAttendanceEmployee />
             </OidcSecure>
