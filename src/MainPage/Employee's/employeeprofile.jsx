@@ -153,27 +153,27 @@ const EmployeeProfile = () => {
                     </h3>
                     <ul className="personal-info">
                       {!id && userInfo.citizen_id && <li>
-                        <div className="title">Citizen Id</div>
+                        <div className="title">Citizen Id:</div>
                         <div className="text">{userInfo.citizen_id || <Skeleton width={250} />}</div>
                       </li>}
                       <li>
-                        <div className="title">Tel</div>
+                        <div className="title">Tel:</div>
                         <div className="text"><a href="">{userInfo.phone || <Skeleton width={250} />}</a></div>
                       </li>
                       <li>
-                        <div className="title">Nationality</div>
+                        <div className="title">Nationality:</div>
                         <div className="text">{userInfo.nationality || <Skeleton width={250} />}</div>
                       </li>
                       <li>
-                        <div className="title">Religion</div>
+                        <div className="title">Religion:</div>
                         <div className="text">{userInfo.nationality || <Skeleton width={250} />}</div>
                       </li>
                       <li>
-                        <div className="title">Marital status</div>
+                        <div className="title">Marital status:</div>
                         <div className="text">{userInfo.maritial_status || <Skeleton width={250} />}</div>
                       </li>
                       {!id && <li>
-                        <div className="title">No. of children</div>
+                        <div className="title">No. of children:</div>
                         <div className="text">{userInfo.no_of_children >= 0 ? userInfo.no_of_children : <Skeleton width={250} />}</div>
                       </li>}
                     </ul>
@@ -192,15 +192,15 @@ const EmployeeProfile = () => {
                       {userInfo.emergency_contacts ? userInfo.emergency_contacts.length > 0 ? userInfo.emergency_contacts.map((x, idx) =>
                         <ul className="personal-info" key={`contact-${idx}`}>
                           <li>
-                            <div className="title">Name</div>
+                            <div className="title">Name:</div>
                             <div className="text">{x.name}</div>
                           </li>
                           <li>
-                            <div className="title">Relationship</div>
+                            <div className="title">Relationship:</div>
                             <div className="text">{x.relation}</div>
                           </li>
                           <li>
-                            <div className="title">Phone </div>
+                            <div className="title">Phone: </div>
                             <div className="text">{x.phone}</div>
                           </li>
                           <hr />
@@ -208,15 +208,15 @@ const EmployeeProfile = () => {
                         :
                         <ul className="personal-info" >
                           <li>
-                            <div className="title">Name</div>
+                            <div className="title">Name:</div>
                             <div className="text">{userInfo.emergency_contacts.name}</div>
                           </li>
                           <li>
-                            <div className="title">Relationship</div>
+                            <div className="title">Relationship:</div>
                             <div className="text">{userInfo.emergency_contacts.relation}</div>
                           </li>
                           <li>
-                            <div className="title">Phone </div>
+                            <div className="title">Phone: </div>
                             <div className="text">{userInfo.emergency_contacts.phone}</div>
                           </li>
                           <hr />

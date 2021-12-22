@@ -25,6 +25,7 @@ import {
 } from "../../Services/dashBoardServices";
 import AddEmployeemodal from "./modals/addEmployeemodal";
 import { useToastify } from "../../Contexts/ToastContext";
+import { chcekPermission } from "../../Services/Helper";
 
 const Employee = () => {
   const { showToast, startLoading, stopLoading, successToast, errorToast } =
@@ -34,6 +35,7 @@ const Employee = () => {
   const { oidcUser } = useReactOidc();
   const [rendemplist, setrendempList] = useState(new Array(8).fill({}));
   const [Desigs, setDesigs] = useState([]);
+  const [adminPermission, setAdminPermission] = useState(chcekPermission(oidcUser.profile.permissions, 'setup'));
   const [DesigOption, SetDesigoption] = useState({
     value: "",
     label: "Select Designation",
@@ -124,13 +126,13 @@ const Employee = () => {
             <div className="col">
               <h3 className="page-title">Employees</h3>
             </div>
-            {/* <div className="col-auto float-right ml-auto">
+            {adminPermission ? <div className="col-auto float-right ml-auto">
               <a className="btn add-btn" data-toggle="modal" data-target="#add_employee"><i className="fa fa-plus" /> Add Employee</a>
-               <div className="view-icons">
+              <div className="view-icons">
                 <a href="/hive_hrm/app/employee/allemployees" className="grid-view btn btn-link active"><i className="fa fa-th" /></a>
                 <a href="/hive_hrm/app/employee/employees-list" className="list-view btn btn-link"><i className="fa fa-bars" /></a>
-              </div> 
-            </div> */}
+              </div>
+            </div> : <></>}
           </div>
         </div>
         {/* /Page Header */}
@@ -224,7 +226,24 @@ const Employee = () => {
       {/* /Page Content */}
       {/* Add Employee Modal */}
       <div id="add_employee" className="modal custom-modal fade" role="dialog">
-        <AddEmployeemodal />
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Add Employee</h5>
+              <button
+                type="button"
+                className="close"
+                data_dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <AddEmployeemodal />
+            </div>
+          </div>
+        </div>
         {/* <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
